@@ -261,7 +261,7 @@ window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200)
 resizeCanvas();
 
 // ===================== COLORS & VERSION =====================
-const VERSION = 22;
+const VERSION = 23;
 const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wars-mobile.html';
 
 const COLORS = [
@@ -1310,8 +1310,8 @@ function draw() {
     if(!player.dead){ctx.fillText(currentUser.name,player.x,player.y-26);if(player.stillTimer>2.0){const wa=Math.min(1,(player.stillTimer-2.0)/1.0),pa=wa*(0.4+Math.sin(Date.now()*0.008)*0.3);ctx.strokeStyle='rgba(201,125,138,'+pa+')';ctx.lineWidth=2;ctx.setLineDash([4,2]);ctx.beginPath();ctx.arc(player.x,player.y,player.r+10,-Math.PI/2,-Math.PI/2+Math.PI*2*Math.min(1,(player.stillTimer-2.0)/1.0));ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(201,125,138,'+(wa*0.5)+')';ctx.font='9px "Courier New",monospace';ctx.fillText(player.stillTimer>3.0?'静止惩罚中':'请移动!',player.x,player.y-36);}}
     ctx.fillStyle=oColor;const oName=gameMode==='ai'?'AI':(remoteUser?remoteUser.name:'对手');if(!opponent.dead)ctx.fillText(oName,opponent.x,opponent.y-26);
 
-    // Aim line — dashed ray from player
-    if(!player.dead&&!matchOver){
+    // Aim line — dashed ray from player (hidden during cooldown)
+    if(!player.dead&&!matchOver&&player.arrowCd<=0){
       const end=getBeamEnd(player.x,player.y,player.aimAngle);
       const isUlt=player.ultiCharging, isBow=player.bowCharging;
       const a=isUlt?0.55:isBow?0.35:0.18, w=isUlt?2.5:isBow?1.8:1.2;
