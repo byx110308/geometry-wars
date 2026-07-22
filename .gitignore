@@ -1,4 +1,5 @@
 *
 !.gitignore
 !geometry-wars.html
+!geometry-wars-mobile.html
 !room_server.py
