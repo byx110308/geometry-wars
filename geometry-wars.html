@@ -1060,6 +1060,7 @@ function sendState() {
 }
 
 function disconnectAndMenu() {
+  clearTimeout(joinTimeout);
   if (peer) {
     try { peer.destroy(); } catch (e) {}
     peer = null;
