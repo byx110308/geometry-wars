@@ -271,6 +271,7 @@ function showRegister() {
   renderColorOptions();
 }
 function backToMenu() {
+  clearTimeout(joinTimeout);
   hideAll();
   document.getElementById('menu').classList.add('active');
   document.getElementById('menu').style.display = '';
