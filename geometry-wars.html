@@ -1560,8 +1560,10 @@ function updateAI(dt) {
   if (!player.dead && ai.ultiCooldown <= 0 && ai.xp >= ai.maxXp) {
     let angleDiff = Math.abs(ai.aimAngle - angleToPlayer);
     while (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
+    const ultDistThreshold = 320 + ai.difficulty * 80;
+    const ultAngleThreshold = 0.08 + 0.34 / ai.difficulty;
     if (!ai.ultiCharging) {
-      if (distToPlayer < 380 && angleDiff < 0.25 && Math.random() < dt * 1.2) {
+      if (distToPlayer < ultDistThreshold && angleDiff < ultAngleThreshold && Math.random() < dt * 1.5 * ai.difficulty) {
         ai.ultiCharging = true; ai.ultiChargeProgress = 0; ai.ultiMaxTimer = 0; ai.ultiLockTimer = 0; ai.ultiLocked = false;
         if (ai.bowCharging) { ai.bowCharging = false; ai.bowCharge = 0; }
       }
@@ -1569,7 +1571,7 @@ function updateAI(dt) {
       ai.ultiChargeProgress = Math.min(1, ai.ultiChargeProgress + dt / 1.2);
       if (ai.ultiChargeProgress >= 1.0) {
         ai.ultiMaxTimer += dt;
-        if (angleDiff < 0.22 && !player.dead) {
+        if (angleDiff < ultAngleThreshold * 0.6 && !player.dead) {
           ai.ultiLockTimer += dt;
           if (ai.ultiLockTimer >= 0.4) ai.ultiLocked = true;
         } else {
