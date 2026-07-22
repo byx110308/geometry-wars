@@ -415,6 +415,13 @@ function joinRoom() {
   });
   peer.on('error', (err) => {
     clearTimeout(joinTimeout);
+    let msg = '连接失败: ' + err.type;
+    if (err.type === 'peer-unavailable') {
+      msg = '找不到该房间（请确保对方已创建房间且房间码正确）';
+    } else if (err.type === 'server-error') {
+      msg = '服务器繁忙，请稍后重试';
+    }
+    document.getElementById('lobby-status').textContent = msg;
     document.getElementById('lobby-spinner').style.display = 'none';
   });
 }
