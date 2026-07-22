@@ -141,9 +141,9 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
     <div id="stick-thumb"></div>
     <div id="aim-dot"></div>
     <canvas id="charge-ring" width="80" height="80"></canvas>
-    <button class="ctrl-btn dash" id="btn-dash" style="width:46px;height:46px;border-radius:50%;top:50%;left:clamp(10px,2.5vw,28px);transform:translateY(-50%);font-size:8px">DASH</button>
-    <button class="ctrl-btn fire" id="btn-fire" style="width:clamp(56px,11vw,66px);height:clamp(56px,11vw,66px);border-radius:50%;bottom:clamp(28px,5.5vh,48px);right:clamp(50px,10vw,100px);font-size:clamp(10px,1.8vw,12px);letter-spacing:1px">FIRE</button>
-    <button class="ctrl-btn ult dim" id="btn-ult" style="width:clamp(30px,6vw,38px);height:clamp(30px,6vw,38px);border-radius:50%;bottom:clamp(90px,17vh,118px);right:clamp(40px,8vw,82px);font-size:clamp(6px,1.2vw,8px);letter-spacing:1px">U</button>
+    <button class="ctrl-btn dash" id="btn-dash" style="width:46px;height:46px;border-radius:50%;bottom:clamp(80px,15vh,110px);right:clamp(126px,24vw,166px);font-size:8px">DASH</button>
+    <button class="ctrl-btn fire" id="btn-fire" style="width:clamp(56px,11vw,66px);height:clamp(56px,11vw,66px);border-radius:50%;bottom:clamp(80px,15vh,110px);right:clamp(50px,10vw,100px);font-size:clamp(10px,1.8vw,12px);letter-spacing:1px">FIRE</button>
+    <button class="ctrl-btn ult dim" id="btn-ult" style="width:clamp(30px,6vw,38px);height:clamp(30px,6vw,38px);border-radius:50%;bottom:clamp(152px,26vh,178px);right:clamp(64px,12vw,113px);font-size:clamp(6px,1.2vw,8px);letter-spacing:1px">U</button>
     <button class="ctrl-btn" id="btn-menu" style="width:clamp(32px,6vw,40px);height:clamp(32px,6vw,40px);border-radius:50%;top:clamp(6px,1.5vh,12px);right:clamp(6px,1.5vw,12px);font-size:8px;letter-spacing:0;position:absolute">✕</button>
   </div>
 
@@ -238,7 +238,7 @@ window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200)
 resizeCanvas();
 
 // ===================== COLORS & VERSION =====================
-const VERSION = 16;
+const VERSION = 17;
 const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wars-mobile.html';
 
 const COLORS = [
