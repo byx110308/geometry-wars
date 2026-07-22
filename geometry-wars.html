@@ -368,8 +368,8 @@ function backToMenu() {
   hideAll();
   document.getElementById('menu').classList.add('active');
   document.getElementById('menu').style.display = '';
-  // Also clean up any peer connection
   if (peer) { peer.destroy(); peer = null; conn = null; }
+  if (window._updatePending) setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + VERSION; }, 600);
 }
 function hideAll() {
   document.querySelectorAll('.overlay').forEach(o => { o.classList.remove('active'); o.style.display = 'none'; });
