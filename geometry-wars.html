@@ -1593,10 +1593,11 @@ function updateAI(dt) {
   const speedMul = ultSlow * bowSlow;
 
   let threatVx = 0, threatVy = 0;
+  const dodgeIntensity = 0.4 + ai.difficulty * 0.6;
   for (const b of bullets) {
     const d = Math.hypot(ai.x - b.x, ai.y - b.y);
     if (d < 200 && d > 0) {
-      const force = 500 / (d * d) * 100;
+      const force = 500 / (d * d) * 100 * dodgeIntensity;
       threatVx += (ai.x - b.x) / d * force;
       threatVy += (ai.y - b.y) / d * force;
     }
@@ -1615,7 +1616,8 @@ function updateAI(dt) {
       }
       ai.dodgeVx = 0; ai.dodgeVy = 0;
       const urgency = closeDanger ? 1 : (player.ultiChargeProgress >= 0.6 ? 0.8 : 0.4);
-      const boost = 540 + urgency * 460;
+      const dodgeScale = 0.5 + ai.difficulty * 0.5;
+      const boost = 540 + urgency * 460 * dodgeScale;
       const dodgeAngle = player.aimAngle + (Math.random() > 0.5 ? 1 : -1) * (Math.PI / 2 + (Math.random() - 0.5) * 0.3);
       threatVx += Math.cos(dodgeAngle) * boost;
       threatVy += Math.sin(dodgeAngle) * boost;
