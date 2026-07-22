@@ -1677,6 +1677,30 @@ function updateAI(dt) {
     ai.dodgeVy = (Math.random() - 0.5) * 240;
   }
 
+  // Learn player dodge pattern after AI fires
+  if (ai.shotTimestamp > 0) {
+    ai.shotTimestamp -= dt;
+    if (ai.shotTimestamp <= 0 && !player.dead) {
+      const dodgeX = player.x - ai.shotPlayerX;
+      const dodgeY = player.y - ai.shotPlayerY;
+      const dodgeDist = Math.hypot(dodgeX, dodgeY);
+      if (dodgeDist > 10) {
+        ai.playerDodgeBiasX += (dodgeX - ai.playerDodgeBiasX) * 0.12;
+        ai.playerDodgeBiasY += (dodgeY - ai.playerDodgeBiasY) * 0.12;
+      }
+    }
+  }
+
+  // Decay hit/miss counts and auto-tune confidence
+  ai.hitCount = Math.max(0, ai.hitCount - dt * 2);
+  ai.missCount = Math.max(0, ai.missCount - dt * 2);
+  const total = ai.hitCount + ai.missCount;
+  if (total > 3) {
+    const recentAccuracy = ai.hitCount / total;
+    ai.predictionConfidence += (recentAccuracy - 0.5) * 0.15;
+    ai.predictionConfidence = Math.max(0.15, Math.min(1, ai.predictionConfidence));
+  }
+
   const maxSpeed = BASE_SPEED * speedMul;
   ai.vx += ((ai.dodgeVx + threatVx) - ai.vx) * 5 * dt;
   ai.vy += ((ai.dodgeVy + threatVy) - ai.vy) * 5 * dt;
