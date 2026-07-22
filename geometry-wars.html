@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>几何战争</title>
+<title>几何决斗</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230a0a0f' rx='4'/><line x1='8' y1='8' x2='24' y2='24' stroke='%23d4a574' stroke-width='2' stroke-linecap='round'/><line x1='24' y1='8' x2='8' y2='24' stroke='%23999' stroke-width='2' stroke-linecap='round'/><rect x='11' y='11' width='10' height='10' fill='none' stroke='%23ddd' stroke-width='1.5'/></svg>">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -125,7 +126,7 @@ canvas { display: block; border: 1px solid #1a1a2a; }
 
   <!-- 菜单 -->
   <div id="menu" class="overlay active">
-    <h1>几何战争</h1>
+    <h1>几何决斗</h1>
     <div class="subtitle">GEOMETRY WARS</div>
     <div id="user-info">
       <span>未注册</span>
@@ -171,6 +172,7 @@ canvas { display: block; border: 1px solid #1a1a2a; }
   <!-- HUD（对战中使用） -->
   <div id="hud" style="display:none;">
     <div><span id="p1-label">玩家</span> <span class="val" id="ps">0</span></div>
+    <div id="round-indicator" style="color:#666;font-size:11px;letter-spacing:4px;">B 0 - 0</div>
     <div><span id="p2-label">对手</span> <span class="val" id="ais" style="color:#f0f">0</span></div>
   </div>
   <div id="msg-overlay"></div>
@@ -200,7 +202,7 @@ const COLORS = [
 ];
 
 // ===================== 自动更新 =====================
-const VERSION = 2;
+const VERSION = 3;
 // 将下方 URL 替换为你的 GitHub 仓库 raw 文件地址：
 // 格式: https://raw.githubusercontent.com/用户名/仓库名/main/geometry-wars.html
 const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wars.html';
@@ -213,7 +215,7 @@ const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wa
       .then(html => {
         const m = html.match(/const VERSION\s*=\s*(\d+)/);
         if (m && parseInt(m[1]) > VERSION) {
-          document.title = '几何战争 - 正在更新...';
+          document.title = '几何决斗 - 正在更新...';
           document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#999;font-family:monospace;font-size:14px;letter-spacing:2px;">发现新版本，正在自动更新...</div>';
           setTimeout(() => { window.location.href = UPDATE_URL; }, 800);
         }
@@ -487,7 +489,11 @@ function createPlayer(x, y, colorIdx, isLocal) {
     ultiLockTimer: 0,
     ultiLocked: false,
     colorIdx: colorIdx,
-    isLocal: isLocal
+    isLocal: isLocal,
+    dashCd: 0, dashMaxCd: 2.5,
+    dashing: false, dashTimer: 0,
+    invuln: 0,
+    combo: 0, lastHitTime: 0
   };
 }
 
@@ -513,6 +519,66 @@ let mouseX = W / 2, mouseY = H / 2;
 let sendTimer = 0;
 const SEND_INTERVAL = 1 / 25; // 25Hz
 
+// 回合制
+let roundWins = { p1: 0, p2: 0 };
+const ROUNDS_TO_WIN = 2;
+let roundPause = 0;
+let matchOver = false;
+
+// 浮动伤害数字
+let dmgNumbers = [];
+
+// 震屏
+let screenShake = 0;
+
+// 音效
+let audioCtx = null;
+function initAudio() {
+  if (audioCtx) return;
+  try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+}
+function snd(freq, dur, type, vol, fade) {
+  if (!audioCtx) return;
+  const t = audioCtx.currentTime;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type || 'square';
+  o.frequency.setValueAtTime(freq, t);
+  g.gain.setValueAtTime(vol || 0.08, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + (fade || dur));
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(t); o.stop(t + dur);
+}
+
+function spawnDmg(x, y, val, color) {
+  dmgNumbers.push({ x, y, text: String(val), life: 0.6, maxLife: 0.6, color: color || '#ddd' });
+}
+
+function applyDamage(attacker, defender, dmg, hitX, hitY) {
+  if (defender.invuln > 0) return false;
+  defender.hp -= dmg;
+  if (defender.hp < 0) defender.hp = 0;
+  attacker.hp = Math.min(attacker.maxHp, attacker.hp + Math.ceil(dmg * 0.1));
+  attacker.xp = Math.min(attacker.maxXp, attacker.xp + Math.ceil(dmg * 0.5));
+  attacker.score += dmg;
+  updateScoreDisplay();
+  spawnExplosion(hitX, hitY, COLORS[defender.colorIdx].hex, 5);
+  spawnDmg(hitX, hitY - 12, dmg, COLORS[attacker.colorIdx].hex);
+  screenShake = Math.max(screenShake, Math.min(8, dmg * 0.4));
+
+  // Combo
+  if (Date.now() - attacker.lastHitTime < 1500) attacker.combo++;
+  else attacker.combo = 1;
+  attacker.lastHitTime = Date.now();
+
+  // Sound
+  snd(200 + attacker.combo * 30, 0.12, 'square', 0.06);
+  if (dmg >= 80) snd(80, 0.25, 'sawtooth', 0.1);
+
+  if (defender.hp <= 0) return true;
+  return false;
+}
+
 // ===================== 输入监听 =====================
 document.addEventListener('keydown', e => {
   keys[e.key.toLowerCase()] = true;
@@ -524,7 +590,7 @@ document.addEventListener('keydown', e => {
 
   if (e.key === 'r' || e.key === 'R') {
     if (gameMode === 'ai') resetAIGame();
-    else if (gameMode === 'online' && gameOver) {
+    else if (gameMode === 'online' && matchOver) {
       if (conn && conn.open) { conn.send(JSON.stringify({ type: 'rematch' })); resetOnlineGame(); }
     }
   }
@@ -535,6 +601,9 @@ document.addEventListener('keydown', e => {
   }
   if (e.key === 'Escape') {
     if (gameMode) { disconnectAndMenu(); }
+  }
+  if (e.key === 'Shift' && gameMode && player && !matchOver) {
+    initAudio(); tryDash(player);
   }
 });
 document.addEventListener('keyup', e => {
@@ -631,23 +700,50 @@ function fireBullet(shooter, bulletsArr) {
   };
   bulletsArr.push(ray);
 
+  // Muzzle flash — burst at shooter
+  for (let i = 0; i < 6 + charge * 10; i++) {
+    const a = angle + (Math.random() - 0.5) * 0.5;
+    const spd = 80 + Math.random() * 200 + charge * 200;
+    particles.push({
+      x: startX, y: startY,
+      vx: Math.cos(a) * spd, vy: Math.sin(a) * spd,
+      life: 0.08 + charge * 0.08, maxLife: 0.08 + charge * 0.08,
+      color: COLORS[shooter.colorIdx].hex, size: 1 + Math.random() * (1 + charge * 2),
+      type: 'spark'
+    });
+  }
+
+  // Ray path spark particles along the line
+  const rLen = Math.hypot(ray.x2 - ray.x1, ray.y2 - ray.y1);
+  for (let i = 0; i < 4 + charge * 8; i++) {
+    const t = Math.random();
+    const sx = ray.x1 + (ray.x2 - ray.x1) * t;
+    const sy = ray.y1 + (ray.y2 - ray.y1) * t;
+    particles.push({
+      x: sx, y: sy,
+      vx: (Math.random() - 0.5) * 60, vy: (Math.random() - 0.5) * 60,
+      life: 0.06 + charge * 0.06, maxLife: 0.06 + charge * 0.06,
+      color: COLORS[shooter.colorIdx].hex, size: 0.8 + Math.random() * 1.5,
+      type: 'spark'
+    });
+  }
+
   // Immediate hit detection — ray-vs-circle
   const target = (shooter === player) ? opponent : (shooter === ai ? player : null);
   if (target && !target.dead) {
-    // Find closest point on ray segment to target center
     const dist = pointToSegmentDist(target.x, target.y, ray.x1, ray.y1, ray.x2, ray.y2);
     if (dist < target.r + 5) {
       const dmg = charge > 0 ? 5 + Math.floor(charge * 22) : 15;
-      target.hp -= dmg;
-      shooter.hp = Math.min(shooter.maxHp, shooter.hp + Math.ceil(dmg * 0.1));
-      shooter.xp = Math.min(shooter.maxXp, shooter.xp + Math.ceil(dmg * 0.5));
-      shooter.score += dmg;
-      updateScoreDisplay();
-      spawnExplosion(target.x, target.y, COLORS[target.colorIdx].hex, 5);
+      const killed = applyDamage(shooter, target, dmg, target.x, target.y);
+      snd(900 + charge * 500, 0.06, 'square', 0.06, 0.04);
       if (gameMode === 'online' && shooter === player && conn && conn.open) {
         conn.send(JSON.stringify({ type: 'hit', damage: dmg, bulletX: target.x, bulletY: target.y }));
       }
-      if (target.hp <= 0) { target.hp = 0; target.dead = true; startKillCam(shooter, target.x, target.y); spawnShatter(target.x, target.y, COLORS[target.colorIdx].hex, target.r);
+      if (killed) {
+        target.dead = true;
+        startKillCam(shooter, target.x, target.y);
+        spawnShatter(target.x, target.y, COLORS[target.colorIdx].hex, target.r);
+        snd(120, 0.5, 'sawtooth', 0.12);
         if (gameMode === 'online' && shooter === player && conn && conn.open) {
           conn.send(JSON.stringify({ type: 'gameOver', winner: isHost ? 'host' : 'guest' }));
         }
@@ -703,14 +799,18 @@ function fireUlt(shooter, target, chargeLevel) {
     const hitRadius = 8 + clampedCharge * 18;
     const dist = pointToSegmentDist(target.x, target.y, shooter.x, shooter.y, end.x, end.y);
     if (dist < target.r + hitRadius) {
-      target.hp -= damage;
-      shooter.hp = Math.min(shooter.maxHp, shooter.hp + Math.ceil(damage * 0.1));
-      shooter.score += damage;
-      updateScoreDisplay();
+      const killed = applyDamage(shooter, target, damage, target.x, target.y);
       spawnExplosion(target.x, target.y, '#fff', Math.floor(15 + clampedCharge * 50));
       spawnExplosion(target.x, target.y, '#ff0', Math.floor(10 + clampedCharge * 30));
       hitDealt = damage;
-      if (target.hp <= 0) { target.hp = 0; target.dead = true; startKillCam(shooter, target.x, target.y); spawnShatter(target.x, target.y, COLORS[target.colorIdx].hex, target.r); }
+      snd(60, 0.6, 'sawtooth', 0.15);
+      screenShake = Math.max(screenShake, 15);
+      if (killed) {
+        target.dead = true;
+        startKillCam(shooter, target.x, target.y);
+        spawnShatter(target.x, target.y, COLORS[target.colorIdx].hex, target.r);
+        snd(50, 0.8, 'sawtooth', 0.18);
+      }
     }
   }
 
@@ -761,36 +861,48 @@ function startAI() {
   resetAIGame();
 }
 
-function resetAIGame() {
+function resetRound() {
   const pColor = currentUser ? currentUser.colorIdx : 0;
   player = createPlayer(200, H / 2, pColor, true);
-  const aiColor = 1; // magenta
-  ai = {
-    x: 700, y: H / 2, r: 16,
-    hp: 1000, maxHp: 1000,
-    xp: 0, maxXp: 50,
-    score: 0,
-    vx: 0, vy: 0,
-    aimAngle: Math.PI,
-    bowCharge: 0, bowCharging: false, arrowCd: 0,
-    dead: false, difficulty: ai && ai.difficulty ? ai.difficulty : 1,
-    ultiCharging: false, ultiChargeProgress: 0, ultiCooldown: 0,
-    ultiBeam: null, ultiMaxTimer: 0, ultiLockTimer: 0, ultiLocked: false,
-    orbitAngle: Math.random() * Math.PI * 2,
-    dodgeTimer: 0, dodgeVx: 0, dodgeVy: 0,
-    predictAngle: 0, predictWeight: 0,
-    prevPlayerX: 0, prevPlayerY: 0,
-    learnTimer: 0, missedShots: 0,
-    colorIdx: aiColor, isLocal: false
-  };
-  opponent = ai;
-  bullets = []; oppBullets = []; particles = [];
-  gameOver = false;
-  mouseLeftDown = false; mouseRightDown = false;
+  if (gameMode === 'ai') {
+    const oldDiff = ai ? ai.difficulty : 1;
+    const aiColor = 1;
+    ai = {
+      x: 700, y: H / 2, r: 16,
+      hp: 1000, maxHp: 1000,
+      xp: 0, maxXp: 50,
+      score: 0,
+      vx: 0, vy: 0,
+      aimAngle: Math.PI,
+      bowCharge: 0, bowCharging: false, arrowCd: 0,
+      dead: false, difficulty: oldDiff,
+      ultiCharging: false, ultiChargeProgress: 0, ultiCooldown: 0,
+      ultiBeam: null, ultiMaxTimer: 0, ultiLockTimer: 0, ultiLocked: false,
+      orbitAngle: Math.random() * Math.PI * 2,
+      dodgeTimer: 0, dodgeVx: 0, dodgeVy: 0,
+      predictAngle: 0, predictWeight: 0,
+      prevPlayerX: 0, prevPlayerY: 0,
+      learnTimer: 0, missedShots: 0,
+      colorIdx: aiColor, isLocal: false
+    };
+    opponent = ai;
+  } else {
+    const localX = isHost ? 200 : 700;
+    const remoteX = isHost ? 700 : 200;
+    const remoteColor = remoteUser ? remoteUser.colorIdx : 1;
+    opponent = createPlayer(remoteX, H / 2, remoteColor, false);
+  }
+  bullets = []; oppBullets = []; particles = []; dmgNumbers = [];
   killCam = { active: false, timer: 0, maxTimer: 1.8, winner: '', posX: 0, posY: 0, shakeX: 0, shakeY: 0, flashAlpha: 0 };
+  roundPause = 0;
   document.getElementById('msg-overlay').style.display = 'none';
-  document.getElementById('ps').textContent = '0';
-  document.getElementById('ais').textContent = '0';
+  document.getElementById('ps').textContent = player.score;
+  document.getElementById('ais').textContent = opponent.score;
+}
+
+function resetAIGame() {
+  roundWins = { p1: 0, p2: 0 }; matchOver = false;
+  resetRound();
   document.getElementById('p1-label').textContent = currentUser.name;
   document.getElementById('p2-label').textContent = 'AI';
   document.getElementById('p2-label').style.color = '#f0f';
@@ -835,7 +947,7 @@ function updateScoreDisplay() {
 function startOnlineGame() {
   hideAll();
   gameMode = 'online';
-  gameOver = false;
+  roundWins = { p1: 0, p2: 0 }; matchOver = false;
   document.getElementById('hud').style.display = '';
   document.getElementById('bar-wrap').style.display = '';
   document.getElementById('msg-overlay').style.display = 'none';
@@ -859,17 +971,8 @@ function startOnlineGame() {
 }
 
 function resetOnlineGame() {
-  const localX = isHost ? 200 : 700;
-  const remoteX = isHost ? 700 : 200;
-  player = createPlayer(localX, H / 2, currentUser.colorIdx, true);
-  opponent = createPlayer(remoteX, H / 2, remoteUser ? remoteUser.colorIdx : 1, false);
-  bullets = []; oppBullets = []; particles = [];
-  gameOver = false;
-  mouseLeftDown = false; mouseRightDown = false;
-  killCam = { active: false, timer: 0, maxTimer: 1.8, winner: '', posX: 0, posY: 0, shakeX: 0, shakeY: 0, flashAlpha: 0 };
-  document.getElementById('msg-overlay').style.display = 'none';
-  document.getElementById('ps').textContent = '0';
-  document.getElementById('ais').textContent = '0';
+  roundWins = { p1: 0, p2: 0 }; matchOver = false;
+  resetRound();
 }
 
 function handleOnlineGameOver(iWon) {
@@ -880,18 +983,12 @@ function handleOnlineGameOver(iWon) {
 }
 
 function applyHitLocally(data) {
-  // data.damage applied to player (local player was hit by remote)
-  player.hp -= data.damage;
-  if (player.hp < 0) player.hp = 0;
-  opponent.hp = Math.min(opponent.maxHp, opponent.hp + Math.ceil(data.damage * 0.1));
-  opponent.xp = Math.min(opponent.maxXp, opponent.xp + Math.ceil(data.damage * 0.5));
-  opponent.score += data.damage;
-  document.getElementById('ais').textContent = opponent.score;
-  spawnExplosion(data.bulletX, data.bulletY, COLORS[opponent.colorIdx].hex, 8);
-  if (player.hp <= 0 && !killCam.active) {
-    player.hp = 0; player.dead = true;
+  const killed = applyDamage(opponent, player, data.damage, data.bulletX || player.x, data.bulletY || player.y);
+  if (killed && !killCam.active) {
+    player.dead = true;
     startKillCam(opponent, player.x, player.y);
     spawnShatter(player.x, player.y, COLORS[player.colorIdx].hex, player.r);
+    snd(120, 0.5, 'sawtooth', 0.12);
   }
 }
 
@@ -951,7 +1048,7 @@ window.addEventListener('beforeunload', () => {
 
 // ===================== 更新逻辑 =====================
 function updatePlayerInput(p, dt) {
-  if (p.dead || gameOver || killCam.active) return;
+  if (p.dead || matchOver || killCam.active || roundPause > 0) return;
 
   if (p.ultiCooldown > 0) {
     p.ultiCooldown -= dt;
@@ -1059,20 +1156,51 @@ function updatePlayerInput(p, dt) {
 }
 
 function updatePlayerMovement(p, dt, ax, ay) {
-  const ultSlow = p.ultiCharging ? 0.35 : 1;
-  const bowSlow = p.bowCharging ? 0.6 : 1;
-  const speedMul = ultSlow * bowSlow;
-
-  p.vx += (ax * BASE_SPEED * speedMul - p.vx) * 5 * dt;
-  p.vy += (ay * BASE_SPEED * speedMul - p.vy) * 5 * dt;
-  p.x += p.vx * dt;
-  p.y += p.vy * dt;
+  // Dash
+  if (p.dashCd > 0) p.dashCd -= dt;
+  if (p.invuln > 0) p.invuln -= dt;
+  if (p.dashTimer > 0) {
+    p.dashTimer -= dt;
+    p.vx = p._dashVx * (p.dashTimer / 0.15);
+    p.vy = p._dashVy * (p.dashTimer / 0.15);
+    if (p.dashTimer <= 0) { p.dashing = false; p._dashVx = 0; p._dashVy = 0; }
+    p.x += p.vx * dt;
+    p.y += p.vy * dt;
+  } else {
+    const ultSlow = p.ultiCharging ? 0.35 : 1;
+    const bowSlow = p.bowCharging ? 0.6 : 1;
+    const speedMul = ultSlow * bowSlow;
+    p.vx += (ax * BASE_SPEED * speedMul - p.vx) * 5 * dt;
+    p.vy += (ay * BASE_SPEED * speedMul - p.vy) * 5 * dt;
+    p.x += p.vx * dt;
+    p.y += p.vy * dt;
+  }
   p.x = Math.max(p.r, Math.min(W - p.r, p.x));
   p.y = Math.max(p.r, Math.min(H - p.r, p.y));
 }
 
+function tryDash(p) {
+  if (p.dashCd > 0 || p.dashing || p.dead || p.ultiCharging) return;
+  let dx = 0, dy = 0;
+  if (keys['w'] || keys['arrowup']) dy = -1;
+  if (keys['s'] || keys['arrowdown']) dy = 1;
+  if (keys['a'] || keys['arrowleft']) dx = -1;
+  if (keys['d'] || keys['arrowright']) dx = 1;
+  if (dx === 0 && dy === 0) { dx = Math.cos(p.aimAngle); dy = Math.sin(p.aimAngle); }
+  const len = Math.hypot(dx, dy) || 1;
+  const speed = BASE_SPEED * 2.2;
+  p._dashVx = dx / len * speed;
+  p._dashVy = dy / len * speed;
+  p.dashing = true;
+  p.dashTimer = 0.15;
+  p.dashCd = p.dashMaxCd;
+  p.invuln = 0.18;
+  spawnExplosion(p.x, p.y, COLORS[p.colorIdx].hex, 8);
+  snd(300, 0.1, 'triangle', 0.05);
+}
+
 function updateAI(dt) {
-  if (!ai || ai.dead || gameOver || killCam.active) return;
+  if (!ai || ai.dead || matchOver || killCam.active || roundPause > 0) return;
 
   if (ai.ultiCooldown > 0) { ai.ultiCooldown -= dt; if (ai.ultiCooldown <= 0) ai.ultiCooldown = 0; }
 
@@ -1232,7 +1360,7 @@ function updateAI(dt) {
 }
 
 function update(dt) {
-  if (!gameMode || gameOver) return;
+  if (!gameMode || matchOver) return;
 
   if (gameMode === 'ai') {
     updatePlayerInput(player, dt);
@@ -1317,16 +1445,33 @@ function update(dt) {
     killCam.flashAlpha = Math.max(0, intensity * 0.6 - 0.2);
     if (killCam.timer <= 0) {
       killCam.active = false;
-      gameOver = true;
-      const msg = document.getElementById('msg-overlay');
-      msg.style.display = 'block';
-      if (gameMode === 'ai') {
-        msg.textContent = killCam.winner === 'player' ? '你赢了！按 R 重来' : 'AI 获胜！按 R 重来';
+      // Round system: best of 3 (2 wins)
+      if (gameMode === 'ai' || gameMode === 'online') {
+        if (killCam.winner === 'player') roundWins.p1++;
+        else roundWins.p2++;
+        if (roundWins.p1 >= ROUNDS_TO_WIN || roundWins.p2 >= ROUNDS_TO_WIN) {
+          matchOver = true;
+          const msg = document.getElementById('msg-overlay');
+          msg.style.display = 'block';
+          const won = roundWins.p1 >= ROUNDS_TO_WIN;
+          msg.textContent = won ? '比赛胜利！按 R 重来' : (gameMode === 'ai' ? 'AI 获胜！按 R 重来' : '你输了！按 R 重来');
+        } else {
+          roundPause = 1.5; // Brief pause then reset positions
+        }
       } else {
-        msg.textContent = killCam.winner === 'player' ? '你赢了！按 R 重来' : '你输了！按 R 重来';
+        gameOver = true;
       }
     }
   }
+
+  // Round pause
+  if (roundPause > 0) {
+    roundPause -= dt;
+    if (roundPause <= 0) resetRound();
+  }
+
+  // Screen shake decay
+  if (screenShake > 0) screenShake = Math.max(0, screenShake - dt * 30);
 
   // Particles
   for (let i = particles.length - 1; i >= 0; i--) {
@@ -1340,6 +1485,12 @@ function update(dt) {
       p.vx *= 0.94; p.vy *= 0.94;
     }
     if (p.life <= 0) particles.splice(i, 1);
+  }
+
+  // Damage numbers decay
+  for (let i = dmgNumbers.length - 1; i >= 0; i--) {
+    dmgNumbers[i].life -= dt;
+    if (dmgNumbers[i].life <= 0) dmgNumbers.splice(i, 1);
   }
 
   updateHUD();
@@ -1441,6 +1592,19 @@ function updateHUD() {
     document.getElementById('aiultbar').style.background = '#d4a574';
     document.getElementById('aiultlabel').textContent = (gameMode === 'ai' ? 'AI ' : '') + 'sin(x) 就绪';
   }
+
+  // Round indicator
+  const ri = document.getElementById('round-indicator');
+  if (roundWins.p1 === 0 && roundWins.p2 === 0) {
+    ri.textContent = 'B 0 - 0';
+  } else {
+    ri.innerHTML = '<span style="color:#ddd">' + roundWins.p1 + '</span> - <span style="color:#aaa">' + roundWins.p2 + '</span>';
+  }
+  if (roundPause > 0) ri.textContent = 'Round ' + (roundWins.p1 + roundWins.p2 + 1);
+
+  // Dash cooldown indicator
+  const dc = player.dashCd > 0 ? player.dashCd / player.dashMaxCd : 0;
+  document.getElementById('bowbar').style.background = player.dashCd > 0 ? '#555' : (player.dashCd <= 0 ? '#7ea8b8' : '#0f8');
 }
 
 // ===================== 渲染 =====================
@@ -1595,6 +1759,10 @@ function draw() {
       ctx.translate(W / 2, H / 2);
       ctx.scale(zoom, zoom);
       ctx.translate(-W / 2 + killCam.shakeX, -H / 2 + killCam.shakeY);
+    } else if (screenShake > 0.3) {
+      const sx = (Math.random() - 0.5) * screenShake;
+      const sy = (Math.random() - 0.5) * screenShake;
+      ctx.translate(sx, sy);
     }
 
     drawGrid();
@@ -1623,6 +1791,15 @@ function draw() {
         ctx.fillStyle = p.color.replace(')', `,${alpha})`).replace('rgb', 'rgba');
         ctx.beginPath(); ctx.arc(p.x, p.y, p.size * alpha, 0, Math.PI * 2); ctx.fill();
       }
+    }
+
+    // Damage numbers
+    for (const dn of dmgNumbers) {
+      const a = dn.life / dn.maxLife;
+      ctx.fillStyle = dn.color.replace(')', `,${a})`).replace('rgb', 'rgba');
+      ctx.font = 'bold 13px "Courier New", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(dn.text, dn.x, dn.y - (1 - a) * 18);
     }
 
     // Draw player bullets
@@ -1664,7 +1841,7 @@ function draw() {
     if (!opponent.dead) ctx.fillText(oName, opponent.x, opponent.y - 28);
 
     // Aim line — dashed directional line like function graph asymptote
-    if (!player.dead && !gameOver) {
+    if (!player.dead && !matchOver) {
       const end = getBeamEnd(player.x, player.y, player.aimAngle);
       const aimAlpha = player.ultiCharging ? 0.3 : player.bowCharging ? 0.2 : 0.06;
       const aimWidth = player.ultiCharging ? 1.5 : player.bowCharging ? 1 : 0.5;
@@ -1765,8 +1942,8 @@ function draw() {
     ctx.font = '9px "Courier New", monospace';
     ctx.textAlign = 'left';
     const hint = gameMode === 'ai'
-      ? '左键蓄力弓 | 右键大招(需50经验) | WASD移动 | R重来 | 1切换AI难度 | Esc返回'
-      : '左键蓄力弓 | 右键大招(需50经验) | WASD移动 | R重来 | Esc返回';
+      ? 'L:y=kx | R:sin(x) | Shift:冲刺 | WASD | R:重来 | 1:难度 | Esc:返回'
+      : 'L:y=kx | R:sin(x) | Shift:冲刺 | WASD | R:重来 | Esc:返回';
     ctx.fillText(hint, 10, H - 10);
     ctx.textAlign = 'start';
 
@@ -1788,20 +1965,41 @@ function drawBullet(b) {
   const rc = parseInt(hex.slice(1,3), 16);
   const gc = parseInt(hex.slice(3,5), 16);
   const bc = parseInt(hex.slice(5,7), 16);
-  const w = 1 + (b.charge || 0) * 2;
+  const charge = b.charge || 0;
 
   // Ray extends from shooter outward over flight time
   const curX2 = b.x1 + (b.x2 - b.x1) * Math.min(1, progress * 1.3);
   const curY2 = b.y1 + (b.y2 - b.y1) * Math.min(1, progress * 1.3);
 
-  // Outer glow
-  ctx.strokeStyle = `rgba(${rc},${gc},${bc},${alpha * 0.12})`;
-  ctx.lineWidth = w + 5;
+  // Flash at origin point (strongest at beginning)
+  const flashAlpha = alpha * (1 - progress) * 0.5;
+  if (flashAlpha > 0.01) {
+    const grad = ctx.createRadialGradient(b.x1, b.y1, 0, b.x1, b.y1, 12 + charge * 6);
+    grad.addColorStop(0, `rgba(${rc},${gc},${bc},${flashAlpha})`);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(b.x1, b.y1, 12 + charge * 6, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // Layer 1: Wide glow
+  ctx.strokeStyle = `rgba(${rc},${gc},${bc},${alpha * 0.08})`;
+  ctx.lineWidth = 10 + charge * 5;
   ctx.beginPath(); ctx.moveTo(b.x1, b.y1); ctx.lineTo(curX2, curY2); ctx.stroke();
 
-  // Main line
-  ctx.strokeStyle = `rgba(${rc},${gc},${bc},${alpha * 0.75})`;
-  ctx.lineWidth = w;
+  // Layer 2: Medium glow
+  ctx.strokeStyle = `rgba(${rc},${gc},${bc},${alpha * 0.2})`;
+  ctx.lineWidth = 4 + charge * 2.5;
+  ctx.beginPath(); ctx.moveTo(b.x1, b.y1); ctx.lineTo(curX2, curY2); ctx.stroke();
+
+  // Layer 3: Main line
+  ctx.strokeStyle = `rgba(${rc},${gc},${bc},${alpha * 0.7})`;
+  ctx.lineWidth = 1.5 + charge;
+  ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(b.x1, b.y1); ctx.lineTo(curX2, curY2); ctx.stroke();
+
+  // Layer 4: Bright core
+  ctx.strokeStyle = `rgba(${Math.min(255,rc+40)},${Math.min(255,gc+40)},${Math.min(255,bc+40)},${alpha * 0.95})`;
+  ctx.lineWidth = 0.8;
   ctx.beginPath(); ctx.moveTo(b.x1, b.y1); ctx.lineTo(curX2, curY2); ctx.stroke();
 }
 
