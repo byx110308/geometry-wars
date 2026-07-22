@@ -408,6 +408,80 @@ let conn = null;
 let isHost = false;
 let remoteReady = false;
 let joinTimeout = null;
+let roomRefreshTimer = null;
+
+// ===================== 房间服务器 =====================
+// 修改此地址为房间服务器地址（局域网用 IP，例如 http://192.168.1.x:8765）
+const ROOM_SERVER = 'http://localhost:8765';
+
+async function fetchRoomList() {
+  try {
+    const res = await fetch(ROOM_SERVER + '/rooms', { signal: AbortSignal.timeout(3000) });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch(e) { return []; }
+}
+
+async function registerRoom(code) {
+  try {
+    await fetch(ROOM_SERVER + '/register', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ code, name: currentUser.name, players: 1 }),
+      signal: AbortSignal.timeout(3000)
+    });
+  } catch(e) {}
+}
+
+async function unregisterRoom(code) {
+  try {
+    await fetch(ROOM_SERVER + '/unregister', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ code }),
+      signal: AbortSignal.timeout(3000)
+    });
+  } catch(e) {}
+}
+
+async function refreshRoom(code) {
+  try {
+    await fetch(ROOM_SERVER + '/refresh', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ code }),
+      signal: AbortSignal.timeout(3000)
+    });
+  } catch(e) {}
+}
+
+function renderLiveRooms(rooms) {
+  const el = document.getElementById('live-rooms');
+  if (!rooms || !rooms.length) {
+    el.innerHTML = '<div style="color:#444;font-size:11px;">暂无房间</div>';
+    return;
+  }
+  el.innerHTML = rooms.map(r => `
+    <div style="padding:6px 8px;border-bottom:1px solid #1a1a1a;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <span class="room-code-sm" onclick="document.getElementById('join-input').value='${r.code}';document.getElementById('join-input').focus()">${r.code}</span>
+        <span style="font-size:9px;color:#555;margin-left:8px;">${r.host}</span>
+      </div>
+      <span style="font-size:9px;color:#555;">${r.players}P</span>
+    </div>
+  `).join('');
+}
+
+async function startRoomRefresh() {
+  const rooms = await fetchRoomList();
+  renderLiveRooms(rooms);
+  roomRefreshTimer = setInterval(async () => {
+    const r = await fetchRoomList();
+    renderLiveRooms(r);
+  }, 3000);
+}
+
+function stopRoomRefresh() {
+  clearInterval(roomRefreshTimer);
+  roomRefreshTimer = null;
+}
 
 function initPeer(id) {
   if (peer) { peer.destroy(); }
