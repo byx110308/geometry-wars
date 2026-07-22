@@ -1556,8 +1556,25 @@ function updateAI(dt) {
       const shouldFire = (ai.bowCharge >= 0.85) || (ai.bowCharge >= 0.5 && Math.random() < dt * 2)
         || (angleDiff > fireAngleThreshold * 2 && ai.bowCharge >= 0.4);
       if (shouldFire && ai.bowCharge >= 0.4) {
+        const aimSnapshot = ai.aimAngle;
         fireBullet(ai, oppBullets);
         ai.bowCharge = 0; ai.bowCharging = false; ai.arrowCd = 0.25;
+        ai.shotTimestamp = 0.3;
+        ai.shotPlayerX = player.x;
+        ai.shotPlayerY = player.y;
+        if (!player.dead) {
+          const actualA = Math.atan2(player.y - ai.y, player.x - ai.x);
+          let err = actualA - aimSnapshot;
+          while (err > Math.PI) err -= Math.PI * 2;
+          while (err < -Math.PI) err += Math.PI * 2;
+          if (Math.abs(err) > 0.15) {
+            ai.missCount++;
+            ai.predictionConfidence = Math.max(0.15, ai.predictionConfidence - 0.04);
+          } else {
+            ai.hitCount++;
+            ai.predictionConfidence = Math.min(1, ai.predictionConfidence + 0.03);
+          }
+        }
       }
     }
   }
