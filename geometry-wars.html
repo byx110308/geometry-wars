@@ -1096,9 +1096,8 @@ function resetRound() {
       ultiBeam: null, ultiMaxTimer: 0, ultiLockTimer: 0, ultiLocked: false,
       orbitAngle: Math.random() * Math.PI * 2,
       dodgeTimer: 0, dodgeVx: 0, dodgeVy: 0,
-      predictAngle: 0, predictWeight: 0,
       prevPlayerX: 0, prevPlayerY: 0,
-      learnTimer: 0, missedShots: 0,
+      learnTimer: 0, predictedOffset: 0,
       colorIdx: aiColor, isLocal: false
     };
     opponent = ai;
