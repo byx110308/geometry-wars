@@ -412,8 +412,15 @@ let joinTimeout = null;
 let roomRefreshTimer = null;
 
 // ===================== 房间服务器 =====================
-// 修改此地址为房间服务器地址（局域网用 IP，例如 http://192.168.1.x:8765）
-const ROOM_SERVER = 'http://localhost:8765';
+// 自动检测：优先使用当前页面同主机:8765，否则用 localhost
+// 也可手动修改此地址（局域网用 IP，例如 http://192.168.1.x:8765）
+const ROOM_SERVER = (function() {
+  const h = window.location.hostname;
+  if (h && h !== 'localhost' && h !== '127.0.0.1') {
+    return window.location.protocol + '//' + h + ':8765';
+  }
+  return 'http://localhost:8765';
+})();
 
 async function fetchRoomList() {
   try {
