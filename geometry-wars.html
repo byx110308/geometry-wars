@@ -1647,7 +1647,7 @@ function updateAI(dt) {
 
   ai.dodgeTimer -= dt;
   if (ai.dodgeTimer <= 0) {
-    ai.dodgeTimer = 0.15 + Math.random() * 0.3;
+    ai.dodgeTimer = (0.35 - ai.difficulty * 0.1) + Math.random() * (0.5 - ai.difficulty * 0.1);
     ai.dodgeVx = (Math.random() - 0.5) * 240;
     ai.dodgeVy = (Math.random() - 0.5) * 240;
   }
