@@ -353,6 +353,7 @@ function showRegister() {
 }
 function backToMenu() {
   clearTimeout(joinTimeout);
+  stopRoomRefresh();
   hideAll();
   document.getElementById('menu').classList.add('active');
   document.getElementById('menu').style.display = '';
