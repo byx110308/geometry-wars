@@ -556,7 +556,7 @@ function createRoom() {
     // 每60秒刷新房间存活状态
     let refreshInt = setInterval(() => refreshRoom(pid), 60000);
     document.getElementById('lobby-spinner').style.display = 'none';
-    document.getElementById('lobby-status').textContent = '等待对手加入...（如无法加入请检查是否在同一网络）';
+    document.getElementById('lobby-status').textContent = '等待对手加入... 房间码: ' + pid + '（直接输入可直连，无需房间服务器）';
     document.getElementById('room-code').style.display = '';
     document.getElementById('room-code').textContent = pid;
     document.getElementById('room-code').title = '点击复制房间码';
