@@ -393,6 +393,19 @@ function joinRoom() {
     isHost = false;
     const c = peer.connect(code, { reliable: true });
     setupConnection(c);
+    // Connection timeout
+    joinTimeout = setTimeout(() => {
+      if (gameMode !== 'online') {
+        document.getElementById('lobby-status').textContent = '无法加入房间（超时）';
+        document.getElementById('lobby-spinner').style.display = 'none';
+        if (c) { c.close(); }
+        if (peer) { peer.destroy(); peer = null; }
+      }
+    }, 15000);
+  });
+  peer.on('error', (err) => {
+    clearTimeout(joinTimeout);
+    document.getElementById('lobby-spinner').style.display = 'none';
   });
 }
 
