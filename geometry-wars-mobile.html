@@ -1310,15 +1310,23 @@ function draw() {
     if(!player.dead){ctx.fillText(currentUser.name,player.x,player.y-26);if(player.stillTimer>2.0){const wa=Math.min(1,(player.stillTimer-2.0)/1.0),pa=wa*(0.4+Math.sin(Date.now()*0.008)*0.3);ctx.strokeStyle='rgba(201,125,138,'+pa+')';ctx.lineWidth=2;ctx.setLineDash([4,2]);ctx.beginPath();ctx.arc(player.x,player.y,player.r+10,-Math.PI/2,-Math.PI/2+Math.PI*2*Math.min(1,(player.stillTimer-2.0)/1.0));ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(201,125,138,'+(wa*0.5)+')';ctx.font='9px "Courier New",monospace';ctx.fillText(player.stillTimer>3.0?'静止惩罚中':'请移动!',player.x,player.y-36);}}
     ctx.fillStyle=oColor;const oName=gameMode==='ai'?'AI':(remoteUser?remoteUser.name:'对手');if(!opponent.dead)ctx.fillText(oName,opponent.x,opponent.y-26);
 
-    // Aim line — dashed ray from player (hidden during cooldown)
-    if(!player.dead&&!matchOver&&player.arrowCd<=0){
+    // Aim line — dashed ray from player (always visible during ult)
+    if(!player.dead&&!matchOver&&(player.arrowCd<=0||player.ultiCharging)){
       const end=getBeamEnd(player.x,player.y,player.aimAngle);
-      const isUlt=player.ultiCharging, isBow=player.bowCharging;
+      const isUlt=player.ultiCharging, isBow=!isUlt&&player.bowCharging;
       const a=isUlt?0.55:isBow?0.35:0.06, w=isUlt?2.5:isBow?1.8:0.6;
       ctx.strokeStyle='rgba('+parseInt(pColor.slice(1,3),16)+','+parseInt(pColor.slice(3,5),16)+','+parseInt(pColor.slice(5,7),16)+','+a+')';
-      ctx.lineWidth=w;ctx.setLineDash([4,5]);
-      ctx.beginPath();
+      ctx.lineWidth=w;ctx.setLineDash([4,5]);ctx.beginPath();
       ctx.moveTo(player.x+Math.cos(player.aimAngle)*(player.r+8),player.y+Math.sin(player.aimAngle)*(player.r+8));
+      ctx.lineTo(end.x,end.y);ctx.stroke();ctx.setLineDash([]);
+    }
+    // AI aim line during ult
+    if(gameMode==='ai'&&ai&&!ai.dead&&!matchOver&&ai.ultiCharging){
+      const end=getBeamEnd(ai.x,ai.y,ai.aimAngle);
+      const aiColor=COLORS[ai.colorIdx||1].hex;
+      ctx.strokeStyle='rgba('+parseInt(aiColor.slice(1,3),16)+','+parseInt(aiColor.slice(3,5),16)+','+parseInt(aiColor.slice(5,7),16)+',0.5)';
+      ctx.lineWidth=2;ctx.setLineDash([4,5]);ctx.beginPath();
+      ctx.moveTo(ai.x+Math.cos(ai.aimAngle)*(ai.r+8),ai.y+Math.sin(ai.aimAngle)*(ai.r+8));
       ctx.lineTo(end.x,end.y);ctx.stroke();ctx.setLineDash([]);
     }
     ctx.restore();
