@@ -1167,6 +1167,89 @@ function disconnectAndMenu() {
   backToMenu();
 }
 
+// ===================== 历史界面 =====================
+function showHistory() {
+  if (!currentUser) { showRegister(); return; }
+  hideAll();
+  document.getElementById('history').classList.add('active');
+  document.getElementById('history').style.display = '';
+  switchHistoryTab('record');
+}
+
+function switchHistoryTab(tab) {
+  document.querySelectorAll('#history .tab-btn').forEach(b => b.classList.toggle('on', false));
+  document.querySelectorAll('#history .tab-content').forEach(c => c.classList.toggle('on', false));
+  if (tab === 'record') {
+    document.querySelector('#history .tab-btn:nth-child(1)').classList.add('on');
+    document.getElementById('tab-record').classList.add('on');
+    renderRecords();
+  } else {
+    document.querySelector('#history .tab-btn:nth-child(2)').classList.add('on');
+    document.getElementById('tab-room').classList.add('on');
+    renderRooms();
+  }
+}
+
+function formatTime(ts) {
+  const d = new Date(ts);
+  const pad = n => String(n).padStart(2,'0');
+  return pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+
+function renderRecords() {
+  const h = loadHistory();
+  const stats = document.getElementById('stats-bar');
+  const list = document.getElementById('record-list');
+  const wins = h.matches.filter(m => m.result === 'win').length;
+  const total = h.matches.length;
+  stats.innerHTML = `
+    <div class="stat-item"><div class="stat-num">${total}</div><div class="stat-label">总场次</div></div>
+    <div class="stat-item"><div class="stat-num">${wins}</div><div class="stat-label">胜</div></div>
+    <div class="stat-item"><div class="stat-num">${total - wins}</div><div class="stat-label">负</div></div>
+    <div class="stat-item"><div class="stat-num">${total ? Math.round(wins / total * 100) : 0}%</div><div class="stat-label">胜率</div></div>
+  `;
+  if (!h.matches.length) {
+    list.innerHTML = '<div class="list-empty">暂无战绩</div>';
+    return;
+  }
+  list.innerHTML = h.matches.map(m => {
+    const cls = m.result === 'win' ? 'result-win' : 'result-lose';
+    const txt = m.result === 'win' ? '胜' : '负';
+    const mode = m.mode === 'ai' ? '人机' : '联机';
+    return `<div class="list-item">
+      <span style="color:#555;">[${mode}]</span>
+      <span style="color:#888;">vs ${m.opponent}</span>
+      <span>${m.myScore}:${m.oppScore}</span>
+      <span class="${cls}">${txt}</span>
+      <span style="color:#444;font-size:10px;">${formatTime(m.time)}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderRooms() {
+  const h = loadHistory();
+  const list = document.getElementById('room-list');
+  if (!h.rooms.length) {
+    list.innerHTML = '<div class="list-empty">暂无房间记录</div>';
+    return;
+  }
+  list.innerHTML = h.rooms.map(r => {
+    const role = r.role === 'host' ? '创建' : '加入';
+    return `<div class="list-item">
+      <span style="color:#555;">[${role}]</span>
+      <span class="room-code-sm" onclick="copyRoomCode('${r.code}',this)">${r.code}</span>
+      <span style="color:#444;font-size:10px;">${formatTime(r.time)}</span>
+    </div>`;
+  }).join('');
+}
+
+function copyRoomCode(code, el) {
+  navigator.clipboard.writeText(code).then(() => {
+    el.style.color = '#4a4';
+    setTimeout(() => { el.style.color = '#d4a574'; }, 600);
+  }).catch(() => {});
+}
+
 window.addEventListener('beforeunload', () => {
   if (peer) { try { peer.destroy(); } catch (e) {} }
 });
