@@ -519,12 +519,16 @@ function initPeer(id) {
   });
   peer.on('error', (err) => {
     console.error('Peer error:', err);
-    document.getElementById('lobby-status').textContent = '连接失败: ' + err.type;
+    let msg = '信令连接失败: ' + err.type;
+    if (err.type === 'unavailable-id') msg = '房间码已被占用，请重新创建';
+    else if (err.type === 'network' || err.type === 'server-error') msg = '无法连接到信令服务器，请检查网络';
+    document.getElementById('lobby-status').textContent = msg;
     document.getElementById('lobby-spinner').style.display = 'none';
   });
   peer.on('disconnected', () => {
     console.log('Peer disconnected from server, reconnecting...');
     if (peer && !peer.destroyed) {
+      document.getElementById('lobby-status').textContent = '信令断开，正在重连...';
       peer.reconnect();
     }
   });
