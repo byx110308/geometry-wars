@@ -1513,7 +1513,8 @@ function updateAI(dt) {
     ai.learnTimer = 0;
     const dx = player.x - ai.prevPlayerX;
     const dy = player.y - ai.prevPlayerY;
-    if (ai.prevPlayerX !== 0) {
+    const moved = Math.hypot(dx, dy);
+    if (ai.prevPlayerX !== 0 && moved > 8) {
       const predX = player.x + dx * 2.5;
       const predY = player.y + dy * 2.5;
       const predAngle = Math.atan2(predY - ai.y, predX - ai.x);
@@ -1521,6 +1522,8 @@ function updateAI(dt) {
       while (offset > Math.PI) offset -= Math.PI * 2;
       while (offset < -Math.PI) offset += Math.PI * 2;
       ai.predictedOffset += (offset - ai.predictedOffset) * 0.25;
+    } else if (ai.prevPlayerX !== 0) {
+      ai.predictedOffset += (0 - ai.predictedOffset) * 0.3;
     }
     ai.prevPlayerX = player.x;
     ai.prevPlayerY = player.y;
