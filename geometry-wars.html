@@ -262,6 +262,41 @@ const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wa
 
 let currentUser = null; // { name, passHashed, colorIdx }
 
+// ===================== 战绩 & 房间记录 =====================
+function loadHistory() {
+  try {
+    return JSON.parse(localStorage.getItem('gw_history') || '{"matches":[],"rooms":[]}');
+  } catch(e) { return {matches:[], rooms:[]}; }
+}
+function saveHistory(h) { localStorage.setItem('gw_history', JSON.stringify(h)); }
+
+function recordMatch(mode, opponent, iWon, myScore, oppScore) {
+  const h = loadHistory();
+  h.matches.unshift({
+    time: Date.now(),
+    mode: mode,    // 'ai' | 'online'
+    opponent: opponent,
+    result: iWon ? 'win' : 'lose',
+    myScore: myScore,
+    oppScore: oppScore
+  });
+  if (h.matches.length > 50) h.matches.length = 50;
+  saveHistory(h);
+}
+
+function recordRoom(code, role) {
+  const h = loadHistory();
+  h.rooms.unshift({
+    time: Date.now(),
+    code: code,
+    role: role  // 'host' | 'guest'
+  });
+  // deduplicate by code
+  h.rooms = h.rooms.filter((r, i, a) => a.findIndex(x => x.code === r.code) === i);
+  if (h.rooms.length > 20) h.rooms.length = 20;
+  saveHistory(h);
+}
+
 function loadUser() {
   const raw = localStorage.getItem('gw_user');
   if (raw) {
