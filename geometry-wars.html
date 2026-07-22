@@ -1806,6 +1806,29 @@ function update(dt) {
   gridOffsetX = 0;
   gridOffsetY = 0;
 
+  // Anti-camping: penalize prolonged standing still
+  if (player && !player.dead && !matchOver && !killCam.active && roundPause <= 0) {
+    const playerSpeed = Math.hypot(player.vx, player.vy);
+    const isMoving = playerSpeed > 8 || player.dashing;
+    if (isMoving) {
+      player.stillTimer = Math.max(0, player.stillTimer - dt * 2);
+    } else {
+      player.stillTimer += dt;
+      if (player.stillTimer > 3.0) {
+        player.hp -= player.maxHp * 0.06 * dt;
+        if (player.hp <= 0) {
+          player.hp = 0;
+          player.dead = true;
+          if (gameMode === 'ai') {
+            startKillCam(ai, player.x, player.y);
+            spawnShatter(player.x, player.y, COLORS[player.colorIdx].hex, player.r);
+            snd(120, 0.5, 'sawtooth', 0.12);
+          }
+        }
+      }
+    }
+  }
+
   // Update bullet rays (timers only)
   for (const arr of [bullets, oppBullets]) {
     for (let i = arr.length - 1; i >= 0; i--) {
