@@ -377,14 +377,18 @@ function createRoom() {
   peer.on('open', (pid) => {
     isHost = true;
     document.getElementById('lobby-spinner').style.display = 'none';
-    document.getElementById('lobby-status').textContent = '等待对手加入...';
+    document.getElementById('lobby-status').textContent = '等待对手加入...（如无法加入请检查是否在同一网络）';
     document.getElementById('room-code').style.display = '';
     document.getElementById('room-code').textContent = pid;
-    // Listen for connections
     peer.on('connection', (c) => {
       if (conn) { c.close(); return; }
       setupConnection(c);
     });
+  });
+  peer.on('disconnected', () => {
+    if (isHost) {
+      document.getElementById('lobby-status').textContent = '连接断开，正在重连...';
+    }
   });
 }
 
