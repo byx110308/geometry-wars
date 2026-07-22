@@ -1242,6 +1242,7 @@ function handleOnlineGameOver(iWon) {
   const msg = document.getElementById('msg-overlay');
   msg.style.display = 'block';
   msg.textContent = iWon ? '你赢了！按 R 重来' : '你输了！按 R 重来';
+  if (window._updatePending) setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + VERSION; }, 3000);
 }
 
 function applyHitLocally(data) {
