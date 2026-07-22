@@ -1532,7 +1532,7 @@ function updateAI(dt) {
     ai.prevPlayerY = player.y;
   }
 
-  let targetAngle = angleToPlayer + (ai.predictedOffset || 0) * ai.difficulty * 1.2;
+  let targetAngle = angleToPlayer + (ai.predictedOffset || 0) * ai.difficulty * 1.2 * ai.predictionConfidence;
   while (targetAngle > Math.PI) targetAngle -= Math.PI * 2;
   while (targetAngle < -Math.PI) targetAngle += Math.PI * 2;
 
