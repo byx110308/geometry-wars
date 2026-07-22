@@ -85,14 +85,17 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
 #charge-ring{position:absolute;transform:translate(-50%,-50%);display:none;pointer-events:none}
 
 /* action buttons */
-.ctrl-btn{position:absolute;border:1.5px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.55);font-family:'Courier New',monospace;text-align:center;letter-spacing:2px;transition:background .1s,border-color .1s,color .1s;border-radius:4px;font-size:clamp(9px,1.8vw,11px)}
+.ctrl-btn{position:absolute;border:1.5px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.55);font-family:'Courier New',monospace;text-align:center;letter-spacing:2px;transition:background .15s,border-color .15s,color .15s,box-shadow .15s;border-radius:4px;font-size:clamp(9px,1.8vw,11px)}
 .ctrl-btn:active,.ctrl-btn.pressed{background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.6);color:rgba(255,255,255,0.85)}
 .ctrl-btn.fire{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.6)}
 .ctrl-btn.fire:active,.ctrl-btn.fire.pressed{background:rgba(255,255,255,0.22);border-color:rgba(255,255,255,0.65);color:#fff}
+.ctrl-btn.fire.ult-mode{background:rgba(212,165,116,0.12);border-color:rgba(212,165,116,0.45);color:rgba(212,165,116,0.75)}
+.ctrl-btn.fire.ult-mode.pressed{background:rgba(212,165,116,0.25);border-color:rgba(212,165,116,0.7);color:#d4a574;box-shadow:0 0 16px rgba(212,165,116,0.35)}
 .ctrl-btn.ult{color:rgba(212,165,116,0.55);border-color:rgba(212,165,116,0.25);background:rgba(212,165,116,0.06)}
-.ctrl-btn.ult:active,.ctrl-btn.ult.pressed{color:rgba(212,165,116,0.9);background:rgba(212,165,116,0.18);border-color:rgba(212,165,116,0.55)}
-.ctrl-btn.ult.ready{animation:ult-pulse 1.5s ease-in-out infinite}
-@keyframes ult-pulse{0%,100%{border-color:rgba(212,165,116,0.25)}50%{border-color:rgba(212,165,116,0.7)}}
+.ctrl-btn.ult.dim{opacity:0.35;color:rgba(212,165,116,0.2);border-color:rgba(212,165,116,0.1);background:rgba(212,165,116,0.02);animation:none;box-shadow:none}
+.ctrl-btn.ult.ready{animation:ult-pulse 1.5s ease-in-out infinite;opacity:1}
+@keyframes ult-pulse{0%,100%{border-color:rgba(212,165,116,0.25);box-shadow:0 0 4px rgba(212,165,116,0.1)}50%{border-color:rgba(212,165,116,0.7);box-shadow:0 0 12px rgba(212,165,116,0.3)}}
+.ctrl-btn.ult.primed{animation:none;color:#d4a574;background:rgba(212,165,116,0.22);border-color:rgba(212,165,116,0.7);box-shadow:0 0 14px rgba(212,165,116,0.45);opacity:1}
 .ctrl-btn.dash{background:rgba(126,168,184,0.08);border-color:rgba(126,168,184,0.2);color:rgba(126,168,184,0.5)}
 .ctrl-btn.dash:active,.ctrl-btn.dash.pressed{background:rgba(126,168,184,0.18);border-color:rgba(126,168,184,0.5);color:rgba(126,168,184,0.8)}
 
@@ -138,9 +141,9 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
     <div id="stick-thumb"></div>
     <div id="aim-dot"></div>
     <canvas id="charge-ring" width="80" height="80"></canvas>
-    <button class="ctrl-btn dash" id="btn-dash" style="width:48px;height:48px;border-radius:50%;bottom:clamp(28px,5.5vh,48px);left:clamp(10px,2.5vw,28px);font-size:9px">DASH</button>
-    <button class="ctrl-btn fire" id="btn-fire" style="width:clamp(54px,10vw,64px);height:clamp(54px,10vw,64px);border-radius:50%;bottom:clamp(28px,5.5vh,48px);right:clamp(120px,24vw,170px);font-size:clamp(9px,1.8vw,11px);letter-spacing:1px">FIRE</button>
-    <button class="ctrl-btn ult" id="btn-ult" style="width:clamp(48px,9vw,56px);height:clamp(48px,9vw,56px);border-radius:50%;bottom:clamp(28px,5.5vh,48px);right:clamp(40px,8vw,80px);font-size:8px;letter-spacing:1px">ULT</button>
+    <button class="ctrl-btn dash" id="btn-dash" style="width:46px;height:46px;border-radius:50%;top:50%;left:clamp(10px,2.5vw,28px);transform:translateY(-50%);font-size:8px">DASH</button>
+    <button class="ctrl-btn fire" id="btn-fire" style="width:clamp(56px,11vw,66px);height:clamp(56px,11vw,66px);border-radius:50%;bottom:clamp(28px,5.5vh,48px);right:clamp(50px,10vw,100px);font-size:clamp(10px,1.8vw,12px);letter-spacing:1px">FIRE</button>
+    <button class="ctrl-btn ult dim" id="btn-ult" style="width:clamp(30px,6vw,38px);height:clamp(30px,6vw,38px);border-radius:50%;bottom:clamp(90px,17vh,118px);right:clamp(40px,8vw,82px);font-size:clamp(6px,1.2vw,8px);letter-spacing:1px">U</button>
     <button class="ctrl-btn" id="btn-menu" style="width:clamp(32px,6vw,40px);height:clamp(32px,6vw,40px);border-radius:50%;top:clamp(6px,1.5vh,12px);right:clamp(6px,1.5vw,12px);font-size:8px;letter-spacing:0;position:absolute">✕</button>
   </div>
 
@@ -235,7 +238,7 @@ window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200)
 resizeCanvas();
 
 // ===================== COLORS & VERSION =====================
-const VERSION = 15;
+const VERSION = 16;
 const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wars-mobile.html';
 
 const COLORS = [
@@ -469,9 +472,10 @@ let roundWins = {p1:0,p2:0}; const ROUNDS_TO_WIN = 2; let roundPause = 0, matchO
 let dmgNumbers = [], screenShake = 0;
 
 // ===================== TOUCH INPUT =====================
-let touchState = { moveId: null, aimId: null, ultId: null, fireId: null, moveX: 0, moveY: 0, moveBaseX: 0, moveBaseY: 0,
-  aimX: 0, aimY: 0, aiming: false, ultDown: false, fireDown: false, dashTap: false };
+let touchState = { moveId: null, aimId: null, fireId: null, moveX: 0, moveY: 0, moveBaseX: 0, moveBaseY: 0,
+  aimX: 0, aimY: 0, fireDown: false };
 let aimTouchActive = false;
+let ultPrimed = false;
 
 function canvasCoords(e) {
   const rect = c.getBoundingClientRect();
@@ -486,6 +490,9 @@ const stickThumb = document.getElementById('stick-thumb');
 const aimDot = document.getElementById('aim-dot');
 const chargeRing = document.getElementById('charge-ring');
 const crCtx = chargeRing.getContext('2d');
+const btnUlt = document.getElementById('btn-ult');
+const btnFire = document.getElementById('btn-fire');
+const btnDash = document.getElementById('btn-dash');
 
 function showStick(x, y) {
   stickBase.style.display = 'block';
@@ -522,29 +529,57 @@ ctrlLayer.addEventListener('touchstart', function(e) {
   e.preventDefault();
   for (let i = 0; i < e.changedTouches.length; i++) {
     const t = e.changedTouches[i];
+    const target = t.target;
     const rect = c.getBoundingClientRect();
-    const sx = t.clientX - rect.left;
-    const sy = t.clientY - rect.top;
+    const sx = t.clientX - rect.left, sy = t.clientY - rect.top;
     const gx = sx / scale, gy = sy / scale;
     const midX = rect.width / 2;
 
+    if (target.id === 'btn-fire' && gameMode && !gameOver) {
+      touchState.fireDown = true;
+      touchState.fireId = t.identifier;
+      btnFire.classList.add('pressed');
+      updateAimUI(gx, gy);
+      if (player && !player.dead) player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
+      initAudio();
+      continue;
+    }
+    if (target.id === 'btn-ult' && gameMode && !gameOver && !matchOver) {
+      initAudio();
+      if (player && player.xp >= player.maxXp && player.ultiCooldown <= 0 && !player.dead) {
+        ultPrimed = !ultPrimed;
+        if (ultPrimed) {
+          btnUlt.classList.add('primed');
+          btnUlt.classList.remove('ready');
+          btnFire.classList.add('ult-mode');
+        } else {
+          btnUlt.classList.remove('primed');
+          btnFire.classList.remove('ult-mode');
+        }
+      }
+      btnUlt.classList.add('pressed');
+      setTimeout(() => btnUlt.classList.remove('pressed'), 120);
+      continue;
+    }
+    if (target.id === 'btn-dash' && gameMode && !gameOver) {
+      btnDash.classList.add('pressed');
+      if (player && !matchOver) { initAudio(); tryDash(player); }
+      setTimeout(() => btnDash.classList.remove('pressed'), 150);
+      continue;
+    }
+    if (target.id === 'btn-menu') { disconnectAndMenu(); continue; }
+
     if (sx < midX && touchState.moveId === null) {
-      // Left half: movement joystick
       touchState.moveId = t.identifier;
       touchState.moveBaseX = sx;
       touchState.moveBaseY = sy;
       showStick(sx, sy);
     } else if (sx >= midX && touchState.aimId === null && gameMode && !gameOver) {
-      // Right half: aim only (fire is on dedicated button)
       touchState.aimId = t.identifier;
-      touchState.aiming = true;
       aimTouchActive = true;
-      touchState.aimX = gx;
-      touchState.aimY = gy;
+      touchState.aimX = gx; touchState.aimY = gy;
       updateAimUI(gx, gy);
-      if (player && !player.dead) {
-        player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
-      }
+      if (player && !player.dead) player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
     }
   }
 }, {passive: false});
@@ -568,12 +603,13 @@ ctrlLayer.addEventListener('touchmove', function(e) {
       touchState.moveY = dist > 8 ? (dy / dist) * norm : 0;
     }
     if (t.identifier === touchState.aimId) {
-      touchState.aimX = gx;
-      touchState.aimY = gy;
+      touchState.aimX = gx; touchState.aimY = gy;
       updateAimUI(gx, gy);
-      if (player && !player.dead) {
-        player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
-      }
+      if (player && !player.dead) player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
+    }
+    if (t.identifier === touchState.fireId) {
+      updateAimUI(gx, gy);
+      if (player && !player.dead) player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
     }
   }
 }, {passive: false});
@@ -583,97 +619,29 @@ ctrlLayer.addEventListener('touchend', function(e) {
   for (let i = 0; i < e.changedTouches.length; i++) {
     const t = e.changedTouches[i];
     if (t.identifier === touchState.moveId) {
-      touchState.moveId = null;
-      touchState.moveX = 0;
-      touchState.moveY = 0;
+      touchState.moveId = null; touchState.moveX = 0; touchState.moveY = 0;
       hideStick();
-      touchState.dashTap = true;
     }
     if (t.identifier === touchState.aimId) {
-      touchState.aimId = null;
-      touchState.aiming = false;
-      aimTouchActive = false;
+      touchState.aimId = null; aimTouchActive = false;
       aimDot.style.display = 'none';
     }
-    if (t.identifier === touchState.ultId) {
-      touchState.ultDown = false;
-      touchState.ultId = null;
-      document.getElementById('btn-ult').classList.remove('pressed');
-    }
     if (t.identifier === touchState.fireId) {
-      touchState.fireDown = false;
-      touchState.fireId = null;
-      document.getElementById('btn-fire').classList.remove('pressed');
+      touchState.fireDown = false; touchState.fireId = null;
+      btnFire.classList.remove('pressed');
+      aimDot.style.display = 'none';
     }
   }
 }, {passive: false});
 
 ctrlLayer.addEventListener('touchcancel', function(e) {
   touchState.moveId = null; touchState.moveX = 0; touchState.moveY = 0;
-  touchState.aimId = null; touchState.aiming = false; aimTouchActive = false;
-  touchState.ultDown = false; touchState.ultId = null;
+  touchState.aimId = null; aimTouchActive = false;
   touchState.fireDown = false; touchState.fireId = null;
   hideStick(); aimDot.style.display = 'none';
-  document.getElementById('btn-ult').classList.remove('pressed');
-  document.getElementById('btn-fire').classList.remove('pressed');
-  document.getElementById('btn-dash').classList.remove('pressed');
-});
-
-// Ult button
-const btnUlt = document.getElementById('btn-ult');
-btnUlt.addEventListener('touchstart', function(e) {
-  e.preventDefault(); e.stopPropagation();
-  touchState.ultDown = true;
-  touchState.ultId = (e.changedTouches[0] || e.touches[0]).identifier;
-  btnUlt.classList.add('pressed');
-  initAudio();
-}, {passive: false});
-btnUlt.addEventListener('touchend', function(e) {
-  e.preventDefault(); e.stopPropagation();
-  touchState.ultDown = false;
-  touchState.ultId = null;
-  btnUlt.classList.remove('pressed');
-}, {passive: false});
-btnUlt.addEventListener('touchcancel', function(e) {
-  touchState.ultDown = false;
-  touchState.ultId = null;
-  btnUlt.classList.remove('pressed');
-});
-
-// Fire button
-const btnFire = document.getElementById('btn-fire');
-btnFire.addEventListener('touchstart', function(e) {
-  e.preventDefault(); e.stopPropagation();
-  touchState.fireDown = true;
-  touchState.fireId = (e.changedTouches[0] || e.touches[0]).identifier;
-  btnFire.classList.add('pressed');
-  initAudio();
-}, {passive: false});
-btnFire.addEventListener('touchend', function(e) {
-  e.preventDefault(); e.stopPropagation();
-  touchState.fireDown = false;
-  touchState.fireId = null;
-  btnFire.classList.remove('pressed');
-}, {passive: false});
-btnFire.addEventListener('touchcancel', function(e) {
-  touchState.fireDown = false;
-  touchState.fireId = null;
-  btnFire.classList.remove('pressed');
-});
-
-// Dash button
-const btnDash = document.getElementById('btn-dash');
-btnDash.addEventListener('touchstart', function(e) {
-  e.preventDefault(); e.stopPropagation();
-  btnDash.classList.add('pressed');
-  if (gameMode && player && !matchOver) { initAudio(); tryDash(player); }
-  setTimeout(() => btnDash.classList.remove('pressed'), 150);
-}, {passive: false});
-
-// Menu button
-document.getElementById('btn-menu').addEventListener('touchstart', function(e) {
-  e.preventDefault(); e.stopPropagation();
-  disconnectAndMenu();
+  btnUlt.classList.remove('pressed','primed');
+  btnFire.classList.remove('pressed','ult-mode');
+  btnDash.classList.remove('pressed');
 });
 
 // ===================== AUDIO =====================
@@ -913,9 +881,12 @@ function updatePlayerInput(p, dt) {
   if (p.ultiCooldown > 0) { p.ultiCooldown -= dt; if (p.ultiCooldown <= 0) p.ultiCooldown = 0; }
   const target = (p === player) ? opponent : player;
   const canUlt = p.ultiCooldown <= 0 && p.xp >= p.maxXp;
-  const ultDown = (p === player) ? touchState.ultDown : false;
+  const fireHeld = (p === player) ? touchState.fireDown : false;
+  const ultActive = (p === player) ? (fireHeld && ultPrimed && canUlt) : false;
+  const bowActive = (p === player) ? (fireHeld && !ultPrimed) : false;
 
-  if (ultDown && canUlt) {
+  // Ult charging via FIRE button when ultPrimed
+  if (ultActive) {
     if (!p.ultiCharging) { p.ultiCharging = true; p.ultiChargeProgress = 0; p.ultiMaxTimer = 0; p.ultiLockTimer = 0; p.ultiLocked = false; }
     p.ultiChargeProgress = Math.min(1, p.ultiChargeProgress + dt / 1.2);
     if (p.ultiChargeProgress >= 1.0) {
@@ -927,6 +898,7 @@ function updatePlayerInput(p, dt) {
       else { p.ultiLockTimer = Math.max(0, p.ultiLockTimer - dt * 2); if (p.ultiLockTimer < 0.2) p.ultiLocked = false; }
       if (p.ultiMaxTimer >= 0.6 || p.ultiLocked) {
         const hitDmg = fireUlt(p, target, 1.0); p.xp = 0; p.ultiCharging = false;
+        ultPrimed = false; btnUlt.classList.remove('primed'); btnFire.classList.remove('ult-mode');
         if (gameMode === 'online' && p === player && conn && conn.open) {
           const end = p.ultiBeam ? {x1:p.ultiBeam.x1,y1:p.ultiBeam.y1,x2:p.ultiBeam.x2,y2:p.ultiBeam.y2} : {x1:0,y1:0,x2:0,y2:0};
           conn.send(JSON.stringify({type:'fireUlt',chargeLevel:1.0,beamDuration:p.ultiBeam?p.ultiBeam.maxTimer:0.3,x1:end.x1,y1:end.y1,x2:end.x2,y2:end.y2}));
@@ -935,9 +907,10 @@ function updatePlayerInput(p, dt) {
         }
       }
     }
-  } else if (!ultDown && p.ultiCharging) {
+  } else if (!ultActive && p.ultiCharging) {
     if (p.ultiChargeProgress >= 0.25) {
       const hitDmg = fireUlt(p, target, p.ultiChargeProgress); p.xp = 0;
+      ultPrimed = false; btnUlt.classList.remove('primed'); btnFire.classList.remove('ult-mode');
       if (gameMode === 'online' && p === player && conn && conn.open) {
         const end = p.ultiBeam ? {x1:p.ultiBeam.x1,y1:p.ultiBeam.y1,x2:p.ultiBeam.x2,y2:p.ultiBeam.y2} : {x1:0,y1:0,x2:0,y2:0};
         conn.send(JSON.stringify({type:'fireUlt',chargeLevel:p.ultiChargeProgress,beamDuration:p.ultiBeam?p.ultiBeam.maxTimer:0.3,x1:end.x1,y1:end.y1,x2:end.x2,y2:end.y2}));
@@ -950,13 +923,11 @@ function updatePlayerInput(p, dt) {
 
   if (p.arrowCd > 0) { p.arrowCd -= dt; if (p.arrowCd <= 0) p.arrowCd = 0; }
 
-  // Mobile: FIRE button = charge + release to fire
-  const bowDown = (p === player) ? touchState.fireDown : false;
-
-  if (bowDown && p.arrowCd <= 0 && !p.ultiCharging) {
+  // Bow charging via FIRE button (normal mode)
+  if (bowActive && p.arrowCd <= 0 && !p.ultiCharging) {
     if (!p.bowCharging) { p.bowCharging = true; p.bowCharge = 0; }
     p.bowCharge = Math.min(1, p.bowCharge + dt / 0.5);
-  } else if (p.bowCharging && !bowDown) {
+  } else if (p.bowCharging && !bowActive) {
     if (p.bowCharge >= 0.4) {
       fireBullet(p, bullets); p.arrowCd = 0.18;
       if (gameMode === 'online' && p === player && conn && conn.open) {
@@ -967,7 +938,7 @@ function updatePlayerInput(p, dt) {
     p.bowCharge = 0; p.bowCharging = false;
   }
 
-  if ((p === player) && !p.bowCharging && !bowDown && p.bowCharge < 0.4 && p.bowCharge > 0) {
+  if ((p === player) && !p.bowCharging && !bowActive && p.bowCharge < 0.4 && p.bowCharge > 0) {
     p.bowCharge = Math.max(0, p.bowCharge - dt * 5);
   }
 }
@@ -1112,10 +1083,19 @@ function update(dt) {
   }
   for (let i = dmgNumbers.length-1; i >= 0; i--) { dmgNumbers[i].life -= dt; if (dmgNumbers[i].life <= 0) dmgNumbers.splice(i, 1); }
   updateHUD();
-  // Ult button ready pulse
-  if (player && player.xp >= player.maxXp && player.ultiCooldown <= 0 && !player.ultiCharging && !matchOver) {
-    document.getElementById('btn-ult').classList.add('ready');
-  } else { document.getElementById('btn-ult').classList.remove('ready'); }
+  // ULT button visual state
+  if (player && !matchOver) {
+    if (ultPrimed) {
+      btnUlt.classList.add('primed'); btnUlt.classList.remove('ready','dim');
+      btnFire.classList.add('ult-mode');
+    } else if (player.xp >= player.maxXp && player.ultiCooldown <= 0 && !player.ultiCharging) {
+      btnUlt.classList.add('ready'); btnUlt.classList.remove('primed','dim');
+    } else {
+      btnUlt.classList.add('dim'); btnUlt.classList.remove('ready','primed');
+    }
+  } else {
+    btnUlt.classList.add('dim'); btnUlt.classList.remove('ready','primed');
+  }
 }
 function updateHUD() {
   if (!gameMode) return;
