@@ -209,9 +209,12 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
   </div>
 
   <!-- 改键位操作栏 -->
-  <div id="edit-bar" style="display:none;position:absolute;bottom:clamp(4px,1vh,10px);left:50%;transform:translateX(-50%);z-index:20;gap:10px;align-items:center">
-    <button class="menu-btn secondary" onclick="exitEditMode(true)" style="width:auto;padding:6px 16px;margin:0;font-size:clamp(9px,1.8vw,11px);border-color:#d4a574;color:#d4a574">完成</button>
-    <button class="menu-btn secondary" onclick="resetLayout()" style="width:auto;padding:6px 16px;margin:0;font-size:clamp(9px,1.8vw,11px)">默认</button>
+  <div id="edit-bar" style="display:none;position:absolute;bottom:clamp(4px,1vh,10px);left:50%;transform:translateX(-50%);z-index:20;gap:6px;align-items:center">
+    <button class="menu-btn secondary" id="eb-smaller" onclick="resizeSelected(-8)" style="width:28px;height:28px;padding:0;margin:0;font-size:14px;line-height:26px;border-radius:50%">−</button>
+    <span id="eb-size" style="color:#888;font-size:clamp(9px,1.6vw,10px);letter-spacing:1px;min-width:36px;text-align:center">--</span>
+    <button class="menu-btn secondary" id="eb-larger" onclick="resizeSelected(8)" style="width:28px;height:28px;padding:0;margin:0;font-size:14px;line-height:26px;border-radius:50%">+</button>
+    <button class="menu-btn secondary" onclick="resetLayout()" style="width:auto;padding:5px 10px;margin:0 0 0 8px;font-size:clamp(9px,1.8vw,11px)">默认</button>
+    <button class="menu-btn secondary" onclick="exitEditMode(true)" style="width:auto;padding:5px 10px;margin:0;font-size:clamp(9px,1.8vw,11px);border-color:#d4a574;color:#d4a574">完成</button>
   </div>
 
   <!-- admin -->
@@ -258,7 +261,7 @@ window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200)
 resizeCanvas();
 
 // ===================== COLORS & VERSION =====================
-const VERSION = 19;
+const VERSION = 20;
 const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wars-mobile.html';
 
 const COLORS = [
@@ -567,6 +570,7 @@ ctrlLayer.addEventListener('touchstart', function(e) {
       editOffY = t.clientY - br.top - br.height/2;
       btnDash.classList.remove('selected'); btnFire.classList.remove('selected'); btnUlt.classList.remove('selected');
       editTarget.classList.add('selected');
+      document.getElementById('eb-size').textContent = Math.round(editTarget.offsetWidth);
       continue;
     }
 
@@ -937,6 +941,7 @@ function enterEditMode() {
   editMode = true;
   btnDash.style.display = ''; btnFire.style.display = ''; btnUlt.style.display = '';
   btnDash.classList.remove('selected'); btnFire.classList.remove('selected'); btnUlt.classList.remove('selected');
+  document.getElementById('eb-size').textContent = '--';
 }
 
 function exitEditMode(save) {
@@ -948,11 +953,23 @@ function exitEditMode(save) {
   backToMenu();
 }
 
+function resizeSelected(delta) {
+  const el = editTarget;
+  if (!el) return;
+  const w = parseFloat(el.style.width) || el.offsetWidth;
+  const h = parseFloat(el.style.height) || el.offsetHeight;
+  const nw = Math.max(24, Math.min(120, w + delta));
+  const nh = Math.max(24, Math.min(120, h + delta));
+  el.style.width = nw + 'px';
+  el.style.height = nh + 'px';
+  document.getElementById('eb-size').textContent = Math.round(nw);
+}
+
 function saveLayout() {
   const l = {};
   ['dash','fire','ult'].forEach(id => {
     const b = document.getElementById('btn-'+id);
-    l[id] = { bottom: b.style.bottom, right: b.style.right };
+    l[id] = { bottom: b.style.bottom, right: b.style.right, width: b.style.width, height: b.style.height };
   });
   localStorage.setItem('gw_layout_m', JSON.stringify(l));
 }
@@ -963,7 +980,9 @@ function resetLayout() {
     const b = document.getElementById('btn-'+id);
     b.style.bottom = b.dataset.dB || '';
     b.style.right = b.dataset.dR || '';
+    b.style.width = ''; b.style.height = '';
   });
+  document.getElementById('eb-size').textContent = '--';
 }
 
 function loadLayout() {
@@ -974,6 +993,8 @@ function loadLayout() {
       const b = document.getElementById('btn-'+id);
       if (l[id] && l[id].bottom) b.style.bottom = l[id].bottom;
       if (l[id] && l[id].right) b.style.right = l[id].right;
+      if (l[id] && l[id].width) b.style.width = l[id].width;
+      if (l[id] && l[id].height) b.style.height = l[id].height;
     });
   } catch(e) {}
 }
