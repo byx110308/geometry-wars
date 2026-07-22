@@ -188,6 +188,23 @@ canvas { display: block; border: 1px solid #1a1a2a; }
     <button class="menu-btn secondary" onclick="disconnectAndMenu()">返回</button>
   </div>
 
+  <!-- 历史战绩 / 房间记录 -->
+  <div id="history" class="overlay" style="display:none;">
+    <h2>历史记录</h2>
+    <div class="tab-row">
+      <button class="tab-btn on" onclick="switchHistoryTab('record')">战绩</button>
+      <button class="tab-btn" onclick="switchHistoryTab('room')">房间</button>
+    </div>
+    <div class="tab-content on" id="tab-record">
+      <div class="stat-bar" id="stats-bar"></div>
+      <div id="record-list"></div>
+    </div>
+    <div class="tab-content" id="tab-room">
+      <div id="room-list"></div>
+    </div>
+    <button class="menu-btn secondary" onclick="backToMenu()" style="margin-top:16px;">返回</button>
+  </div>
+
   <!-- HUD（对战中使用） -->
   <div id="hud" style="display:none;">
     <div><span id="p1-label">玩家</span> <span class="val" id="ps">0</span></div>
