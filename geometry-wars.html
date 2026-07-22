@@ -511,6 +511,7 @@ function setupConnection(c) {
   clearTimeout(joinTimeout);
   conn.on('open', () => {
     clearTimeout(joinTimeout);
+    recordRoom(conn.peer, 'guest');
     document.getElementById('lobby-spinner').style.display = 'none';
     document.getElementById('lobby-status').textContent = '对手已连接！即将开始...';
     // Exchange user info
