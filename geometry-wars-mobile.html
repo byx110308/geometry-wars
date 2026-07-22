@@ -122,6 +122,12 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
 #admin-panel h2{font-size:clamp(16px,4vw,20px);color:#ddd;letter-spacing:5px;margin-bottom:14px}
 #admin-pw{width:min(200px,55vw);padding:9px;font-size:14px;text-align:center;letter-spacing:2px;background:rgba(255,255,255,0.03);border:1px solid #333;color:#ddd;outline:none;font-family:'Courier New',monospace;margin:6px 0;border-radius:2px}
 #admin-err{color:#c97d8a;font-size:10px;height:14px;margin:3px 0}
+
+/* more & edit mode */
+#more{background:rgba(10,10,15,0.92)}
+#more h2{font-size:clamp(16px,4vw,20px);color:#ddd;letter-spacing:5px;margin-bottom:18px}
+.edit-mode .ctrl-btn{border-style:dashed !important;transition:none}
+.edit-mode .ctrl-btn.selected{border-style:solid !important;border-color:#d4a574 !important;box-shadow:0 0 12px rgba(212,165,116,0.45)}
 </style>
 </head>
 <body>
@@ -141,9 +147,9 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
     <div id="stick-thumb"></div>
     <div id="aim-dot"></div>
     <canvas id="charge-ring" width="80" height="80"></canvas>
-    <button class="ctrl-btn dash" id="btn-dash" style="width:46px;height:46px;border-radius:50%;bottom:clamp(80px,15vh,110px);right:clamp(126px,24vw,166px);font-size:8px">DASH</button>
-    <button class="ctrl-btn fire" id="btn-fire" style="width:clamp(56px,11vw,66px);height:clamp(56px,11vw,66px);border-radius:50%;bottom:clamp(80px,15vh,110px);right:clamp(50px,10vw,100px);font-size:clamp(10px,1.8vw,12px);letter-spacing:1px">FIRE</button>
-    <button class="ctrl-btn ult dim" id="btn-ult" style="width:clamp(30px,6vw,38px);height:clamp(30px,6vw,38px);border-radius:50%;bottom:clamp(152px,26vh,178px);right:clamp(64px,12vw,113px);font-size:clamp(6px,1.2vw,8px);letter-spacing:1px">U</button>
+    <button class="ctrl-btn dash" id="btn-dash" style="width:46px;height:46px;border-radius:50%;bottom:clamp(80px,15vh,110px);right:clamp(126px,24vw,166px);font-size:8px" data-d-b="clamp(80px,15vh,110px)" data-d-r="clamp(126px,24vw,166px)">DASH</button>
+    <button class="ctrl-btn fire" id="btn-fire" style="width:clamp(56px,11vw,66px);height:clamp(56px,11vw,66px);border-radius:50%;bottom:clamp(80px,15vh,110px);right:clamp(50px,10vw,100px);font-size:clamp(10px,1.8vw,12px);letter-spacing:1px" data-d-b="clamp(80px,15vh,110px)" data-d-r="clamp(50px,10vw,100px)">FIRE</button>
+    <button class="ctrl-btn ult dim" id="btn-ult" style="width:clamp(30px,6vw,38px);height:clamp(30px,6vw,38px);border-radius:50%;bottom:clamp(152px,26vh,178px);right:clamp(64px,12vw,113px);font-size:clamp(6px,1.2vw,8px);letter-spacing:1px" data-d-b="clamp(152px,26vh,178px)" data-d-r="clamp(64px,12vw,113px)">U</button>
     <button class="ctrl-btn" id="btn-menu" style="width:clamp(32px,6vw,40px);height:clamp(32px,6vw,40px);border-radius:50%;top:clamp(6px,1.5vh,12px);right:clamp(6px,1.5vw,12px);font-size:8px;letter-spacing:0;position:absolute">✕</button>
   </div>
 
@@ -155,7 +161,7 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
     <button class="menu-btn" id="btn-start-ai" onclick="startAI()">人机对战</button>
     <button class="menu-btn" id="btn-start-online" onclick="showLobby()">联机对战</button>
     <button class="menu-btn secondary" onclick="showRegister()">注册 / 切换账号</button>
-    <button class="menu-btn secondary" onclick="showHistory()">历史战绩</button>
+    <button class="menu-btn secondary" onclick="showMore()">更多</button>
     <button class="menu-btn secondary" onclick="showAdmin()">管理</button>
   </div>
 
@@ -192,6 +198,20 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
     <div class="tab-content on" id="tab-record"><div class="stat-bar" id="stats-bar"></div><div id="record-list"></div></div>
     <div class="tab-content" id="tab-room"><div id="room-list"></div></div>
     <button class="menu-btn secondary" onclick="backToMenu()" style="margin-top:12px">返回</button>
+  </div>
+
+  <!-- 更多 -->
+  <div id="more" class="overlay" style="display:none">
+    <h2>更多选项</h2>
+    <button class="menu-btn" onclick="enterEditMode()">改键位</button>
+    <button class="menu-btn" onclick="showHistoryFromMore()">历史战绩</button>
+    <button class="menu-btn secondary" onclick="backToMenu()" style="margin-top:10px">返回</button>
+  </div>
+
+  <!-- 改键位操作栏 -->
+  <div id="edit-bar" style="display:none;position:absolute;bottom:clamp(4px,1vh,10px);left:50%;transform:translateX(-50%);z-index:20;gap:10px;align-items:center">
+    <button class="menu-btn secondary" onclick="exitEditMode(true)" style="width:auto;padding:6px 16px;margin:0;font-size:clamp(9px,1.8vw,11px);border-color:#d4a574;color:#d4a574">完成</button>
+    <button class="menu-btn secondary" onclick="resetLayout()" style="width:auto;padding:6px 16px;margin:0;font-size:clamp(9px,1.8vw,11px)">默认</button>
   </div>
 
   <!-- admin -->
@@ -238,7 +258,7 @@ window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200)
 resizeCanvas();
 
 // ===================== COLORS & VERSION =====================
-const VERSION = 18;
+const VERSION = 19;
 const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wars-mobile.html';
 
 const COLORS = [
@@ -353,7 +373,9 @@ function hideAll() {
   document.getElementById('room-code').style.display = 'none';
   document.getElementById('lobby-status').textContent = '';
   document.getElementById('lobby-spinner').style.display = 'none';
-  document.getElementById('ctrl-layer').classList.remove('active');
+  document.getElementById('ctrl-layer').classList.remove('active','edit-mode');
+  document.getElementById('edit-bar').style.display = 'none';
+  editMode = false; editDragId = null; editTarget = null;
   gameMode = null; gameOver = false; killCam.active = false;
 }
 
@@ -536,6 +558,18 @@ ctrlLayer.addEventListener('touchstart', function(e) {
     const gx = sx / scale, gy = sy / scale;
     const midX = rect.width / 2;
 
+    // Edit mode: drag buttons
+    if (editMode && target.closest && target.closest('.ctrl-btn') && target.id !== 'btn-menu') {
+      editTarget = target.closest('.ctrl-btn');
+      editDragId = t.identifier;
+      const br = editTarget.getBoundingClientRect();
+      editOffX = t.clientX - br.left - br.width/2;
+      editOffY = t.clientY - br.top - br.height/2;
+      btnDash.classList.remove('selected'); btnFire.classList.remove('selected'); btnUlt.classList.remove('selected');
+      editTarget.classList.add('selected');
+      continue;
+    }
+
     if (target.id === 'btn-fire' && gameMode && !gameOver) {
       touchState.fireDown = true;
       touchState.fireId = t.identifier;
@@ -603,6 +637,13 @@ ctrlLayer.addEventListener('touchmove', function(e) {
       touchState.moveX = dist > 8 ? (dx / dist) * norm : 0;
       touchState.moveY = dist > 8 ? (dy / dist) * norm : 0;
     }
+    if (t.identifier === editDragId && editTarget) {
+      const newLeft = t.clientX - editOffX - editTarget.offsetWidth/2;
+      const newTop = t.clientY - editOffY - editTarget.offsetHeight/2;
+      const pr = c.getBoundingClientRect();
+      editTarget.style.right = (pr.right - newLeft - editTarget.offsetWidth) + 'px';
+      editTarget.style.bottom = (pr.bottom - newTop - editTarget.offsetHeight) + 'px';
+    }
     if (t.identifier === touchState.aimId) {
       touchState.aimX = gx; touchState.aimY = gy;
       updateAimUI(gx, gy);
@@ -634,6 +675,9 @@ ctrlLayer.addEventListener('touchend', function(e) {
       btnFire.classList.remove('pressed');
       aimDot.style.display = 'none';
     }
+    if (t.identifier === editDragId) {
+      editDragId = null;
+    }
   }
 }, {passive: false});
 
@@ -641,6 +685,7 @@ ctrlLayer.addEventListener('touchcancel', function(e) {
   touchState.moveId = null; touchState.moveX = 0; touchState.moveY = 0;
   touchState.aimId = null; aimTouchActive = false;
   touchState.fireDown = false; touchState.fireId = null;
+  editDragId = null;
   hideStick(); aimDot.style.display = 'none';
   btnUlt.classList.remove('pressed','primed');
   btnFire.classList.remove('pressed','ult-mode');
@@ -877,6 +922,61 @@ const ADMIN_PW = 'bie110308';
 function showAdmin() { hideAll(); document.getElementById('admin-panel').style.display = ''; document.getElementById('admin-panel').classList.add('active'); document.getElementById('admin-pw').value = ''; document.getElementById('admin-err').textContent = ''; setTimeout(() => document.getElementById('admin-pw').focus(), 100); }
 function adminVerify() { const input = document.getElementById('admin-pw').value; if (input === ADMIN_PW) { document.getElementById('admin-err').textContent = '密码正确'; } else { document.getElementById('admin-err').textContent = '密码错误'; document.getElementById('admin-pw').value = ''; } }
 document.getElementById('admin-pw').addEventListener('keydown', function(e) { if (e.key === 'Enter') adminVerify(); });
+
+// ===================== MORE / EDIT MODE =====================
+function showMore() { hideAll(); document.getElementById('more').classList.add('active'); document.getElementById('more').style.display = ''; }
+function showHistoryFromMore() { hideAll(); showHistory(); }
+
+let editMode = false, editDragId = null, editTarget = null, editOffX = 0, editOffY = 0;
+
+function enterEditMode() {
+  hideAll();
+  document.getElementById('ctrl-layer').classList.add('active');
+  document.getElementById('ctrl-layer').classList.add('edit-mode');
+  document.getElementById('edit-bar').style.display = 'flex';
+  editMode = true;
+  btnDash.style.display = ''; btnFire.style.display = ''; btnUlt.style.display = '';
+  btnDash.classList.remove('selected'); btnFire.classList.remove('selected'); btnUlt.classList.remove('selected');
+}
+
+function exitEditMode(save) {
+  document.getElementById('ctrl-layer').classList.remove('edit-mode','active');
+  document.getElementById('edit-bar').style.display = 'none';
+  editMode = false; editDragId = null; editTarget = null;
+  btnDash.classList.remove('selected'); btnFire.classList.remove('selected'); btnUlt.classList.remove('selected');
+  if (save) saveLayout();
+  backToMenu();
+}
+
+function saveLayout() {
+  const l = {};
+  ['dash','fire','ult'].forEach(id => {
+    const b = document.getElementById('btn-'+id);
+    l[id] = { bottom: b.style.bottom, right: b.style.right };
+  });
+  localStorage.setItem('gw_layout_m', JSON.stringify(l));
+}
+
+function resetLayout() {
+  localStorage.removeItem('gw_layout_m');
+  ['dash','fire','ult'].forEach(id => {
+    const b = document.getElementById('btn-'+id);
+    b.style.bottom = b.dataset.dB || '';
+    b.style.right = b.dataset.dR || '';
+  });
+}
+
+function loadLayout() {
+  try {
+    const l = JSON.parse(localStorage.getItem('gw_layout_m'));
+    if (!l) return;
+    ['dash','fire','ult'].forEach(id => {
+      const b = document.getElementById('btn-'+id);
+      if (l[id] && l[id].bottom) b.style.bottom = l[id].bottom;
+      if (l[id] && l[id].right) b.style.right = l[id].right;
+    });
+  } catch(e) {}
+}
 
 // ===================== UPDATE LOGIC =====================
 function updatePlayerInput(p, dt) {
@@ -1198,7 +1298,7 @@ let lastTime=0,accumulator=0;const fixedDt=1/60;
 function loop(time){let rawDt=(time-lastTime)/1000;lastTime=time;if(rawDt>0.1)rawDt=0.1;accumulator+=rawDt;while(accumulator>=fixedDt){if(gameMode&&!gameOver)update(fixedDt);accumulator-=fixedDt;}draw();requestAnimationFrame(loop);}
 
 // ===================== INIT =====================
-loadUser();renderColorOptions();if(currentUser)selectedColorIdx=currentUser.colorIdx;
+loadUser();renderColorOptions();if(currentUser)selectedColorIdx=currentUser.colorIdx;loadLayout();
 document.getElementById('bar-col-1').innerHTML='<div class="bar"><div class="bar-fill" id="hpbar" style="background:#999;width:100%"></div></div><div class="bar-label">生命</div><div class="bar"><div class="bar-fill" id="xpbar" style="background:#666;width:0%"></div></div><div class="bar-label">经验 0/50</div><div class="bar"><div class="bar-fill" id="bowbar" style="background:#666;width:0%"></div></div><div class="bar-label">y=kx</div><div class="bar"><div class="bar-fill" id="ultbar" style="background:#d4a574;width:0%"></div></div><div class="bar-label">sin(x)</div>';
 document.getElementById('bar-col-2').innerHTML='<div class="bar"><div class="bar-fill" id="aihpbar" style="background:#888;width:100%"></div></div><div class="bar-label">对手 生命</div><div class="bar"><div class="bar-fill" id="aixpbar" style="background:#555;width:0%"></div></div><div class="bar-label">对手 经验</div><div class="bar"><div class="bar-fill" id="aibowbar" style="background:#555;width:0%"></div></div><div class="bar-label">对手 y=kx</div><div class="bar"><div class="bar-fill" id="aiultbar" style="background:#d4a574;width:0%"></div></div><div class="bar-label">对手 sin(x)</div>';
 
