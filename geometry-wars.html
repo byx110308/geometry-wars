@@ -325,6 +325,7 @@ let peer = null;
 let conn = null;
 let isHost = false;
 let remoteReady = false;
+let joinTimeout = null;
 
 function initPeer(id) {
   if (peer) { peer.destroy(); }
@@ -411,7 +412,9 @@ function joinRoom() {
 
 function setupConnection(c) {
   conn = c;
+  clearTimeout(joinTimeout);
   conn.on('open', () => {
+    clearTimeout(joinTimeout);
     document.getElementById('lobby-spinner').style.display = 'none';
     document.getElementById('lobby-status').textContent = '对手已连接！即将开始...';
     // Exchange user info
