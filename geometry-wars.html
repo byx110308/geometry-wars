@@ -1578,6 +1578,8 @@ function update(dt) {
           msg.style.display = 'block';
           const won = roundWins.p1 >= ROUNDS_TO_WIN;
           msg.textContent = won ? '比赛胜利！按 R 重来' : (gameMode === 'ai' ? 'AI 获胜！按 R 重来' : '你输了！按 R 重来');
+          const oppName = gameMode === 'ai' ? 'AI' : (remoteUser ? remoteUser.name : '对手');
+          recordMatch(gameMode, oppName, won, roundWins.p1, roundWins.p2);
         } else {
           roundPause = 1.5; // Brief pause then reset positions
         }
