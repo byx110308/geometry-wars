@@ -1627,7 +1627,7 @@ function updateAI(dt) {
       if (!closeDanger && ai.xp >= ai.maxXp && ai.ultiCooldown <= 0 && !ai.ultiCharging) {
         let ownDiff = Math.abs(ai.aimAngle - angleToPlayer);
         while (ownDiff > Math.PI) ownDiff = Math.PI * 2 - ownDiff;
-        if (ownDiff < 0.3 && Math.random() < dt * 4) {
+        if (ownDiff < 0.12 + 0.36 / ai.difficulty && Math.random() < dt * 4 * ai.difficulty) {
           ai.ultiCharging = true; ai.ultiChargeProgress = 0; ai.ultiMaxTimer = 0; ai.ultiLockTimer = 0; ai.ultiLocked = false;
         }
       }
