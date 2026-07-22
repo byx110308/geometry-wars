@@ -1518,8 +1518,8 @@ function updateAI(dt) {
     const dy = player.y - ai.prevPlayerY;
     const moved = Math.hypot(dx, dy);
     if (ai.prevPlayerX !== 0 && moved > 8) {
-      const predX = player.x + dx * 2.5;
-      const predY = player.y + dy * 2.5;
+      const predX = player.x + dx * 2.5 + ai.playerDodgeBiasX * 0.6;
+      const predY = player.y + dy * 2.5 + ai.playerDodgeBiasY * 0.6;
       const predAngle = Math.atan2(predY - ai.y, predX - ai.x);
       let offset = predAngle - angleToPlayer;
       while (offset > Math.PI) offset -= Math.PI * 2;
