@@ -1530,21 +1530,25 @@ function updateAI(dt) {
   while (targetAngle > Math.PI) targetAngle -= Math.PI * 2;
   while (targetAngle < -Math.PI) targetAngle += Math.PI * 2;
 
-  ai.aimAngle += (targetAngle - ai.aimAngle) * Math.min(1, 8 * ai.difficulty * dt);
+  ai.aimNoise += (Math.random() - 0.5) * 0.3 * dt;
+  ai.aimNoise = Math.max(-0.15, Math.min(0.15, ai.aimNoise * 0.95));
+  const wobble = ai.aimNoise * Math.max(0, 1.0 / ai.difficulty - 0.3);
+  ai.aimAngle += (targetAngle + wobble - ai.aimAngle) * Math.min(1, 8 * ai.difficulty * dt);
 
   if (ai.arrowCd > 0) { ai.arrowCd -= dt; if (ai.arrowCd <= 0) ai.arrowCd = 0; }
 
   if (!player.dead && ai.arrowCd <= 0 && !ai.ultiCharging && distToPlayer < 500) {
     let angleDiff = Math.abs(ai.aimAngle - angleToPlayer);
     while (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
+    const fireAngleThreshold = 0.12 + 0.46 / ai.difficulty;
     if (!ai.bowCharging) {
-      if (angleDiff < 0.35 && Math.random() < dt * 3 * ai.difficulty) {
+      if (angleDiff < fireAngleThreshold && Math.random() < dt * 3 * ai.difficulty) {
         ai.bowCharging = true; ai.bowCharge = 0;
       }
     } else {
       ai.bowCharge = Math.min(1, ai.bowCharge + dt / 0.5);
       const shouldFire = (ai.bowCharge >= 0.85) || (ai.bowCharge >= 0.5 && Math.random() < dt * 2)
-        || (angleDiff > 0.6 && ai.bowCharge >= 0.4);
+        || (angleDiff > fireAngleThreshold * 2 && ai.bowCharge >= 0.4);
       if (shouldFire && ai.bowCharge >= 0.4) {
         fireBullet(ai, oppBullets);
         ai.bowCharge = 0; ai.bowCharging = false; ai.arrowCd = 0.25;
