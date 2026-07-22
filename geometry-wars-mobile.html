@@ -85,12 +85,16 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
 #charge-ring{position:absolute;transform:translate(-50%,-50%);display:none;pointer-events:none}
 
 /* action buttons */
-.ctrl-btn{position:absolute;border:1.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);font-family:'Courier New',monospace;text-align:center;letter-spacing:2px;display:none;transition:background .1s,border-color .1s,color .1s;border-radius:4px;font-size:clamp(9px,1.8vw,11px)}
-.ctrl-btn:active,.ctrl-btn.pressed{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.5);color:rgba(255,255,255,0.8)}
-.ctrl-btn.ult{color:rgba(212,165,116,0.5);border-color:rgba(212,165,116,0.2)}
-.ctrl-btn.ult:active,.ctrl-btn.ult.pressed{color:rgba(212,165,116,0.9);background:rgba(212,165,116,0.15);border-color:rgba(212,165,116,0.5)}
+.ctrl-btn{position:absolute;border:1.5px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.55);font-family:'Courier New',monospace;text-align:center;letter-spacing:2px;transition:background .1s,border-color .1s,color .1s;border-radius:4px;font-size:clamp(9px,1.8vw,11px)}
+.ctrl-btn:active,.ctrl-btn.pressed{background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.6);color:rgba(255,255,255,0.85)}
+.ctrl-btn.fire{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.6)}
+.ctrl-btn.fire:active,.ctrl-btn.fire.pressed{background:rgba(255,255,255,0.22);border-color:rgba(255,255,255,0.65);color:#fff}
+.ctrl-btn.ult{color:rgba(212,165,116,0.55);border-color:rgba(212,165,116,0.25);background:rgba(212,165,116,0.06)}
+.ctrl-btn.ult:active,.ctrl-btn.ult.pressed{color:rgba(212,165,116,0.9);background:rgba(212,165,116,0.18);border-color:rgba(212,165,116,0.55)}
 .ctrl-btn.ult.ready{animation:ult-pulse 1.5s ease-in-out infinite}
-@keyframes ult-pulse{0%,100%{border-color:rgba(212,165,116,0.2)}50%{border-color:rgba(212,165,116,0.6)}}
+@keyframes ult-pulse{0%,100%{border-color:rgba(212,165,116,0.25)}50%{border-color:rgba(212,165,116,0.7)}}
+.ctrl-btn.dash{background:rgba(126,168,184,0.08);border-color:rgba(126,168,184,0.2);color:rgba(126,168,184,0.5)}
+.ctrl-btn.dash:active,.ctrl-btn.dash.pressed{background:rgba(126,168,184,0.18);border-color:rgba(126,168,184,0.5);color:rgba(126,168,184,0.8)}
 
 /* history */
 #history{background:rgba(10,10,15,0.92)}
@@ -134,8 +138,9 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
     <div id="stick-thumb"></div>
     <div id="aim-dot"></div>
     <canvas id="charge-ring" width="80" height="80"></canvas>
-    <button class="ctrl-btn" id="btn-dash" style="width:50px;height:50px;border-radius:50%;bottom:clamp(30px,6vh,50px);left:clamp(12px,3vw,30px);font-size:9px">DASH</button>
-    <button class="ctrl-btn" id="btn-ult" style="width:clamp(46px,9vw,56px);height:clamp(46px,9vw,56px);border-radius:50%;bottom:clamp(30px,6vh,50px);right:clamp(80px,18vw,120px);font-size:8px;letter-spacing:1px">ULT</button>
+    <button class="ctrl-btn dash" id="btn-dash" style="width:48px;height:48px;border-radius:50%;bottom:clamp(28px,5.5vh,48px);left:clamp(10px,2.5vw,28px);font-size:9px">DASH</button>
+    <button class="ctrl-btn fire" id="btn-fire" style="width:clamp(54px,10vw,64px);height:clamp(54px,10vw,64px);border-radius:50%;bottom:clamp(28px,5.5vh,48px);right:clamp(120px,24vw,170px);font-size:clamp(9px,1.8vw,11px);letter-spacing:1px">FIRE</button>
+    <button class="ctrl-btn ult" id="btn-ult" style="width:clamp(48px,9vw,56px);height:clamp(48px,9vw,56px);border-radius:50%;bottom:clamp(28px,5.5vh,48px);right:clamp(40px,8vw,80px);font-size:8px;letter-spacing:1px">ULT</button>
     <button class="ctrl-btn" id="btn-menu" style="width:clamp(32px,6vw,40px);height:clamp(32px,6vw,40px);border-radius:50%;top:clamp(6px,1.5vh,12px);right:clamp(6px,1.5vw,12px);font-size:8px;letter-spacing:0;position:absolute">✕</button>
   </div>
 
@@ -230,7 +235,7 @@ window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200)
 resizeCanvas();
 
 // ===================== COLORS & VERSION =====================
-const VERSION = 14;
+const VERSION = 15;
 const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wars-mobile.html';
 
 const COLORS = [
@@ -464,11 +469,9 @@ let roundWins = {p1:0,p2:0}; const ROUNDS_TO_WIN = 2; let roundPause = 0, matchO
 let dmgNumbers = [], screenShake = 0;
 
 // ===================== TOUCH INPUT =====================
-let touchState = { moveId: null, aimId: null, ultId: null, moveX: 0, moveY: 0, moveBaseX: 0, moveBaseY: 0,
-  aimX: 0, aimY: 0, aiming: false, ultDown: false, dashTap: false };
+let touchState = { moveId: null, aimId: null, ultId: null, fireId: null, moveX: 0, moveY: 0, moveBaseX: 0, moveBaseY: 0,
+  aimX: 0, aimY: 0, aiming: false, ultDown: false, fireDown: false, dashTap: false };
 let aimTouchActive = false;
-let aimChargeStartTime = 0;
-const AIM_CHARGE_DELAY = 0.12;
 
 function canvasCoords(e) {
   const rect = c.getBoundingClientRect();
@@ -532,11 +535,10 @@ ctrlLayer.addEventListener('touchstart', function(e) {
       touchState.moveBaseY = sy;
       showStick(sx, sy);
     } else if (sx >= midX && touchState.aimId === null && gameMode && !gameOver) {
-      // Right half: aim + charge
+      // Right half: aim only (fire is on dedicated button)
       touchState.aimId = t.identifier;
       touchState.aiming = true;
       aimTouchActive = true;
-      aimChargeStartTime = performance.now() / 1000;
       touchState.aimX = gx;
       touchState.aimY = gy;
       updateAimUI(gx, gy);
@@ -598,6 +600,11 @@ ctrlLayer.addEventListener('touchend', function(e) {
       touchState.ultId = null;
       document.getElementById('btn-ult').classList.remove('pressed');
     }
+    if (t.identifier === touchState.fireId) {
+      touchState.fireDown = false;
+      touchState.fireId = null;
+      document.getElementById('btn-fire').classList.remove('pressed');
+    }
   }
 }, {passive: false});
 
@@ -605,8 +612,10 @@ ctrlLayer.addEventListener('touchcancel', function(e) {
   touchState.moveId = null; touchState.moveX = 0; touchState.moveY = 0;
   touchState.aimId = null; touchState.aiming = false; aimTouchActive = false;
   touchState.ultDown = false; touchState.ultId = null;
+  touchState.fireDown = false; touchState.fireId = null;
   hideStick(); aimDot.style.display = 'none';
   document.getElementById('btn-ult').classList.remove('pressed');
+  document.getElementById('btn-fire').classList.remove('pressed');
   document.getElementById('btn-dash').classList.remove('pressed');
 });
 
@@ -629,6 +638,27 @@ btnUlt.addEventListener('touchcancel', function(e) {
   touchState.ultDown = false;
   touchState.ultId = null;
   btnUlt.classList.remove('pressed');
+});
+
+// Fire button
+const btnFire = document.getElementById('btn-fire');
+btnFire.addEventListener('touchstart', function(e) {
+  e.preventDefault(); e.stopPropagation();
+  touchState.fireDown = true;
+  touchState.fireId = (e.changedTouches[0] || e.touches[0]).identifier;
+  btnFire.classList.add('pressed');
+  initAudio();
+}, {passive: false});
+btnFire.addEventListener('touchend', function(e) {
+  e.preventDefault(); e.stopPropagation();
+  touchState.fireDown = false;
+  touchState.fireId = null;
+  btnFire.classList.remove('pressed');
+}, {passive: false});
+btnFire.addEventListener('touchcancel', function(e) {
+  touchState.fireDown = false;
+  touchState.fireId = null;
+  btnFire.classList.remove('pressed');
 });
 
 // Dash button
@@ -920,15 +950,12 @@ function updatePlayerInput(p, dt) {
 
   if (p.arrowCd > 0) { p.arrowCd -= dt; if (p.arrowCd <= 0) p.arrowCd = 0; }
 
-  // Mobile: right-half touch = aim + charge
-  const bowDown = (p === player) ? aimTouchActive : false;
+  // Mobile: FIRE button = charge + release to fire
+  const bowDown = (p === player) ? touchState.fireDown : false;
 
   if (bowDown && p.arrowCd <= 0 && !p.ultiCharging) {
-    const elapsed = (performance.now() / 1000) - aimChargeStartTime;
-    if (elapsed > AIM_CHARGE_DELAY) {
-      if (!p.bowCharging) { p.bowCharging = true; p.bowCharge = 0; }
-      p.bowCharge = Math.min(1, p.bowCharge + dt / 0.5);
-    }
+    if (!p.bowCharging) { p.bowCharging = true; p.bowCharge = 0; }
+    p.bowCharge = Math.min(1, p.bowCharge + dt / 0.5);
   } else if (p.bowCharging && !bowDown) {
     if (p.bowCharge >= 0.4) {
       fireBullet(p, bullets); p.arrowCd = 0.18;
