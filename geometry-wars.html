@@ -1509,31 +1509,28 @@ function updateAI(dt) {
   const angleToPlayer = Math.atan2(player.y - ai.y, player.x - ai.x);
 
   ai.learnTimer += dt;
-  if (ai.learnTimer > 0.5 && distToPlayer < 500 && !player.dead) {
+  if (ai.learnTimer > 0.08 && distToPlayer < 600 && !player.dead) {
     ai.learnTimer = 0;
     const dx = player.x - ai.prevPlayerX;
     const dy = player.y - ai.prevPlayerY;
-    const moved = Math.hypot(dx, dy);
-    if (moved > 10 && ai.prevPlayerX !== 0) {
-      ai.missedShots++;
-      const moveAngle = Math.atan2(dy, dx);
-      const aimDiff = moveAngle - angleToPlayer;
-      if (Math.abs(aimDiff) > 0.3) {
-        ai.predictAngle += (aimDiff - ai.predictAngle) * 0.3;
-        ai.predictWeight = Math.min(1, ai.predictWeight + 0.08);
-      } else {
-        ai.predictWeight = Math.max(0, ai.predictWeight - 0.04);
-      }
+    if (ai.prevPlayerX !== 0) {
+      const predX = player.x + dx * 2.5;
+      const predY = player.y + dy * 2.5;
+      const predAngle = Math.atan2(predY - ai.y, predX - ai.x);
+      let offset = predAngle - angleToPlayer;
+      while (offset > Math.PI) offset -= Math.PI * 2;
+      while (offset < -Math.PI) offset += Math.PI * 2;
+      ai.predictedOffset += (offset - ai.predictedOffset) * 0.25;
     }
     ai.prevPlayerX = player.x;
     ai.prevPlayerY = player.y;
   }
 
-  const predictX = player.x + player.vx * 0.2 + Math.cos(ai.predictAngle + angleToPlayer) * ai.predictWeight * 80;
-  const predictY = player.y + player.vy * 0.2 + Math.sin(ai.predictAngle + angleToPlayer) * ai.predictWeight * 80;
-  const predictedAngle = Math.atan2(predictY - ai.y, predictX - ai.x);
+  let targetAngle = angleToPlayer + (ai.predictedOffset || 0) * ai.difficulty * 1.2;
+  while (targetAngle > Math.PI) targetAngle -= Math.PI * 2;
+  while (targetAngle < -Math.PI) targetAngle += Math.PI * 2;
 
-  ai.aimAngle += (predictedAngle - ai.aimAngle) * Math.min(1, 6 * ai.difficulty * dt);
+  ai.aimAngle += (targetAngle - ai.aimAngle) * Math.min(1, 8 * ai.difficulty * dt);
 
   if (ai.arrowCd > 0) { ai.arrowCd -= dt; if (ai.arrowCd <= 0) ai.arrowCd = 0; }
 
