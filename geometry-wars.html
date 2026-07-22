@@ -1583,7 +1583,7 @@ function updateAI(dt) {
           ai.ultiCharging = false; ai.ultiMaxTimer = 0; ai.ultiLockTimer = 0; ai.ultiLocked = false;
         }
       }
-      if (angleDiff > 0.6) {
+      if (angleDiff > ultAngleThreshold * 2.5) {
         if (ai.ultiChargeProgress >= 0.25) { fireUlt(ai, player, ai.ultiChargeProgress); ai.xp = 0; }
         ai.ultiCharging = false; ai.ultiChargeProgress = 0; ai.ultiMaxTimer = 0; ai.ultiLockTimer = 0; ai.ultiLocked = false;
       }
