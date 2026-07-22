@@ -535,6 +535,9 @@ function createRoom() {
   peer.on('open', (pid) => {
     isHost = true;
     recordRoom(pid, 'host');
+    registerRoom(pid);
+    // 每60秒刷新房间存活状态
+    let refreshInt = setInterval(() => refreshRoom(pid), 60000);
     document.getElementById('lobby-spinner').style.display = 'none';
     document.getElementById('lobby-status').textContent = '等待对手加入...（如无法加入请检查是否在同一网络）';
     document.getElementById('room-code').style.display = '';
@@ -548,6 +551,8 @@ function createRoom() {
     };
     peer.on('connection', (c) => {
       if (conn) { c.close(); return; }
+      clearInterval(refreshInt);
+      unregisterRoom(pid);
       setupConnection(c);
     });
   });
