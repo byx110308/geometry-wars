@@ -1877,6 +1877,7 @@ function update(dt) {
           msg.textContent = won ? '比赛胜利！按 R 重来' : (gameMode === 'ai' ? 'AI 获胜！按 R 重来' : '你输了！按 R 重来');
           const oppName = gameMode === 'ai' ? 'AI' : (remoteUser ? remoteUser.name : '对手');
           recordMatch(gameMode, oppName, won, roundWins.p1, roundWins.p2);
+          if (window._updatePending) setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + VERSION; }, 3000);
         } else {
           roundPause = 1.5; // Brief pause then reset positions
         }
