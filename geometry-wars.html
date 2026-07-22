@@ -685,15 +685,22 @@ function setupConnection(c) {
 
   conn.on('close', () => {
     if (gameMode === 'online') {
-      document.getElementById('lobby-status').textContent = '对手断开连接';
-      setTimeout(() => backToMenu(), 1500);
+      const msg = document.getElementById('msg-overlay');
+      msg.style.display = 'block';
+      msg.textContent = '对手断开连接\n即将返回菜单...';
+      setTimeout(() => { msg.style.display = 'none'; backToMenu(); }, 2500);
     }
     conn = null;
   });
 
   conn.on('error', (err) => {
     console.error('Connection error:', err);
-    document.getElementById('lobby-status').textContent = '连接错误';
+    if (gameMode === 'online') {
+      const msg = document.getElementById('msg-overlay');
+      msg.style.display = 'block';
+      msg.textContent = '网络连接错误';
+      setTimeout(() => { msg.style.display = 'none'; }, 2000);
+    }
   });
 }
 
