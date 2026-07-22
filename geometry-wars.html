@@ -70,12 +70,13 @@ canvas { display: block; border: 1px solid #1a1a2a; }
 #lobby h2 { font-size: 20px; color: #ddd; letter-spacing: 6px; margin-bottom: 28px; }
 #lobby .status-text { color: #999; font-size: 12px; letter-spacing: 2px; margin: 8px 0; min-height: 18px; }
 #room-code {
-  font-size: 28px; color: #d4a574; letter-spacing: 6px;
+  font-size: 32px; color: #d4a574; letter-spacing: 8px;
   margin: 12px 0; padding: 8px 18px;
-  border: 1px dashed #444;
+  border: 1px dashed #444; cursor: pointer;
 }
+#room-code:hover { border-color: #888; }
 #join-input {
-  width: 240px; padding: 9px; font-size: 15px; text-align: center; letter-spacing: 4px;
+  width: 100%; max-width: 320px; padding: 9px; font-size: 16px; text-align: center; letter-spacing: 2px;
   background: rgba(255,255,255,0.03); border: 1px solid #333; color: #ddd;
   outline: none; margin: 7px 0; font-family: 'Courier New', monospace;
 }
