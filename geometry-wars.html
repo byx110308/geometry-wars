@@ -605,9 +605,13 @@ function joinRoom() {
     clearTimeout(joinTimeout);
     let msg = '连接失败: ' + err.type;
     if (err.type === 'peer-unavailable') {
-      msg = '找不到该房间（请确保对方已创建房间且房间码正确）';
+      msg = '找不到该房间，请确保：\n1.对方已创建房间\n2.房间码输入正确\n3.双方网络均可访问外网';
     } else if (err.type === 'server-error') {
-      msg = '服务器繁忙，请稍后重试';
+      msg = '信令服务器连接失败，请稍后重试\n可尝试让双方使用同一 WiFi 或 VPN';
+    } else if (err.type === 'network') {
+      msg = '网络错误，请检查网络连接\n可尝试切换网络或使用 VPN';
+    } else if (err.type === 'unavailable-id') {
+      msg = '该房间码已被占用，请对方重新创建';
     }
     document.getElementById('lobby-status').textContent = msg;
     document.getElementById('lobby-spinner').style.display = 'none';
