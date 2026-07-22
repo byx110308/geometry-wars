@@ -110,6 +110,23 @@ canvas { display: block; border: 1px solid #1a1a2a; }
   animation: spin 0.8s linear infinite; margin: 8px auto;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== 历史战绩 & 房间记录 ===== */
+#history .tab-row { display: flex; gap: 0; margin-bottom: 16px; border-bottom: 1px solid #222; }
+#history .tab-btn { flex: 1; padding: 8px 0; font-size: 13px; letter-spacing: 2px; color: #555; background: none; border: none; cursor: pointer; font-family: 'Courier New', monospace; }
+#history .tab-btn.on { color: #d4a574; border-bottom: 2px solid #d4a574; }
+#history .tab-content { max-height: 280px; overflow-y: auto; display: none; }
+#history .tab-content.on { display: block; }
+#history .list-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid #1a1a1a; font-size: 12px; letter-spacing: 1px; color: #777; }
+#history .list-item .result-win { color: #9db88f; }
+#history .list-item .result-lose { color: #c97d8a; }
+#history .list-item .room-code-sm { color: #d4a574; letter-spacing: 3px; font-weight: bold; cursor: pointer; }
+#history .list-item .room-code-sm:hover { color: #fff; }
+#history .list-empty { text-align: center; padding: 40px 20px; color: #444; font-size: 13px; letter-spacing: 3px; }
+#history .stat-bar { display: flex; gap: 16px; margin-bottom: 16px; }
+#history .stat-item { flex: 1; text-align: center; padding: 8px; background: rgba(255,255,255,0.02); border: 1px solid #1a1a1a; }
+#history .stat-num { font-size: 22px; color: #d4a574; letter-spacing: 2px; }
+#history .stat-label { font-size: 10px; color: #555; letter-spacing: 1px; margin-top: 2px; }
 </style>
 </head>
 <body>
