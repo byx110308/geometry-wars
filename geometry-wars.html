@@ -2246,7 +2246,31 @@ function draw() {
     ctx.fillStyle = pColor;
     ctx.font = '10px "Courier New", monospace';
     ctx.textAlign = 'center';
-    if (!player.dead) ctx.fillText(currentUser.name, player.x, player.y - 28);
+    if (!player.dead) {
+      ctx.fillText(currentUser.name, player.x, player.y - 28);
+      if (player.stillTimer > 2.0) {
+        const warnAlpha = Math.min(1, (player.stillTimer - 2.0) / 1.0);
+        const pulseAlpha = warnAlpha * (0.4 + Math.sin(Date.now() * 0.008) * 0.3);
+        ctx.strokeStyle = `rgba(201,125,138,${pulseAlpha})`;
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 2]);
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.r + 10, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.min(1, (player.stillTimer - 2.0) / 1.0));
+        ctx.stroke();
+        ctx.setLineDash([]);
+        if (player.stillTimer > 3.0) {
+          ctx.fillStyle = `rgba(201,125,138,${warnAlpha * 0.6})`;
+          ctx.font = '9px "Courier New", monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText('静止惩罚中', player.x, player.y - 38);
+        } else {
+          ctx.fillStyle = `rgba(201,125,138,${warnAlpha * 0.5})`;
+          ctx.font = '9px "Courier New", monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText('请移动!', player.x, player.y - 38);
+        }
+      }
+    }
     ctx.fillStyle = oColor;
     const oName = gameMode === 'ai' ? 'AI' : (remoteUser ? remoteUser.name : '对手');
     if (!opponent.dead) ctx.fillText(oName, opponent.x, opponent.y - 28);
