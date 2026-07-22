@@ -238,7 +238,7 @@ window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200)
 resizeCanvas();
 
 // ===================== COLORS & VERSION =====================
-const VERSION = 17;
+const VERSION = 18;
 const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wars-mobile.html';
 
 const COLORS = [
@@ -476,6 +476,7 @@ let touchState = { moveId: null, aimId: null, fireId: null, moveX: 0, moveY: 0, 
   aimX: 0, aimY: 0, fireDown: false };
 let aimTouchActive = false;
 let ultPrimed = false;
+let fireStartX = 0, fireStartY = 0;
 
 function canvasCoords(e) {
   const rect = c.getBoundingClientRect();
@@ -538,8 +539,8 @@ ctrlLayer.addEventListener('touchstart', function(e) {
     if (target.id === 'btn-fire' && gameMode && !gameOver) {
       touchState.fireDown = true;
       touchState.fireId = t.identifier;
+      fireStartX = gx; fireStartY = gy;
       btnFire.classList.add('pressed');
-      updateAimUI(gx, gy);
       if (player && !player.dead) player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
       initAudio();
       continue;
@@ -608,8 +609,10 @@ ctrlLayer.addEventListener('touchmove', function(e) {
       if (player && !player.dead) player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
     }
     if (t.identifier === touchState.fireId) {
-      updateAimUI(gx, gy);
-      if (player && !player.dead) player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
+      const dx = gx - fireStartX, dy = gy - fireStartY;
+      if (Math.hypot(dx, dy) > 6 && player && !player.dead) {
+        player.aimAngle = Math.atan2(dy, dx);
+      }
     }
   }
 }, {passive: false});
