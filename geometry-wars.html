@@ -1249,12 +1249,14 @@ function sendState() {
 
 function disconnectAndMenu() {
   clearTimeout(joinTimeout);
+  stopRoomRefresh();
   if (peer) {
-    try { peer.destroy(); } catch (e) {}
+    try { if (isHost && peer.id) { unregisterRoom(peer.id); } peer.destroy(); } catch (e) {}
     peer = null;
   }
   conn = null;
   gameMode = null;
+  isHost = false;
   backToMenu();
 }
 
