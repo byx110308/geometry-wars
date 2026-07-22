@@ -1344,15 +1344,6 @@ function copyRoomCode(code, el) {
   }).catch(() => {});
 }
 
-function renderRecentRooms() {
-  const h = loadHistory();
-  const el = document.getElementById('recent-rooms');
-  if (!h.rooms.length) { el.innerHTML = ''; return; }
-  const recent = h.rooms.slice(0, 5);
-  el.innerHTML = '<div style="color:#444;font-size:10px;letter-spacing:2px;margin-bottom:4px;">最近房间</div>' +
-    recent.map(r => `<span class="room-code-sm" style="margin:0 6px;font-size:12px;cursor:pointer;" onclick="document.getElementById('join-input').value='${r.code}';document.getElementById('join-input').focus()">${r.code}</span>`).join('');
-}
-
 window.addEventListener('beforeunload', () => {
   if (peer) { try { peer.destroy(); } catch (e) {} }
 });
