@@ -330,10 +330,8 @@ let joinTimeout = null;
 
 function initPeer(id) {
   if (peer) { peer.destroy(); }
-  peer = new Peer(id, {
-    host: '0.peerjs.com',
-    port: 443,
-    secure: true,
+  const peerConfig = {
+    path: '/myapp',
     config: {
       iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
@@ -343,7 +341,8 @@ function initPeer(id) {
       ]
     },
     debug: 0
-  });
+  };
+  peer = new Peer(id, peerConfig);
   peer.on('open', (pid) => {
     console.log('Peer opened:', pid);
   });
@@ -351,6 +350,12 @@ function initPeer(id) {
     console.error('Peer error:', err);
     document.getElementById('lobby-status').textContent = '连接失败: ' + err.type;
     document.getElementById('lobby-spinner').style.display = 'none';
+  });
+  peer.on('disconnected', () => {
+    console.log('Peer disconnected from server, attempting reconnect...');
+    if (peer && !peer.destroyed) {
+      peer.reconnect();
+    }
   });
 }
 
