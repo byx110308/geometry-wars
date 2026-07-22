@@ -511,7 +511,8 @@ function initPeer(id) {
       iceCandidatePoolSize: 4,
       iceTransportPolicy: 'all'
     },
-    debug: 0
+    debug: 0,
+    connectTimeout: 15000
   };
   peer = new Peer(id, peerConfig);
   peer.on('open', (pid) => {
