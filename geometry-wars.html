@@ -329,6 +329,9 @@ let remoteReady = false;
 function initPeer(id) {
   if (peer) { peer.destroy(); }
   peer = new Peer(id, {
+    host: '0.peerjs.com',
+    port: 443,
+    secure: true,
     debug: 0
   });
   peer.on('open', (pid) => {
