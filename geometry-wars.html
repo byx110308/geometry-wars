@@ -448,6 +448,7 @@ function createRoom() {
 
   peer.on('open', (pid) => {
     isHost = true;
+    recordRoom(pid, 'host');
     document.getElementById('lobby-spinner').style.display = 'none';
     document.getElementById('lobby-status').textContent = '等待对手加入...（如无法加入请检查是否在同一网络）';
     document.getElementById('room-code').style.display = '';
