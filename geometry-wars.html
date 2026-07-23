@@ -1850,6 +1850,13 @@ function update(dt) {
             startKillCam(ai, player.x, player.y);
             spawnShatter(player.x, player.y, COLORS[player.colorIdx].hex, player.r);
             snd(120, 0.5, 'sawtooth', 0.12);
+          } else if (gameMode === 'online') {
+            startKillCam(opponent, player.x, player.y);
+            spawnShatter(player.x, player.y, COLORS[player.colorIdx].hex, player.r);
+            snd(120, 0.5, 'sawtooth', 0.12);
+            if (conn && conn.open) {
+              conn.send(JSON.stringify({ type: 'gameOver', winner: isHost ? 'guest' : 'host' }));
+            }
           }
         }
       }
