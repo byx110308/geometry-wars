@@ -270,8 +270,9 @@ window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200)
 resizeCanvas();
 
 // ===================== COLORS & VERSION =====================
-const VERSION = 23;
+const VERSION = 24;
 const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wars-mobile.html';
+const CHECK_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/version';
 
 const COLORS = [
   {name:'白',hex:'#e0e0e0',rgb:'rgba(224,224,224,0.15)'},
@@ -289,12 +290,12 @@ const COLORS = [
   if (!UPDATE_URL) return;
   const loc = window.location.href;
   if (loc.startsWith(UPDATE_URL)) return;
-  fetch(UPDATE_URL + '?_t=' + Date.now(), {cache:'no-store'})
+  fetch(CHECK_URL + '?_t=' + Date.now(), {cache:'no-store'})
     .then(r => { if (!r.ok) throw new Error('status ' + r.status); return r.text(); })
-    .then(html => {
-      const m = html.match(/const\s+VERSION\s*=\s*(\d+)/);
-      if (!m) { if (!bg) showUpdateTip('无法检查更新'); return; }
-      if (parseInt(m[1]) > VERSION) {
+    .then(txt => {
+      const ver = parseInt(txt.trim());
+      if (!ver) { if (!bg) showUpdateTip('无法检查更新'); return; }
+      if (ver > VERSION) {
         if (bg && gameMode && !gameOver) {
           const ov = document.getElementById('msg-overlay');
           ov.style.display = 'block';
@@ -304,13 +305,16 @@ const COLORS = [
         } else {
           document.title = '几何决斗 - 正在更新...';
           document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#999;font-family:monospace;font-size:14px;letter-spacing:2px">发现新版本，正在自动更新...</div>';
-          setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + parseInt(m[1]); }, 800);
+          setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + ver; }, 800);
         }
       } else if (!bg) {
         showUpdateTip('已是最新版本 (v' + VERSION + ')');
       }
     })
-    .catch(() => { setTimeout(() => checkUpdate(true), 30000); });
+    .catch(() => {
+      if (!bg) showUpdateTip('网络错误');
+      setTimeout(() => checkUpdate(true), 30000);
+    });
 })(true);
 setInterval(() => { if (!window._updatePending) checkUpdate(true); }, 300000);
 
