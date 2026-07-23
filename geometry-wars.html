@@ -284,6 +284,16 @@ const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wa
 
 setInterval(() => { if (!window._updatePending) checkUpdate(true); }, 300000);
 
+function manualCheckUpdate() {
+  const btn = document.querySelector('#menu button[onclick^="manualCheckUpdate"]');
+  if (btn) { btn.textContent = '检查中...'; btn.style.color = '#888'; }
+  checkUpdate(false);
+}
+function showUpdateTip(msg) {
+  const btn = document.querySelector('#menu button[onclick^="manualCheckUpdate"]');
+  if (btn) { btn.textContent = msg; btn.style.color = '#888'; setTimeout(() => { btn.textContent = '检查更新'; btn.style.color = '#555'; }, 2500); }
+}
+
 let currentUser = null; // { name, passHashed, colorIdx }
 
 // ===================== 战绩 & 房间记录 =====================
