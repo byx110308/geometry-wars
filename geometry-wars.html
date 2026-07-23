@@ -1163,7 +1163,8 @@ function startAI() {
 
 function resetRound() {
   const pColor = currentUser ? currentUser.colorIdx : 0;
-  player = createPlayer(200, H / 2, pColor, true);
+  const localX = isHost ? 200 : 700;
+  player = createPlayer(localX, H / 2, pColor, true);
   if (gameMode === 'ai') {
     const oldDiff = ai ? ai.difficulty : 1;
     const aiColor = 1;
