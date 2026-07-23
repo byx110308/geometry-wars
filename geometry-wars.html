@@ -723,8 +723,17 @@ function setupConnection(c) {
       handleOnlineGameOver(data.winner === (isHost ? 'host' : 'guest'));
     }
 
-    if (data.type === 'rematch') {
-      resetOnlineGame();
+    if (data.type === 'rematchRequest') {
+      showInviteReceived();
+    }
+
+    if (data.type === 'rematchResponse') {
+      hideInvitePanel();
+      if (data.accept) {
+        resetOnlineGame();
+      } else {
+        disconnectAndMenu();
+      }
     }
   });
 
