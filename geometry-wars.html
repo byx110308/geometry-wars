@@ -1501,9 +1501,6 @@ function updatePlayerInput(p, dt) {
         if (hitDmg > 0) {
           conn.send(JSON.stringify({ type: 'hit', damage: hitDmg, bulletX: target.x, bulletY: target.y, isUlt: true }));
         }
-        if (target.dead) {
-          conn.send(JSON.stringify({ type: 'gameOver', winner: isHost ? 'host' : 'guest' }));
-        }
       }
     }
     p.ultiCharging = false;
