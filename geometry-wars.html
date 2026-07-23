@@ -1031,9 +1031,6 @@ function fireBullet(shooter, bulletsArr) {
         startKillCam(shooter, target.x, target.y);
         spawnShatter(target.x, target.y, COLORS[target.colorIdx].hex, target.r);
         snd(120, 0.5, 'sawtooth', 0.12);
-        if (gameMode === 'online' && shooter === player && conn && conn.open) {
-          conn.send(JSON.stringify({ type: 'gameOver', winner: isHost ? 'host' : 'guest' }));
-        }
       }
     }
   }
