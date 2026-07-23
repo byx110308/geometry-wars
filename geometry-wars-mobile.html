@@ -938,12 +938,17 @@ function startOnlineGame() {
 }
 function resetOnlineGame() { roundWins = {p1:0,p2:0}; matchOver = false; document.getElementById('result-panel').style.display = 'none'; resetRound(); }
 function handleOnlineGameOver(iWon) {
-  matchOver = true;
-  const oppName = remoteUser ? remoteUser.name : '对手';
   if (iWon) roundWins.p1++; else roundWins.p2++;
-  recordMatch('online', oppName, iWon, roundWins.p1, roundWins.p2);
-  showOnlineResult(iWon, roundWins.p1, roundWins.p2);
-  if (window._updatePending) setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + VERSION; }, 3000);
+  if (roundWins.p1 >= ROUNDS_TO_WIN || roundWins.p2 >= ROUNDS_TO_WIN) {
+    matchOver = true;
+    const oppName = remoteUser ? remoteUser.name : '对手';
+    const won = roundWins.p1 >= ROUNDS_TO_WIN;
+    recordMatch('online', oppName, won, roundWins.p1, roundWins.p2);
+    showOnlineResult(won, roundWins.p1, roundWins.p2);
+    if (window._updatePending) setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + VERSION; }, 3000);
+  } else {
+    roundPause = 1.5;
+  }
 }
 function applyHitLocally(data) {
   const killed = applyDamage(opponent, player, data.damage, data.bulletX||player.x, data.bulletY||player.y);
