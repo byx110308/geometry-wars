@@ -157,8 +157,7 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
   <div id="result-panel" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(10,10,15,0.88);z-index:15;flex-direction:column;align-items:center;justify-content:center;gap:14px;">
     <div id="result-title" style="font-size:clamp(20px,5vw,30px);font-weight:bold;color:#ddd;letter-spacing:6px;text-align:center;"></div>
     <div id="result-detail" style="color:#888;font-size:clamp(10px,2vw,13px);letter-spacing:2px;"></div>
-    <button class="menu-btn" onclick="restartFromResult()" style="border-color:#d4a574;color:#d4a574;">再来一局</button>
-    <button class="menu-btn secondary" onclick="exitFromResult()">返回菜单</button>
+    <div id="result-btns" style="display:flex;flex-direction:column;align-items:center;gap:6px;"></div>
   </div>
 
   <!-- menu -->
@@ -886,8 +885,21 @@ function showResultPanel(won, p1Score, p2Score) {
   document.getElementById('result-title').textContent = won ? '比赛胜利' : 'AI 获胜';
   document.getElementById('result-title').style.color = won ? '#d4a574' : '#c97d8a';
   document.getElementById('result-detail').textContent = p1Score + ' : ' + p2Score;
+  document.getElementById('result-btns').innerHTML =
+    '<button class="menu-btn" onclick="restartFromResult()" style="border-color:#d4a574;color:#d4a574;">再来一局</button>' +
+    '<button class="menu-btn secondary" onclick="exitFromResult()">返回菜单</button>';
+}
+function showOnlineResult(won, p1Score, p2Score) {
+  document.getElementById('result-panel').style.display = 'flex';
+  document.getElementById('result-title').textContent = won ? '比赛胜利' : '比赛失败';
+  document.getElementById('result-title').style.color = won ? '#d4a574' : '#c97d8a';
+  document.getElementById('result-detail').textContent = p1Score + ' : ' + p2Score;
+  document.getElementById('result-btns').innerHTML =
+    '<button class="menu-btn" onclick="rematchOnline()" style="border-color:#d4a574;color:#d4a574;">重新邀请</button>' +
+    '<button class="menu-btn secondary" onclick="exitFromResult()">返回菜单</button>';
 }
 function restartFromResult() { document.getElementById('result-panel').style.display = 'none'; resetAIGame(); }
+function rematchOnline() { document.getElementById('result-panel').style.display = 'none'; if (conn && conn.open) { conn.send(JSON.stringify({type:'rematch'})); } resetOnlineGame(); }
 function exitFromResult() { document.getElementById('result-panel').style.display = 'none'; backToMenu(); }
 function buildBars() {
   const c1 = document.getElementById('bar-col-1'), c2 = document.getElementById('bar-col-2');
@@ -923,10 +935,14 @@ function startOnlineGame() {
   document.getElementById('p2-label').style.color = COLORS[opponent.colorIdx].hex;
   buildBars(); remoteState = null; remoteReady = true;
 }
-function resetOnlineGame() { roundWins = {p1:0,p2:0}; matchOver = false; resetRound(); }
+function resetOnlineGame() { roundWins = {p1:0,p2:0}; matchOver = false; document.getElementById('result-panel').style.display = 'none'; resetRound(); }
 function handleOnlineGameOver(iWon) {
-  gameOver = true; const msg = document.getElementById('msg-overlay'); msg.style.display = 'block';
-  msg.textContent = iWon ? '你赢了！按 菜单 重来' : '你输了！按 菜单 重来';
+  if (matchOver) return;
+  matchOver = true;
+  const oppName = remoteUser ? remoteUser.name : '对手';
+  if (iWon) roundWins.p1++; else roundWins.p2++;
+  recordMatch('online', oppName, iWon, roundWins.p1, roundWins.p2);
+  showOnlineResult(iWon, roundWins.p1, roundWins.p2);
   if (window._updatePending) setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + VERSION; }, 3000);
 }
 function applyHitLocally(data) {
@@ -1240,8 +1256,7 @@ function update(dt) {
           if (gameMode === 'ai') {
             showResultPanel(won, roundWins.p1, roundWins.p2);
           } else {
-            const msg = document.getElementById('msg-overlay'); msg.style.display = 'block';
-            msg.textContent = won ? '你赢了！点菜单重来' : '你输了！点菜单重来';
+            showOnlineResult(won, roundWins.p1, roundWins.p2);
           }
           if (window._updatePending) setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + VERSION; }, 3000);
         } else { roundPause = 1.5; resetRound(); }
