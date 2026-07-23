@@ -892,8 +892,8 @@ document.addEventListener('keydown', e => {
 
   if (e.key === 'r' || e.key === 'R') {
     if (gameMode === 'ai') resetAIGame();
-    else if (gameMode === 'online' && matchOver) {
-      if (conn && conn.open) { conn.send(JSON.stringify({ type: 'rematch' })); resetOnlineGame(); }
+    else if (gameMode === 'online' && matchOver && !document.getElementById('invite-panel').style.display.includes('flex')) {
+      rematchOnline();
     }
   }
   if (e.key === '1' && gameMode === 'ai' && ai) {
