@@ -1924,7 +1924,9 @@ function update(dt) {
           const oppName = gameMode === 'ai' ? 'AI' : (remoteUser ? remoteUser.name : '对手');
           recordMatch(gameMode, oppName, won, roundWins.p1, roundWins.p2);
           if (gameMode === 'ai') {
-            showResultPanel(won, roundWins.p1, roundWins.p2);
+            const msg = document.getElementById('msg-overlay');
+            msg.style.display = 'block';
+            msg.textContent = won ? '比赛胜利！按 R 重来' : 'AI 获胜！按 R 重来';
           } else {
             showOnlineResult(won, roundWins.p1, roundWins.p2);
           }
