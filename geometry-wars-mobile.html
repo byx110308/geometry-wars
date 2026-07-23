@@ -160,6 +160,12 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
     <div id="result-btns" style="display:flex;flex-direction:column;align-items:center;gap:6px;"></div>
   </div>
 
+  <!-- 重赛邀请 -->
+  <div id="invite-panel" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(10,10,15,0.88);z-index:16;flex-direction:column;align-items:center;justify-content:center;gap:14px;">
+    <div id="invite-title" style="font-size:clamp(18px,4vw,22px);color:#ddd;letter-spacing:4px;text-align:center;"></div>
+    <div id="invite-btns" style="display:flex;gap:12px;"></div>
+  </div>
+
   <!-- menu -->
   <div id="menu" class="overlay active">
     <button class="menu-btn secondary" onclick="manualCheckUpdate()" style="position:absolute;top:10px;right:12px;width:auto;padding:4px 10px;font-size:clamp(8px,1.6vw,10px);letter-spacing:2px;z-index:11;margin:0">检查更新</button>
@@ -402,6 +408,7 @@ function hideAll() {
   document.getElementById('lobby-spinner').style.display = 'none';
   document.getElementById('ctrl-layer').classList.remove('active','edit-mode');
   document.getElementById('result-panel').style.display = 'none';
+  document.getElementById('invite-panel').style.display = 'none';
   document.getElementById('edit-bar').style.display = 'none';
   editMode = false; editDragId = null; editTarget = null;
   gameMode = null; gameOver = false; killCam.active = false;
@@ -498,7 +505,8 @@ function setupConnection(c) {
     if (data.type === 'fireBullet') { fireBulletRemote(data); }
     if (data.type === 'fireUlt') { fireUltRemote(data); }
     if (data.type === 'gameOver') { handleOnlineGameOver(data.winner === (isHost ? 'host' : 'guest')); }
-    if (data.type === 'rematch') { resetOnlineGame(); }
+    if (data.type === 'rematchRequest') { showInviteReceived(); }
+    if (data.type === 'rematchResponse') { hideInvitePanel(); if (data.accept) { resetOnlineGame(); } else { disconnectAndMenu(); } }
   });
   conn.on('close', () => { if (gameMode === 'online') { const msg = document.getElementById('msg-overlay'); msg.style.display = 'block'; msg.textContent = '对手断开连接\n即将返回菜单...'; setTimeout(() => { msg.style.display = 'none'; backToMenu(); }, 2500); } conn = null; });
   conn.on('error', () => { if (gameMode === 'online') { const msg = document.getElementById('msg-overlay'); msg.style.display = 'block'; msg.textContent = '网络连接错误'; setTimeout(() => { msg.style.display = 'none'; }, 2000); } });
@@ -900,7 +908,42 @@ function showOnlineResult(won, p1Score, p2Score) {
     '<button class="menu-btn secondary" onclick="exitFromResult()">返回菜单</button>';
 }
 function restartFromResult() { document.getElementById('result-panel').style.display = 'none'; resetAIGame(); }
-function rematchOnline() { document.getElementById('result-panel').style.display = 'none'; if (conn && conn.open) { conn.send(JSON.stringify({type:'rematch'})); } resetOnlineGame(); }
+function rematchOnline() {
+  if (conn && conn.open) {
+    conn.send(JSON.stringify({ type: 'rematchRequest' }));
+    showInviteSent();
+  }
+}
+function showInviteSent() {
+  document.getElementById('result-panel').style.display = 'none';
+  document.getElementById('invite-panel').style.display = 'flex';
+  document.getElementById('invite-title').textContent = '已发送邀请，等待对手回应...';
+  document.getElementById('invite-btns').innerHTML =
+    '<button class="menu-btn secondary" onclick="cancelInvite()">取消</button>';
+}
+function showInviteReceived() {
+  document.getElementById('result-panel').style.display = 'none';
+  document.getElementById('invite-panel').style.display = 'flex';
+  document.getElementById('invite-title').textContent = '对手邀请重赛';
+  document.getElementById('invite-btns').innerHTML =
+    '<button class="menu-btn" onclick="acceptRematch()" style="border-color:#d4a574;color:#d4a574;">同意</button>' +
+    '<button class="menu-btn secondary" onclick="declineRematch()">拒绝</button>';
+}
+function acceptRematch() {
+  if (conn && conn.open) { conn.send(JSON.stringify({ type: 'rematchResponse', accept: true })); }
+  hideInvitePanel();
+  resetOnlineGame();
+}
+function declineRematch() {
+  if (conn && conn.open) { conn.send(JSON.stringify({ type: 'rematchResponse', accept: false })); }
+  hideInvitePanel();
+  disconnectAndMenu();
+}
+function cancelInvite() {
+  hideInvitePanel();
+  document.getElementById('result-panel').style.display = 'flex';
+}
+function hideInvitePanel() { document.getElementById('invite-panel').style.display = 'none'; }
 function exitFromResult() { document.getElementById('result-panel').style.display = 'none'; backToMenu(); }
 function buildBars() {
   const c1 = document.getElementById('bar-col-1'), c2 = document.getElementById('bar-col-2');
