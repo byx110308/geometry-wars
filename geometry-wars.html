@@ -251,18 +251,17 @@ const COLORS = [
 // ===================== 自动更新 =====================
 const VERSION = 15;
 const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wars.html';
-const CHECK_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/version';
 
 (function checkUpdate(background) {
   if (!UPDATE_URL) return;
   const loc = window.location.href;
   if (loc.startsWith(UPDATE_URL) || loc.startsWith('file://' + UPDATE_URL)) return;
-  fetch(CHECK_URL + '?_t=' + Date.now(), { cache: 'no-store', signal: AbortSignal.timeout(4000) })
+  fetch(UPDATE_URL + '?_t=' + Date.now(), { cache: 'no-store', signal: AbortSignal.timeout(4000) })
     .then(r => { if (!r.ok) throw new Error('status ' + r.status); return r.text(); })
-    .then(txt => {
-      const ver = parseInt(txt.trim());
-      if (!ver) { if (!background) showUpdateTip('无法检查更新'); return; }
-      if (ver > VERSION) {
+    .then(html => {
+      const m = html.match(/const\s+VERSION\s*=\s*(\d+)/);
+      if (!m) { if (!background) showUpdateTip('无法检查更新'); return; }
+      if (parseInt(m[1]) > VERSION) {
         if (background && gameMode && !gameOver) {
           const ov = document.getElementById('msg-overlay');
           ov.style.display = 'block';
