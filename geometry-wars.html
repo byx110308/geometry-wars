@@ -1274,7 +1274,7 @@ function showResultPanel(won, p1Score, p2Score) {
   document.getElementById('result-panel').style.display = 'flex';
   document.getElementById('result-title').textContent = won ? '比赛胜利' : 'AI 获胜';
   document.getElementById('result-title').style.color = won ? '#d4a574' : '#c97d8a';
-  document.getElementById('result-detail').textContent = p1Score + ' : ' + p2Score;
+  document.getElementById('result-detail').textContent = '三局两胜  ' + p1Score + ' : ' + p2Score;
   document.getElementById('result-btns').innerHTML =
     '<button class="menu-btn" onclick="restartFromResult()" style="border-color:#d4a574;color:#d4a574;">再来一局</button>' +
     '<button class="menu-btn secondary" onclick="exitFromResult()">返回菜单 (Esc)</button>';
@@ -1283,7 +1283,7 @@ function showOnlineResult(won, p1Score, p2Score) {
   document.getElementById('result-panel').style.display = 'flex';
   document.getElementById('result-title').textContent = won ? '比赛胜利' : '比赛失败';
   document.getElementById('result-title').style.color = won ? '#d4a574' : '#c97d8a';
-  document.getElementById('result-detail').textContent = p1Score + ' : ' + p2Score;
+  document.getElementById('result-detail').textContent = '三局两胜  ' + p1Score + ' : ' + p2Score;
   document.getElementById('result-btns').innerHTML =
     '<button class="menu-btn" onclick="rematchOnline()" style="border-color:#d4a574;color:#d4a574;">重新邀请</button>' +
     '<button class="menu-btn secondary" onclick="exitFromResult()">返回菜单 (Esc)</button>';
