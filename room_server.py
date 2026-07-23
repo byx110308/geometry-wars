@@ -252,7 +252,7 @@ if __name__ == "__main__":
     # 启动服务器
     print(f"[2/2] 启动: http://{HOST}:{PORT}")
     print(f"       房间: GET /rooms  | POST /register /unregister /refresh")
-    print(f"       因子: POST /signals {\"date\": \"2022-12-30\"}  | GET /health")
+    print(f"       因子: POST /signals" + ' {"date": "2022-12-30"}  | GET /health')
 
     server = HTTPServer((HOST, PORT), Handler)
     try:

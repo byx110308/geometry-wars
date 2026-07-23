@@ -697,6 +697,10 @@ function setupConnection(c) {
       remoteState = data;
     }
 
+    if (data.type === 'scoreSync') {
+      document.getElementById('ais').textContent = data.score;
+    }
+
     if (data.type === 'hit') {
       applyHitLocally(data);
     }
