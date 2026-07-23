@@ -140,6 +140,14 @@ canvas { display: block; border: 1px solid #1a1a2a; }
 </style>
 </head>
 <body>
+<div id="browser-block">
+  <div class="bicon">✕</div>
+  <div class="btitle" id="browser-block-title"></div>
+  <div class="bdetail" id="browser-block-detail"></div>
+  <button class="menu-btn secondary" id="browser-block-btn" style="display:none" onclick="document.getElementById('browser-block').classList.remove('show');document.getElementById('wrap').style.display='';">仍然进入</button>
+</div>
+<div id="browser-warns"></div>
+
 <div id="wrap">
   <canvas id="c"></canvas>
 
