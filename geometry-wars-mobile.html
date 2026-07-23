@@ -1229,22 +1229,22 @@ function update(dt) {
     killCam.flashAlpha = Math.max(0, intensity*0.6-0.2);
     if (killCam.timer <= 0) {
       killCam.active = false;
-      if (gameMode === 'ai' || gameMode === 'online') {
+      // AI: 三局两胜; 联机: 先死即输
+      if (gameMode === 'ai') {
         if (killCam.winner === 'player') roundWins.p1++; else roundWins.p2++;
         if (roundWins.p1 >= ROUNDS_TO_WIN || roundWins.p2 >= ROUNDS_TO_WIN) {
           matchOver = true;
           const won = roundWins.p1 >= ROUNDS_TO_WIN;
-          const oppName = gameMode==='ai'?'AI':(remoteUser?remoteUser.name:'对手');
+          const oppName = 'AI';
           recordMatch(gameMode, oppName, won, roundWins.p1, roundWins.p2);
-          if (gameMode === 'ai') {
-            showResultPanel(won, roundWins.p1, roundWins.p2);
-          } else {
-            const msg = document.getElementById('msg-overlay'); msg.style.display = 'block';
-            msg.textContent = won ? '你赢了！点菜单重来' : '你输了！点菜单重来';
-          }
+          showResultPanel(won, roundWins.p1, roundWins.p2);
           if (window._updatePending) setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + VERSION; }, 3000);
         } else { roundPause = 1.5; resetRound(); }
-      } else { gameOver = true; }
+      } else if (gameMode === 'online') {
+        matchOver = true;
+        const iWon = killCam.winner === 'player';
+        handleOnlineGameOver(iWon);
+      }
     }
   }
   if (roundPause > 0) { roundPause -= dt; if (roundPause <= 0) resetRound(); }
