@@ -493,6 +493,7 @@ function setupConnection(c) {
     if (data.type === 'hello') { remoteUser = {name:data.name,colorIdx:data.colorIdx}; if (isHost) { conn.send(JSON.stringify({type:'start',hostUser:{name:currentUser.name,colorIdx:currentUser.colorIdx},guestUser:{name:data.name,colorIdx:data.colorIdx}})); startOnlineGame(); } }
     if (data.type === 'start') { remoteUser = isHost ? data.guestUser : data.hostUser; startOnlineGame(); }
     if (data.type === 'state') { remoteState = data; }
+    if (data.type === 'scoreSync') { document.getElementById('ais').textContent = data.score; }
     if (data.type === 'hit') { applyHitLocally(data); }
     if (data.type === 'fireBullet') { fireBulletRemote(data); }
     if (data.type === 'fireUlt') { fireUltRemote(data); }
@@ -1259,7 +1260,7 @@ function update(dt) {
             showOnlineResult(won, roundWins.p1, roundWins.p2);
           }
           if (window._updatePending) setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + VERSION; }, 3000);
-        } else { roundPause = 1.5; resetRound(); }
+        } else { roundPause = 1.5; }
       } else { gameOver = true; }
     }
   }
