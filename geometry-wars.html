@@ -271,7 +271,7 @@ const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wa
         } else {
           document.title = '几何决斗 - 正在更新...';
           document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#999;font-family:monospace;font-size:14px;letter-spacing:2px;">发现新版本，正在自动更新...</div>';
-          setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + ver; }, 800);
+          setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + parseInt(m[1]); }, 800);
         }
       } else if (!background) {
         showUpdateTip('已是最新版本 (v' + VERSION + ')');
