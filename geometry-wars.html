@@ -1309,7 +1309,42 @@ function showOnlineResult(won, p1Score, p2Score) {
     '<button class="menu-btn secondary" onclick="exitFromResult()">返回菜单 (Esc)</button>';
 }
 function restartFromResult() { document.getElementById('result-panel').style.display = 'none'; resetAIGame(); }
-function rematchOnline() { document.getElementById('result-panel').style.display = 'none'; if (conn && conn.open) { conn.send(JSON.stringify({type:'rematch'})); } resetOnlineGame(); }
+function rematchOnline() {
+  if (conn && conn.open) {
+    conn.send(JSON.stringify({ type: 'rematchRequest' }));
+    showInviteSent();
+  }
+}
+function showInviteSent() {
+  document.getElementById('result-panel').style.display = 'none';
+  document.getElementById('invite-panel').style.display = 'flex';
+  document.getElementById('invite-title').textContent = '已发送邀请，等待对手回应...';
+  document.getElementById('invite-btns').innerHTML =
+    '<button class="menu-btn secondary" onclick="cancelInvite()">取消</button>';
+}
+function showInviteReceived() {
+  document.getElementById('result-panel').style.display = 'none';
+  document.getElementById('invite-panel').style.display = 'flex';
+  document.getElementById('invite-title').textContent = '对手邀请重赛';
+  document.getElementById('invite-btns').innerHTML =
+    '<button class="menu-btn" onclick="acceptRematch()" style="border-color:#d4a574;color:#d4a574;">同意</button>' +
+    '<button class="menu-btn secondary" onclick="declineRematch()">拒绝</button>';
+}
+function acceptRematch() {
+  if (conn && conn.open) { conn.send(JSON.stringify({ type: 'rematchResponse', accept: true })); }
+  hideInvitePanel();
+  resetOnlineGame();
+}
+function declineRematch() {
+  if (conn && conn.open) { conn.send(JSON.stringify({ type: 'rematchResponse', accept: false })); }
+  hideInvitePanel();
+  disconnectAndMenu();
+}
+function cancelInvite() {
+  hideInvitePanel();
+  document.getElementById('result-panel').style.display = 'flex';
+}
+function hideInvitePanel() { document.getElementById('invite-panel').style.display = 'none'; }
 function exitFromResult() { document.getElementById('result-panel').style.display = 'none'; backToMenu(); }
 
 function applyHitLocally(data) {
