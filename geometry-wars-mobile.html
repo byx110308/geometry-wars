@@ -811,7 +811,7 @@ function fireBullet(shooter, bulletsArr) {
       const killed = applyDamage(shooter, target, dmg, target.x, target.y);
       snd(900 + charge * 500, 0.06, 'square', 0.06, 0.04);
       if (gameMode === 'online' && shooter === player && conn && conn.open) { conn.send(JSON.stringify({type:'hit',damage:dmg,bulletX:target.x,bulletY:target.y})); }
-      if (killed) { target.dead = true; startKillCam(shooter, target.x, target.y); spawnShatter(target.x, target.y, COLORS[target.colorIdx].hex, target.r); snd(120, 0.5, 'sawtooth', 0.12); if (gameMode === 'online' && shooter === player && conn && conn.open) { conn.send(JSON.stringify({type:'gameOver',winner:isHost?'host':'guest'})); } }
+      if (killed) { target.dead = true; startKillCam(shooter, target.x, target.y); spawnShatter(target.x, target.y, COLORS[target.colorIdx].hex, target.r); snd(120, 0.5, 'sawtooth', 0.12); }
     }
   }
 }
@@ -938,7 +938,6 @@ function startOnlineGame() {
 }
 function resetOnlineGame() { roundWins = {p1:0,p2:0}; matchOver = false; document.getElementById('result-panel').style.display = 'none'; resetRound(); }
 function handleOnlineGameOver(iWon) {
-  if (matchOver) return;
   matchOver = true;
   const oppName = remoteUser ? remoteUser.name : '对手';
   if (iWon) roundWins.p1++; else roundWins.p2++;
@@ -1083,7 +1082,6 @@ function updatePlayerInput(p, dt) {
           const end = p.ultiBeam ? {x1:p.ultiBeam.x1,y1:p.ultiBeam.y1,x2:p.ultiBeam.x2,y2:p.ultiBeam.y2} : {x1:0,y1:0,x2:0,y2:0};
           conn.send(JSON.stringify({type:'fireUlt',chargeLevel:1.0,beamDuration:p.ultiBeam?p.ultiBeam.maxTimer:0.3,x1:end.x1,y1:end.y1,x2:end.x2,y2:end.y2}));
           if (hitDmg > 0) conn.send(JSON.stringify({type:'hit',damage:hitDmg,bulletX:target.x,bulletY:target.y,isUlt:true}));
-          if (target.dead) conn.send(JSON.stringify({type:'gameOver',winner:isHost?'host':'guest'}));
         }
       }
     }
