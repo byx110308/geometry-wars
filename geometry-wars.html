@@ -1257,6 +1257,7 @@ function startOnlineGame() {
 
 function resetOnlineGame() {
   roundWins = { p1: 0, p2: 0 }; matchOver = false;
+  document.getElementById('result-panel').style.display = 'none';
   resetRound();
 }
 
