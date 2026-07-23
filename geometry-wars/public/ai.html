@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>几何战争 - PvP决斗</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; background: #000; font-family: 'Segoe UI', sans-serif;
+  }
+  #wrap { position: relative; }
+  canvas { display: block; border: 1px solid #1a1a3a; border-radius: 4px; }
+  #hud {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 60px; color: #fff; font-size: 13px; letter-spacing: 2px;
+    pointer-events: none; text-shadow: 0 0 10px rgba(255,255,255,0.5);
+  }
+  #hud .val { color: #0ff; font-weight: bold; font-size: 18px; }
+  #msg {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    color: #fff; font-size: 18px; letter-spacing: 3px; text-align: center;
+    pointer-events: none; text-shadow: 0 0 20px #f0f; display: none;
+  }
+  .bar-wrap {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 40px;
+  }
+  .bar-col { display: flex; flex-direction: column; gap: 5px; align-items: center; }
+  .bar { width: 140px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; transition: width 0.1s; }
+  .bar-label { color: #888; font-size: 10px; text-align: center; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="hud">
+    <div>玩家 <span class="val" id="ps">0</span></div>
+    <div>AI <span class="val" id="ais" style="color:#f0f">0</span></div>
+  </div>
+  <div id="msg"></div>
+  <div id="result" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:20;flex-direction:column;align-items:center;justify-content:center;gap:20px;">
+    <div id="resultTitle" style="font-size:36px;font-weight:bold;letter-spacing:6px;"></div>
+    <div id="resultStats" style="color:#aaa;font-size:14px;letter-spacing:2px;text-align:center;line-height:2;"></div>
+    <div style="display:flex;gap:15px;">
+      <button onclick="resetGame();document.getElementById('result').style.display='none'" style="padding:12px 30px;border:2px solid #0ff;background:transparent;color:#0ff;font-size:15px;letter-spacing:3px;cursor:pointer;border-radius:6px;">再来一局 [R]</button>
+      <button onclick="window.location.href='/'" style="padding:12px 30px;border:2px solid #f0f;background:transparent;color:#f0f;font-size:15px;letter-spacing:3px;cursor:pointer;border-radius:6px;">返回主页 [ESC]</button>
+    </div>
+  </div>
+  <div class="bar-wrap">
+    <div class="bar-col">
+      <div class="bar"><div class="bar-fill" id="hpbar" style="background:#0ff;width:100%"></div></div>
+      <div class="bar-label">玩家生命</div>
+      <div class="bar"><div class="bar-fill" id="xpbar" style="background:#4af;width:0%"></div></div>
+      <div class="bar-label" id="xplabel">经验 0/50</div>
+      <div class="bar"><div class="bar-fill" id="bowbar" style="background:#0f8;width:0%"></div></div>
+      <div class="bar-label" id="bowlabel">弓箭 [左键] 蓄力</div>
+      <div class="bar"><div class="bar-fill" id="ultbar" style="background:#fa0;width:0%"></div></div>
+      <div class="bar-label" id="ultlabel">大招 [右键] 蓄力</div>
+    </div>
+    <div class="bar-col">
+      <div class="bar"><div class="bar-fill" id="aihpbar" style="background:#f0f;width:100%"></div></div>
+      <div class="bar-label">AI 生命</div>
+      <div class="bar"><div class="bar-fill" id="aixpbar" style="background:#a4f;width:0%"></div></div>
+      <div class="bar-label" id="aixplabel">经验 0/50</div>
+      <div class="bar"><div class="bar-fill" id="aibowbar" style="background:#f8f;width:0%"></div></div>
+      <div class="bar-label" id="aibowlabel">AI 弓箭</div>
+      <div class="bar"><div class="bar-fill" id="aiultbar" style="background:#fa0;width:0%"></div></div>
+      <div class="bar-label" id="aiultlabel">AI 大招</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+const W = c.width = 900;
+const H = c.height = 600;
+
+const gridSize = 48;
+let gridOffsetX = 0, gridOffsetY = 0;
+
+let player = {
+  x: 200, y: H / 2, r: 16,
+  hp: 1000, maxHp: 1000,
+  xp: 0, maxXp: 50,
+  score: 0,
+  vx: 0, vy: 0,
+  aimAngle: 0,
+  bowCharge: 0,
+  bowCharging: false,
+  arrowCd: 0,
+  dead: false,
+  ultiCharging: false,
+  ultiChargeProgress: 0,
+  ultiCooldown: 0,
+  ultiBeam: null,
+  ultiMaxTimer: 0,
+  ultiLockTimer: 0,
+  ultiLocked: false
+};
+
+let ai = {
+  x: 700, y: H / 2, r: 16,
+  hp: 1000, maxHp: 1000,
+  xp: 0, maxXp: 50,
+  score: 0,
+  vx: 0, vy: 0,
+  aimAngle: Math.PI,
+  bowCharge: 0,
+  bowCharging: false,
+  arrowCd: 0,
+  dead: false,
+  difficulty: 1,
+  ultiCharging: false,
+  ultiChargeProgress: 0,
+  ultiCooldown: 0,
+  ultiBeam: null,
+  ultiMaxTimer: 0,
+  ultiLockTimer: 0,
+  ultiLocked: false,
+  orbitAngle: Math.random() * Math.PI * 2,
+  dodgeTimer: 0,
+  dodgeVx: 0, dodgeVy: 0,
+  predictAngle: 0,
+  predictWeight: 0,
+  prevPlayerX: 0,
+  prevPlayerY: 0,
+  learnTimer: 0,
+  missedShots: 0
+};
+
+let bullets = [];
+let aiBullets = [];
+let particles = [];
+let gameOver = false;
+let keys = {};
+let mouseLeftDown = false;
+let mouseRightDown = false;
+let mouseX = W / 2, mouseY = H / 2;
+let killCam = { active: false, timer: 0, maxTimer: 1.8, winner: '', posX: 0, posY: 0, shakeX: 0, shakeY: 0, flashAlpha: 0 };
+
+document.addEventListener('keydown', e => {
+  keys[e.key.toLowerCase()] = true;
+  if (e.key === 'r' || e.key === 'R') resetGame();
+  if (e.key === 'Escape') window.location.href = '/';
+  if (e.key === '1') {
+    if (ai.difficulty === 1) ai.difficulty = 0.5;
+    else if (ai.difficulty === 0.5) ai.difficulty = 2;
+    else ai.difficulty = 1;
+  }
+  e.preventDefault();
+});
+document.addEventListener('keyup', e => {
+  keys[e.key.toLowerCase()] = false;
+  e.preventDefault();
+});
+
+c.addEventListener('mousemove', e => {
+  const rect = c.getBoundingClientRect();
+  mouseX = e.clientX - rect.left;
+  mouseY = e.clientY - rect.top;
+  player.aimAngle = Math.atan2(mouseY - player.y, mouseX - player.x);
+});
+c.addEventListener('mousedown', e => {
+  if (e.button === 0) mouseLeftDown = true;
+  if (e.button === 2) {
+    mouseRightDown = true;
+    e.preventDefault();
+  }
+});
+c.addEventListener('mouseup', e => {
+  if (e.button === 0) mouseLeftDown = false;
+  if (e.button === 2) {
+    mouseRightDown = false;
+    e.preventDefault();
+  }
+});
+c.addEventListener('contextmenu', e => e.preventDefault());
+
+let reportedMatch = false;
+function reportMatchResult(winner) {
+  if (reportedMatch) return;
+  reportedMatch = true;
+  const userId = localStorage.getItem('gw_userId');
+  const token = localStorage.getItem('gw_token');
+  if (!userId || !token) return;
+  const won = winner === 'player';
+  const stats = JSON.parse(localStorage.getItem('gw_stats') || '{}');
+  stats.matches = (stats.matches || 0) + 1;
+  if (won) stats.wins = (stats.wins || 0) + 1;
+  else stats.losses = (stats.losses || 0) + 1;
+  localStorage.setItem('gw_stats', JSON.stringify(stats));
+  fetch('/api/matchResult', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, token, won, mode: 'ai' })
+  }).catch(() => {});
+}
+
+function resetGame() {
+  player = { x: 200, y: H / 2, r: 16, hp: 1000, maxHp: 1000, xp: 0, maxXp: 50, score: 0, vx: 0, vy: 0, aimAngle: 0, bowCharge: 0, bowCharging: false, arrowCd: 0, dead: false, ultiCharging: false, ultiChargeProgress: 0, ultiCooldown: 0, ultiBeam: null, ultiMaxTimer: 0, ultiLockTimer: 0, ultiLocked: false };
+  ai = { x: 700, y: H / 2, r: 16, hp: 1000, maxHp: 1000, xp: 0, maxXp: 50, score: 0, vx: 0, vy: 0, aimAngle: Math.PI, bowCharge: 0, bowCharging: false, arrowCd: 0, dead: false, difficulty: ai.difficulty || 1, ultiCharging: false, ultiChargeProgress: 0, ultiCooldown: 0, ultiBeam: null, ultiMaxTimer: 0, ultiLockTimer: 0, ultiLocked: false, orbitAngle: Math.random() * Math.PI * 2, dodgeTimer: 0, dodgeVx: 0, dodgeVy: 0, predictAngle: 0, predictWeight: 0, prevPlayerX: 0, prevPlayerY: 0, learnTimer: 0, missedShots: 0 };
+  bullets = []; aiBullets = []; particles = [];
+  gameOver = false;
+  reportedMatch = false;
+  killCam = { active: false, timer: 0, maxTimer: 1.8, winner: '', posX: 0, posY: 0, shakeX: 0, shakeY: 0, flashAlpha: 0 };
+  mouseLeftDown = false; mouseRightDown = false;
+  document.getElementById('msg').style.display = 'none';
+  document.getElementById('ps').textContent = '0';
+  document.getElementById('ais').textContent = '0';
+}
+
+function spawnExplosion(x, y, color, count) {
+  for (let i = 0; i < count; i++) {
+    const ang = Math.random() * Math.PI * 2;
+    const spd = 60 + Math.random() * 200;
+    particles.push({
+      x, y, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+      life: 0.25 + Math.random() * 0.5, maxLife: 0.25 + Math.random() * 0.5,
+      color, size: 1 + Math.random() * 3
+    });
+  }
+}
+
+function fireBullet(shooter, bulletsArr, color, charge) {
+  const angle = shooter.aimAngle;
+  const c = charge || 0;
+  const speed = c > 0 ? 300 + c * 450 : 480;
+  bulletsArr.push({
+    x: shooter.x + Math.cos(angle) * (shooter.r + 4),
+    y: shooter.y + Math.sin(angle) * (shooter.r + 4),
+    vx: Math.cos(angle) * speed,
+    vy: Math.sin(angle) * speed,
+    color,
+    life: 2,
+    charge: c
+  });
+}
+
+function getBeamEnd(x, y, angle) {
+  const dx = Math.cos(angle);
+  const dy = Math.sin(angle);
+  let t = Infinity;
+  if (dx > 0.0001) t = Math.min(t, (W - x) / dx);
+  else if (dx < -0.0001) t = Math.min(t, -x / dx);
+  if (dy > 0.0001) t = Math.min(t, (H - y) / dy);
+  else if (dy < -0.0001) t = Math.min(t, -y / dy);
+  return { x: x + dx * Math.max(1, t), y: y + dy * Math.max(1, t) };
+}
+
+function pointToSegmentDist(px, py, x1, y1, x2, y2) {
+  const dx = x2 - x1, dy = y2 - y1;
+  const lenSq = dx * dx + dy * dy;
+  if (lenSq < 0.0001) return Math.hypot(px - x1, py - y1);
+  let t = ((px - x1) * dx + (py - y1) * dy) / lenSq;
+  t = Math.max(0, Math.min(1, t));
+  return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+}
+
+function fireUlt(shooter, chargeLevel) {
+  const clampedCharge = Math.max(0.25, Math.min(1, chargeLevel));
+  const end = getBeamEnd(shooter.x, shooter.y, shooter.aimAngle);
+
+  const damage = clampedCharge >= 1.0 ? 999 : Math.floor(clampedCharge * 85 + 10);
+  const beamDuration = 0.15 + clampedCharge * 0.25;
+
+  shooter.ultiBeam = {
+    x1: shooter.x, y1: shooter.y,
+    x2: end.x, y2: end.y,
+    timer: beamDuration, maxTimer: beamDuration,
+    chargeLevel: clampedCharge,
+    color: shooter === player ? '#0ff' : '#f0f'
+  };
+
+  shooter.ultiCooldown = clampedCharge >= 1.0 ? 7 : 4;
+  shooter.ultiChargeProgress = 0;
+  shooter.ultiCharging = false;
+
+  const target = shooter === player ? ai : player;
+  if (!target.dead) {
+    const hitRadius = 8 + clampedCharge * 18;
+    const dist = pointToSegmentDist(target.x, target.y, shooter.x, shooter.y, end.x, end.y);
+    if (dist < target.r + hitRadius) {
+      target.hp -= damage;
+      shooter.hp = Math.min(shooter.maxHp, shooter.hp + Math.ceil(damage * 0.1));
+      shooter.score += damage;
+      if (shooter === player) document.getElementById('ps').textContent = player.score;
+      else document.getElementById('ais').textContent = ai.score;
+      spawnExplosion(target.x, target.y, '#fff', Math.floor(15 + clampedCharge * 50));
+      spawnExplosion(target.x, target.y, '#ff0', Math.floor(10 + clampedCharge * 30));
+      if (target.hp <= 0) { target.hp = 0; target.dead = true; startKillCam(shooter === player ? 'player' : 'ai', target.x, target.y); }
+    }
+  }
+
+  for (let i = 0; i < 8 + clampedCharge * 20; i++) {
+    const pct = Math.random();
+    spawnExplosion(
+      shooter.x + (end.x - shooter.x) * pct,
+      shooter.y + (end.y - shooter.y) * pct,
+      shooter === player ? '#0ff' : '#f0f', 2
+    );
+  }
+}
+
+function startKillCam(winner, px, py) {
+  if (killCam.active) return;
+  killCam.active = true;
+  killCam.timer = killCam.maxTimer;
+  killCam.winner = winner;
+  killCam.posX = px;
+  killCam.posY = py;
+  killCam.shakeX = 0;
+  killCam.shakeY = 0;
+  killCam.flashAlpha = 0.8;
+  const pColor = winner === 'player' ? 'rgb(0,255,255)' : 'rgb(255,0,255)';
+  for (let i = 0; i < 80; i++) {
+    const ang = Math.random() * Math.PI * 2;
+    const spd = 80 + Math.random() * 350;
+    particles.push({
+      x: px, y: py,
+      vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+      life: 0.5 + Math.random() * 1.2, maxLife: 0.5 + Math.random() * 1.2,
+      color: pColor,
+      size: 2 + Math.random() * 6
+    });
+  }
+}
+
+function updatePlayer(dt) {
+  if (player.dead || gameOver || killCam.active) return;
+
+  if (player.ultiCooldown > 0) {
+    player.ultiCooldown -= dt;
+    if (player.ultiCooldown <= 0) player.ultiCooldown = 0;
+  }
+
+  const canUlt = player.ultiCooldown <= 0 && player.xp >= player.maxXp;
+  const chargeDown = mouseRightDown && canUlt;
+
+  if (chargeDown) {
+    if (!player.ultiCharging) {
+      player.ultiCharging = true;
+      player.ultiChargeProgress = 0;
+      player.ultiMaxTimer = 0;
+      player.ultiLockTimer = 0;
+      player.ultiLocked = false;
+    }
+    player.ultiChargeProgress = Math.min(1, player.ultiChargeProgress + dt / 1.2);
+    if (player.ultiChargeProgress >= 1.0) {
+      player.ultiMaxTimer += dt;
+      const distToAI = Math.hypot(ai.x - player.x, ai.y - player.y);
+      const angleToAI = Math.atan2(ai.y - player.y, ai.x - player.x);
+      let angleDiff = Math.abs(player.aimAngle - angleToAI);
+      while (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
+      if (angleDiff < 0.22 && distToAI < 600 && !ai.dead) {
+        player.ultiLockTimer += dt;
+        if (player.ultiLockTimer >= 0.4) {
+          player.ultiLocked = true;
+        }
+      } else {
+        player.ultiLockTimer = Math.max(0, player.ultiLockTimer - dt * 2);
+        if (player.ultiLockTimer < 0.2) player.ultiLocked = false;
+      }
+      if (player.ultiMaxTimer >= 0.6 || player.ultiLocked) {
+        fireUlt(player, 1.0);
+        player.xp = 0;
+        player.ultiCharging = false;
+        player.ultiMaxTimer = 0;
+        player.ultiLockTimer = 0;
+        player.ultiLocked = false;
+      }
+    }
+  } else if (player.ultiCharging) {
+    if (player.ultiChargeProgress >= 0.25) {
+      fireUlt(player, player.ultiChargeProgress);
+      player.xp = 0;
+    }
+    player.ultiCharging = false;
+    player.ultiChargeProgress = 0;
+    player.ultiMaxTimer = 0;
+    player.ultiLockTimer = 0;
+    player.ultiLocked = false;
+  }
+
+  if (player.arrowCd > 0) {
+    player.arrowCd -= dt;
+    if (player.arrowCd <= 0) player.arrowCd = 0;
+  }
+
+  const bowDown = mouseLeftDown;
+  if (bowDown && player.arrowCd <= 0 && !player.ultiCharging) {
+    if (!player.bowCharging) {
+      player.bowCharging = true;
+      player.bowCharge = 0;
+    }
+    player.bowCharge = Math.min(1, player.bowCharge + dt / 0.5);
+  } else if (player.bowCharging) {
+    if (player.bowCharge >= 0.2) {
+      fireBullet(player, bullets, '#0ff', player.bowCharge);
+      player.arrowCd = 0.18;
+    }
+    player.bowCharge = 0;
+    player.bowCharging = false;
+  }
+
+  if (!player.bowCharging && !bowDown && player.bowCharge < 0.2 && player.bowCharge > 0) {
+    player.bowCharge = Math.max(0, player.bowCharge - dt * 5);
+  }
+
+  const ultSlow = player.ultiCharging ? 0.35 : 1;
+  const bowSlow = player.bowCharging ? 0.6 : 1;
+  const speedMul = ultSlow * bowSlow;
+  let ax = 0, ay = 0;
+  if (keys['w'] || keys['arrowup']) ay -= 1;
+  if (keys['s'] || keys['arrowdown']) ay += 1;
+  if (keys['a'] || keys['arrowleft']) ax -= 1;
+  if (keys['d'] || keys['arrowright']) ax += 1;
+  if (ax !== 0 || ay !== 0) { const len = Math.hypot(ax, ay); ax /= len; ay /= len; }
+
+  player.vx += (ax * 360 * speedMul - player.vx) * 5 * dt;
+  player.vy += (ay * 360 * speedMul - player.vy) * 5 * dt;
+  player.x += player.vx * dt;
+  player.y += player.vy * dt;
+  player.x = Math.max(player.r, Math.min(W - player.r, player.x));
+  player.y = Math.max(player.r, Math.min(H - player.r, player.y));
+}
+
+function updateAI(dt) {
+  if (ai.dead || gameOver || killCam.active) return;
+
+  if (ai.ultiCooldown > 0) {
+    ai.ultiCooldown -= dt;
+    if (ai.ultiCooldown <= 0) ai.ultiCooldown = 0;
+  }
+
+  const distToPlayer = Math.hypot(ai.x - player.x, ai.y - player.y);
+  const angleToPlayer = Math.atan2(player.y - ai.y, player.x - ai.x);
+
+  ai.learnTimer += dt;
+  if (ai.learnTimer > 0.5 && distToPlayer < 500 && !player.dead) {
+    ai.learnTimer = 0;
+    const dx = player.x - ai.prevPlayerX;
+    const dy = player.y - ai.prevPlayerY;
+    const moved = Math.hypot(dx, dy);
+    if (moved > 10 && ai.prevPlayerX !== 0) {
+      ai.missedShots++;
+      const moveAngle = Math.atan2(dy, dx);
+      const aimDiff = moveAngle - angleToPlayer;
+      if (Math.abs(aimDiff) > 0.3) {
+        ai.predictAngle += (aimDiff - ai.predictAngle) * 0.3;
+        ai.predictWeight = Math.min(1, ai.predictWeight + 0.08);
+      } else {
+        ai.predictWeight = Math.max(0, ai.predictWeight - 0.04);
+      }
+    }
+    ai.prevPlayerX = player.x;
+    ai.prevPlayerY = player.y;
+  }
+
+  const predictX = player.x + player.vx * 0.2 + Math.cos(ai.predictAngle + angleToPlayer) * ai.predictWeight * 80;
+  const predictY = player.y + player.vy * 0.2 + Math.sin(ai.predictAngle + angleToPlayer) * ai.predictWeight * 80;
+  const predictedAngle = Math.atan2(predictY - ai.y, predictX - ai.x);
+
+  ai.aimAngle += (predictedAngle - ai.aimAngle) * Math.min(1, 6 * ai.difficulty * dt);
+
+  if (ai.arrowCd > 0) {
+    ai.arrowCd -= dt;
+    if (ai.arrowCd <= 0) ai.arrowCd = 0;
+  }
+
+  if (!player.dead && ai.arrowCd <= 0 && !ai.ultiCharging && distToPlayer < 500) {
+    let angleDiff = Math.abs(ai.aimAngle - angleToPlayer);
+    while (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
+    if (!ai.bowCharging) {
+      if (angleDiff < 0.35 && Math.random() < dt * 3 * ai.difficulty) {
+        ai.bowCharging = true;
+        ai.bowCharge = 0;
+      }
+    } else {
+      ai.bowCharge = Math.min(1, ai.bowCharge + dt / 0.5);
+      const shouldFire = (ai.bowCharge >= 0.8) || (ai.bowCharge >= 0.4 && Math.random() < dt * 2)
+        || (angleDiff > 0.6 && ai.bowCharge >= 0.25);
+      if (shouldFire && ai.bowCharge >= 0.2) {
+        fireBullet(ai, aiBullets, '#f0f', ai.bowCharge);
+        ai.bowCharge = 0;
+        ai.bowCharging = false;
+        ai.arrowCd = 0.25;
+      }
+    }
+  }
+
+  if (!player.dead && ai.ultiCooldown <= 0 && ai.xp >= ai.maxXp) {
+    let angleDiff = Math.abs(ai.aimAngle - angleToPlayer);
+    while (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
+
+    if (!ai.ultiCharging) {
+      if (distToPlayer < 380 && angleDiff < 0.25 && Math.random() < dt * 1.2) {
+        ai.ultiCharging = true;
+        ai.ultiChargeProgress = 0;
+        ai.ultiMaxTimer = 0;
+        ai.ultiLockTimer = 0;
+        ai.ultiLocked = false;
+        if (ai.bowCharging) { ai.bowCharging = false; ai.bowCharge = 0; }
+      }
+    } else {
+      ai.ultiChargeProgress = Math.min(1, ai.ultiChargeProgress + dt / 1.2);
+      if (ai.ultiChargeProgress >= 1.0) {
+        ai.ultiMaxTimer += dt;
+        if (angleDiff < 0.22 && !player.dead) {
+          ai.ultiLockTimer += dt;
+          if (ai.ultiLockTimer >= 0.4) ai.ultiLocked = true;
+        } else {
+          ai.ultiLockTimer = Math.max(0, ai.ultiLockTimer - dt * 2);
+          if (ai.ultiLockTimer < 0.2) ai.ultiLocked = false;
+        }
+        if (ai.ultiMaxTimer >= 0.6 || ai.ultiLocked) {
+          fireUlt(ai, 1.0);
+          ai.xp = 0;
+          ai.ultiCharging = false;
+          ai.ultiMaxTimer = 0;
+          ai.ultiLockTimer = 0;
+          ai.ultiLocked = false;
+        }
+      }
+      if (angleDiff > 0.6) {
+        if (ai.ultiChargeProgress >= 0.25) { fireUlt(ai, ai.ultiChargeProgress); ai.xp = 0; }
+        ai.ultiCharging = false;
+        ai.ultiChargeProgress = 0;
+        ai.ultiMaxTimer = 0;
+        ai.ultiLockTimer = 0;
+        ai.ultiLocked = false;
+      }
+    }
+  }
+
+  const ultSlow = ai.ultiCharging ? 0.35 : 1;
+  const bowSlow = ai.bowCharging ? 0.6 : 1;
+  const speedMul = ultSlow * bowSlow;
+
+  let threatVx = 0, threatVy = 0;
+
+  for (const b of bullets) {
+    const d = Math.hypot(ai.x - b.x, ai.y - b.y);
+    if (d < 170 && d > 0) {
+      const force = 180 / (d * d) * 100;
+      threatVx += (ai.x - b.x) / d * force;
+      threatVy += (ai.y - b.y) / d * force;
+    }
+  }
+
+    if (player.ultiCharging && !player.dead) {
+    const plAngleToAI = Math.atan2(ai.y - player.y, ai.x - player.x);
+    let plAimDiff = Math.abs(player.aimAngle - plAngleToAI);
+    while (plAimDiff > Math.PI) plAimDiff = Math.PI * 2 - plAimDiff;
+
+    const ultThreat = plAimDiff < 0.5 && distToPlayer < 700;
+    if (ultThreat) {
+      const closeDanger = plAimDiff < 0.25 && distToPlayer < 400;
+
+      if (closeDanger && player.ultiChargeProgress > 0.5) {
+        if (ai.bowCharging) { ai.bowCharging = false; ai.bowCharge = 0; }
+        if (ai.ultiCharging) {
+          ai.ultiCharging = false;
+          ai.ultiChargeProgress = 0;
+          ai.ultiMaxTimer = 0;
+          ai.ultiLockTimer = 0;
+          ai.ultiLocked = false;
+        }
+      }
+
+      ai.dodgeVx = 0; ai.dodgeVy = 0;
+
+      const urgency = closeDanger ? 1 : (player.ultiChargeProgress >= 0.6 ? 0.8 : 0.4);
+      const boost = 320 + urgency * 280;
+      const dodgeAngle = player.aimAngle + (Math.random() > 0.5 ? 1 : -1) * (Math.PI / 2 + (Math.random() - 0.5) * 0.3);
+      threatVx += Math.cos(dodgeAngle) * boost;
+      threatVy += Math.sin(dodgeAngle) * boost;
+
+      if (closeDanger && player.ultiChargeProgress > 0.3) {
+        ai.orbitAngle += dt * 3;
+      }
+
+      if (!closeDanger && ai.xp >= ai.maxXp && ai.ultiCooldown <= 0 && !ai.ultiCharging) {
+        let ownDiff = Math.abs(ai.aimAngle - angleToPlayer);
+        while (ownDiff > Math.PI) ownDiff = Math.PI * 2 - ownDiff;
+        if (ownDiff < 0.3 && Math.random() < dt * 4) {
+          ai.ultiCharging = true;
+          ai.ultiChargeProgress = 0;
+          ai.ultiMaxTimer = 0;
+          ai.ultiLockTimer = 0;
+          ai.ultiLocked = false;
+        }
+      }
+    }
+  }
+
+  if (!player.dead) {
+    const orbitDist = 220 + Math.random() * 80;
+    const hpRatio = ai.hp / ai.maxHp;
+    const orbitSpeed = hpRatio < 0.3 ? 2.5 : hpRatio < 0.5 ? 1.8 : 0.8 + ai.difficulty * 0.4;
+    const retreatDist = hpRatio < 0.3 ? 130 : hpRatio < 0.5 ? 60 : 0;
+    ai.orbitAngle += dt * orbitSpeed;
+    const desiredX = player.x + Math.cos(ai.orbitAngle) * (orbitDist + retreatDist);
+    const desiredY = player.y + Math.sin(ai.orbitAngle) * (orbitDist + retreatDist);
+    const toTargetX = desiredX - ai.x;
+    const toTargetY = desiredY - ai.y;
+    const toTargetDist = Math.hypot(toTargetX, toTargetY) || 1;
+    threatVx += toTargetX / toTargetDist * 120;
+    threatVy += toTargetY / toTargetDist * 120;
+  }
+
+  ai.dodgeTimer -= dt;
+  if (ai.dodgeTimer <= 0) {
+    ai.dodgeTimer = 0.2 + Math.random() * 0.4;
+    ai.dodgeVx = (Math.random() - 0.5) * 90;
+    ai.dodgeVy = (Math.random() - 0.5) * 90;
+  }
+
+  const maxSpeed = 360 * speedMul;
+  ai.vx += ((ai.dodgeVx + threatVx) - ai.vx) * 3 * dt;
+  ai.vy += ((ai.dodgeVy + threatVy) - ai.vy) * 3 * dt;
+  const speed = Math.hypot(ai.vx, ai.vy);
+  if (speed > maxSpeed) { ai.vx = ai.vx / speed * maxSpeed; ai.vy = ai.vy / speed * maxSpeed; }
+
+  ai.x += ai.vx * dt;
+  ai.y += ai.vy * dt;
+  ai.x = Math.max(ai.r, Math.min(W - ai.r, ai.x));
+  ai.y = Math.max(ai.r, Math.min(H - ai.r, ai.y));
+}
+
+function update(dt) {
+  if (gameOver) return;
+  updatePlayer(dt);
+  updateAI(dt);
+
+  gridOffsetX = (gridOffsetX + (player.vx || 0) * dt * 0.4) % gridSize;
+  gridOffsetY = (gridOffsetY + (player.vy || 0) * dt * 0.4) % gridSize;
+
+  for (const arr of [bullets, aiBullets]) {
+    for (let i = arr.length - 1; i >= 0; i--) {
+      const b = arr[i];
+      b.x += b.vx * dt; b.y += b.vy * dt;
+      b.life -= dt;
+      if (b.x < -20 || b.x > W + 20 || b.y < -20 || b.y > H + 20 || b.life <= 0) {
+        arr.splice(i, 1);
+      }
+    }
+  }
+
+  for (let bi = bullets.length - 1; bi >= 0; bi--) {
+    const b = bullets[bi];
+    if (!ai.dead && Math.hypot(b.x - ai.x, b.y - ai.y) < ai.r + 5) {
+      const dmg = b.charge > 0 ? 5 + Math.floor(b.charge * 22) : 15;
+      ai.hp -= dmg;
+      player.hp = Math.min(player.maxHp, player.hp + Math.ceil(dmg * 0.1));
+      player.xp = Math.min(player.maxXp, player.xp + Math.ceil(dmg * 0.5));
+      player.score += dmg;
+      document.getElementById('ps').textContent = player.score;
+      bullets.splice(bi, 1);
+      spawnExplosion(b.x, b.y, '#f0f', 5);
+      if (ai.hp <= 0 && !killCam.active) { ai.hp = 0; ai.dead = true; startKillCam('player', ai.x, ai.y); }
+    }
+  }
+  for (let bi = aiBullets.length - 1; bi >= 0; bi--) {
+    const b = aiBullets[bi];
+    if (!player.dead && Math.hypot(b.x - player.x, b.y - player.y) < player.r + 5) {
+      const dmg = b.charge > 0 ? 5 + Math.floor(b.charge * 22) : 15;
+      player.hp -= dmg;
+      ai.hp = Math.min(ai.maxHp, ai.hp + Math.ceil(dmg * 0.1));
+      ai.xp = Math.min(ai.maxXp, ai.xp + Math.ceil(dmg * 0.5));
+      ai.score += dmg;
+      document.getElementById('ais').textContent = ai.score;
+      aiBullets.splice(bi, 1);
+      spawnExplosion(b.x, b.y, '#0ff', 5);
+      if (player.hp <= 0 && !killCam.active) { player.hp = 0; player.dead = true; startKillCam('ai', player.x, player.y); }
+    }
+  }
+
+  for (const shooter of [player, ai]) {
+    if (shooter.ultiBeam) {
+      shooter.ultiBeam.timer -= dt;
+      if (shooter.ultiBeam.timer <= 0) shooter.ultiBeam = null;
+    }
+  }
+
+  if (killCam.active) {
+    killCam.timer -= dt;
+    const intensity = killCam.timer / killCam.maxTimer;
+    killCam.shakeX = (Math.random() - 0.5) * intensity * 40;
+    killCam.shakeY = (Math.random() - 0.5) * intensity * 40;
+    killCam.flashAlpha = Math.max(0, intensity * 0.6 - 0.2);
+    if (killCam.timer <= 0) {
+      killCam.active = false;
+      gameOver = true;
+      reportMatchResult(killCam.winner);
+      const won = killCam.winner === 'player';
+      const resultDiv = document.getElementById('result');
+      const resultTitle = document.getElementById('resultTitle');
+      const resultStats = document.getElementById('resultStats');
+      resultTitle.textContent = won ? '胜 利' : '失 败';
+      resultTitle.style.color = won ? '#0ff' : '#f44';
+      resultTitle.style.textShadow = won ? '0 0 30px #0ff' : '0 0 30px #f44';
+      resultStats.innerHTML = `
+        得分: ${player.score}<br>
+        对方得分: ${ai.score}<br>
+        剩余血量: ${player.hp}
+      `;
+      resultDiv.style.display = 'flex';
+    }
+  }
+
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx * dt; p.y += p.vy * dt;
+    p.life -= dt;
+    p.vx *= 0.94; p.vy *= 0.94;
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+
+  document.getElementById('hpbar').style.width = (player.hp / player.maxHp * 100) + '%';
+  document.getElementById('aihpbar').style.width = (ai.hp / ai.maxHp * 100) + '%';
+
+  const ultBar = document.getElementById('ultbar');
+  const aiUltBar = document.getElementById('aiultbar');
+  const ultLabel = document.getElementById('ultlabel');
+  const aiUltLabel = document.getElementById('aiultlabel');
+  const bowBar = document.getElementById('bowbar');
+  const bowLabel = document.getElementById('bowlabel');
+  const aiBowBar = document.getElementById('aibowbar');
+  const aiBowLabel = document.getElementById('aibowlabel');
+  const xpBar = document.getElementById('xpbar');
+  const xpLabel = document.getElementById('xplabel');
+  const aiXpBar = document.getElementById('aixpbar');
+  const aiXpLabel = document.getElementById('aixplabel');
+
+  xpBar.style.width = (player.xp / player.maxXp * 100) + '%';
+  xpBar.style.background = player.xp >= player.maxXp ? '#0ff' : '#4af';
+  xpLabel.textContent = '经验 ' + player.xp + '/' + player.maxXp;
+  if (player.xp >= player.maxXp) xpLabel.textContent += ' 可用大招!';
+
+  aiXpBar.style.width = (ai.xp / ai.maxXp * 100) + '%';
+  aiXpBar.style.background = ai.xp >= ai.maxXp ? '#f0f' : '#a4f';
+  aiXpLabel.textContent = '经验 ' + ai.xp + '/' + ai.maxXp;
+
+  if (player.arrowCd > 0) {
+    bowBar.style.width = (player.arrowCd / 0.18 * 100) + '%';
+    bowBar.style.background = '#555';
+    bowLabel.textContent = '弓箭冷却';
+  } else if (player.bowCharging) {
+    bowBar.style.width = (player.bowCharge * 100) + '%';
+    bowBar.style.background = player.bowCharge >= 1 ? '#0ff' : '#0f8';
+    bowLabel.textContent = player.bowCharge >= 1 ? '满弓！松开发射' : '拉弓... ' + Math.floor(player.bowCharge * 100) + '%';
+  } else {
+    bowBar.style.width = '0%';
+    bowBar.style.background = '#0f8';
+    bowLabel.textContent = '弓箭 [左键] 蓄力';
+  }
+
+  if (ai.arrowCd > 0) {
+    aiBowBar.style.width = (ai.arrowCd / 0.25 * 100) + '%';
+    aiBowBar.style.background = '#555';
+    aiBowLabel.textContent = 'AI 弓箭冷却';
+  } else if (ai.bowCharging) {
+    aiBowBar.style.width = (ai.bowCharge * 100) + '%';
+    aiBowBar.style.background = ai.bowCharge >= 1 ? '#f0f' : '#f8f';
+    aiBowLabel.textContent = ai.bowCharge >= 1 ? 'AI 满弓！' : 'AI 拉弓... ' + Math.floor(ai.bowCharge * 100) + '%';
+  } else {
+    aiBowBar.style.width = '0%';
+    aiBowBar.style.background = '#f8f';
+    aiBowLabel.textContent = 'AI 弓箭';
+  }
+
+  if (player.ultiCooldown > 0) {
+    ultBar.style.width = (player.ultiCooldown / 7 * 100) + '%';
+    ultBar.style.background = '#555';
+    ultLabel.textContent = '大招冷却 ' + player.ultiCooldown.toFixed(1) + 's';
+  } else if (player.xp < player.maxXp) {
+    ultBar.style.width = (player.xp / player.maxXp * 100) + '%';
+    ultBar.style.background = '#864';
+    ultLabel.textContent = '大招需经验 ' + player.xp + '/' + player.maxXp;
+  } else if (player.ultiCharging) {
+    ultBar.style.width = (player.ultiChargeProgress * 100) + '%';
+    ultBar.style.background = player.ultiChargeProgress >= 1 ? '#ff0' : '#fa0';
+    if (player.ultiLocked) {
+      ultLabel.textContent = '锁定！自动发射';
+    } else if (player.ultiChargeProgress >= 1) {
+      ultLabel.textContent = '蓄力完成 ' + player.ultiMaxTimer.toFixed(1) + 's / 0.6s';
+    } else {
+      ultLabel.textContent = '蓄力中... ' + Math.floor(player.ultiChargeProgress * 100) + '%';
+    }
+  } else {
+    ultBar.style.width = '100%';
+    ultBar.style.background = '#fa0';
+    ultLabel.textContent = '大招就绪 [右键]';
+  }
+
+  if (ai.ultiCooldown > 0) {
+    aiUltBar.style.width = (ai.ultiCooldown / 7 * 100) + '%';
+    aiUltBar.style.background = '#555';
+    aiUltLabel.textContent = 'AI 大招冷却 ' + ai.ultiCooldown.toFixed(1) + 's';
+  } else if (ai.xp < ai.maxXp) {
+    aiUltBar.style.width = (ai.xp / ai.maxXp * 100) + '%';
+    aiUltBar.style.background = '#864';
+    aiUltLabel.textContent = 'AI 大招需经验 ' + ai.xp + '/' + ai.maxXp;
+  } else if (ai.ultiCharging) {
+    aiUltBar.style.width = (ai.ultiChargeProgress * 100) + '%';
+    aiUltBar.style.background = ai.ultiChargeProgress >= 1 ? '#ff0' : '#fa0';
+    if (ai.ultiLocked) {
+      aiUltLabel.textContent = 'AI 锁定！';
+    } else if (ai.ultiChargeProgress >= 1) {
+      aiUltLabel.textContent = 'AI 蓄力完成 ' + ai.ultiMaxTimer.toFixed(1) + 's';
+    } else {
+      aiUltLabel.textContent = 'AI 蓄力中... ' + Math.floor(ai.ultiChargeProgress * 100) + '%';
+    }
+  } else {
+    aiUltBar.style.width = '100%';
+    aiUltBar.style.background = '#fa0';
+    aiUltLabel.textContent = 'AI 大招就绪';
+  }
+
+  if (player.hp < 30) document.getElementById('hpbar').style.background = '#f44';
+  else document.getElementById('hpbar').style.background = '#0ff';
+  if (ai.hp < 30) document.getElementById('aihpbar').style.background = '#f44';
+  else document.getElementById('aihpbar').style.background = '#f0f';
+}
+
+function drawGrid() {
+  ctx.strokeStyle = 'rgba(20, 30, 60, 0.5)';
+  ctx.lineWidth = 1;
+  for (let x = gridOffsetX; x < W; x += gridSize) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+  }
+  for (let y = gridOffsetY; y < H; y += gridSize) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+}
+
+function drawSquare(x, y, r, angle, color, glowColor, chargeProgress, isCharging, bowCharge, bowCharging) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle + Math.PI / 4);
+
+  let extraGlow = 1;
+  if (isCharging) {
+    extraGlow = 1 + chargeProgress * 1.8;
+  } else if (chargeProgress > 0 && chargeProgress < 0.25) {
+    extraGlow = 1 + chargeProgress * 0.5;
+  }
+
+  const glowR = r * 3 * extraGlow;
+  const grad = ctx.createRadialGradient(0, 0, r * 0.3, 0, 0, glowR);
+  grad.addColorStop(0, glowColor);
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(0, 0, glowR, 0, Math.PI * 2); ctx.fill();
+
+  if (isCharging && chargeProgress > 0) {
+    const pulseAlpha = 0.15 + Math.sin(Date.now() * 0.012) * 0.1;
+    const chargeR = r + 8 + chargeProgress * 14;
+    ctx.strokeStyle = `rgba(255,200,30,${0.4 + chargeProgress * 0.6})`;
+    ctx.lineWidth = 3 + chargeProgress * 5;
+    ctx.shadowColor = `rgba(255,200,30,${0.5})`;
+    ctx.shadowBlur = 15 + chargeProgress * 20;
+    ctx.beginPath();
+    const startAngle = -Math.PI / 2;
+    const sweepAngle = Math.PI * 2 * chargeProgress;
+    ctx.arc(0, 0, chargeR, startAngle, startAngle + sweepAngle);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    if (chargeProgress >= 1.0) {
+      const p2 = 0.3 + Math.sin(Date.now() * 0.015) * 0.2;
+      const outerGrad = ctx.createRadialGradient(0, 0, r, 0, 0, r * 4);
+      outerGrad.addColorStop(0, `rgba(255,255,100,${p2})`);
+      outerGrad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = outerGrad;
+      ctx.beginPath(); ctx.arc(0, 0, r * 4, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
+  if (bowCharging && bowCharge > 0) {
+    const bowR = r + 6;
+    const [br, bg, bb] = color === '#0ff' ? [0, 255, 255] : [255, 0, 255];
+    ctx.strokeStyle = `rgba(${br},${bg},${bb},${0.3 + bowCharge * 0.7})`;
+    ctx.lineWidth = 2 + bowCharge * 3;
+    ctx.shadowColor = `rgba(${br},${bg},${bb},0.4)`;
+    ctx.shadowBlur = 6;
+    ctx.beginPath();
+    ctx.arc(0, 0, bowR, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * bowCharge);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+
+  ctx.fillStyle = color;
+  const hs = r * 0.85;
+  ctx.beginPath();
+  ctx.rect(-hs, -hs, hs * 2, hs * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.fillRect(-r * 0.15, -r * 0.15, r * 0.3, r * 0.3);
+
+  ctx.restore();
+}
+
+function drawUltBeam(beam) {
+  if (!beam || beam.timer <= 0) return;
+  const alpha = beam.timer / beam.maxTimer;
+  const [r, g, b] = beam.color === '#0ff' ? [0, 255, 255] : [255, 0, 255];
+  const chargeLevel = beam.chargeLevel || 0.5;
+
+  const layers = [
+    { w: 36 + chargeLevel * 20, aMul: 0.15 },
+    { w: 26 + chargeLevel * 16, aMul: 0.35 },
+    { w: 16 + chargeLevel * 12, aMul: 0.6 },
+    { w: 8 + chargeLevel * 8, aMul: 0.85 },
+    { w: 3 + chargeLevel * 4, aMul: 1 }
+  ];
+
+  for (const layer of layers) {
+    const a = alpha * layer.aMul;
+    ctx.strokeStyle = `rgba(${r},${g},${b},${a})`;
+    ctx.lineWidth = layer.w;
+    ctx.shadowColor = `rgba(${r},${g},${b},${a * 0.7})`;
+    ctx.shadowBlur = layer.w * 2;
+    ctx.beginPath();
+    ctx.moveTo(beam.x1, beam.y1);
+    ctx.lineTo(beam.x2, beam.y2);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+
+  if (chargeLevel > 0.6) {
+    ctx.strokeStyle = `rgba(255,255,255,${alpha * chargeLevel})`;
+    ctx.lineWidth = 2 + chargeLevel * 3;
+    ctx.beginPath();
+    ctx.moveTo(beam.x1, beam.y1);
+    ctx.lineTo(beam.x2, beam.y2);
+    ctx.stroke();
+  }
+}
+
+function draw() {
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.save();
+  if (killCam.active) {
+    const intensity = killCam.timer / killCam.maxTimer;
+    const shakeX = killCam.shakeX;
+    const shakeY = killCam.shakeY;
+    const zoom = 1 + intensity * 0.15;
+    ctx.translate(W / 2, H / 2);
+    ctx.scale(zoom, zoom);
+    ctx.translate(-W / 2 + shakeX, -H / 2 + shakeY);
+  }
+
+  drawGrid();
+
+  for (const p of particles) {
+    const alpha = p.life / p.maxLife;
+    ctx.fillStyle = p.color.replace(')', `,${alpha})`).replace('rgb', 'rgba');
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.size * alpha, 0, Math.PI * 2); ctx.fill();
+  }
+
+  for (const b of bullets) {
+    if (b.charge > 0) {
+      const len = 12 + b.charge * 20;
+      const angle = Math.atan2(b.vy, b.vx);
+      const tx = b.x - Math.cos(angle) * len * 0.5;
+      const ty = b.y - Math.sin(angle) * len * 0.5;
+      ctx.strokeStyle = '#0ff';
+      ctx.lineWidth = 2 + b.charge * 2;
+      ctx.shadowColor = '#0ff';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.moveTo(tx, ty);
+      ctx.lineTo(b.x + Math.cos(angle) * len * 0.5, b.y + Math.sin(angle) * len * 0.5);
+      ctx.stroke();
+      ctx.fillStyle = '#0ff';
+      ctx.beginPath();
+      ctx.moveTo(b.x + Math.cos(angle) * len * 0.5, b.y + Math.sin(angle) * len * 0.5);
+      ctx.lineTo(
+        b.x + Math.cos(angle + 2.6) * len * 0.25,
+        b.y + Math.sin(angle + 2.6) * len * 0.25
+      );
+      ctx.lineTo(
+        b.x + Math.cos(angle - 2.6) * len * 0.25,
+        b.y + Math.sin(angle - 2.6) * len * 0.25
+      );
+      ctx.closePath();
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    } else {
+      ctx.fillStyle = '#0ff';
+      ctx.shadowColor = '#0ff';
+      ctx.shadowBlur = 8;
+      ctx.beginPath(); ctx.arc(b.x, b.y, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+  for (const b of aiBullets) {
+    if (b.charge > 0) {
+      const len = 12 + b.charge * 20;
+      const angle = Math.atan2(b.vy, b.vx);
+      const tx = b.x - Math.cos(angle) * len * 0.5;
+      const ty = b.y - Math.sin(angle) * len * 0.5;
+      ctx.strokeStyle = '#f0f';
+      ctx.lineWidth = 2 + b.charge * 2;
+      ctx.shadowColor = '#f0f';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.moveTo(tx, ty);
+      ctx.lineTo(b.x + Math.cos(angle) * len * 0.5, b.y + Math.sin(angle) * len * 0.5);
+      ctx.stroke();
+      ctx.fillStyle = '#f0f';
+      ctx.beginPath();
+      ctx.moveTo(b.x + Math.cos(angle) * len * 0.5, b.y + Math.sin(angle) * len * 0.5);
+      ctx.lineTo(b.x + Math.cos(angle + 2.6) * len * 0.25, b.y + Math.sin(angle + 2.6) * len * 0.25);
+      ctx.lineTo(b.x + Math.cos(angle - 2.6) * len * 0.25, b.y + Math.sin(angle - 2.6) * len * 0.25);
+      ctx.closePath();
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    } else {
+      ctx.fillStyle = '#f0f';
+      ctx.shadowColor = '#f0f';
+      ctx.shadowBlur = 8;
+      ctx.beginPath(); ctx.arc(b.x, b.y, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  if (player.ultiBeam) drawUltBeam(player.ultiBeam);
+  if (ai.ultiBeam) drawUltBeam(ai.ultiBeam);
+
+  drawSquare(player.x, player.y, player.r, player.aimAngle, '#0ff',
+    'rgba(0,255,255,0.3)', player.ultiChargeProgress, player.ultiCharging,
+    player.bowCharge, player.bowCharging);
+  drawSquare(ai.x, ai.y, ai.r, ai.aimAngle, '#f0f',
+    'rgba(255,0,255,0.3)', ai.ultiChargeProgress, ai.ultiCharging,
+    ai.bowCharge, ai.bowCharging);
+
+  ctx.fillStyle = '#0ff';
+  ctx.font = '11px monospace';
+  ctx.textAlign = 'center';
+  if (!player.dead) ctx.fillText('玩家', player.x, player.y - 28);
+  ctx.fillStyle = '#f0f';
+  if (!ai.dead) ctx.fillText('AI', ai.x, ai.y - 28);
+
+  if (!player.dead && !gameOver) {
+    const end = getBeamEnd(player.x, player.y, player.aimAngle);
+    const aimAlpha = player.ultiCharging ? 0.25 : player.bowCharging ? 0.2 : 0.08;
+    const aimWidth = player.ultiCharging ? 2 : player.bowCharging ? 1.5 : 0.7;
+    ctx.strokeStyle = `rgba(255,255,255,${aimAlpha * 0.7})`;
+    ctx.lineWidth = aimWidth;
+    ctx.setLineDash([8, 12]);
+    ctx.beginPath();
+    ctx.moveTo(player.x + Math.cos(player.aimAngle) * (player.r + 6), player.y + Math.sin(player.aimAngle) * (player.r + 6));
+    ctx.lineTo(end.x, end.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    const cs = 10;
+    const ultiAvailable = player.xp >= player.maxXp && player.ultiCooldown <= 0 && !player.ultiCharging;
+    let pulse = player.ultiLocked ? 0.8 + Math.sin(Date.now() * 0.02) * 0.2
+      : ultiAvailable ? 0.6 + Math.sin(Date.now() * 0.008) * 0.4
+      : player.ultiCharging ? 0.7 : player.bowCharging ? 0.5 : 0.3;
+    let cr = ultiAvailable ? 14 : 10;
+    if (player.ultiLocked) { cr = 18; }
+
+    ctx.strokeStyle = `rgba(${player.ultiLocked ? '255,80,80' : '255,255,255'},${pulse * (player.ultiLocked ? 1 : 0.6)})`;
+    ctx.lineWidth = player.ultiLocked ? 3 : 1.5;
+    ctx.shadowColor = `rgba(${player.ultiLocked ? '255,80,80' : '255,255,255'},${pulse * (player.ultiLocked ? 0.6 : 0.3)})`;
+    ctx.shadowBlur = player.ultiLocked ? 20 : 6;
+    ctx.beginPath();
+    ctx.arc(mouseX, mouseY, cr, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(mouseX - cs, mouseY);
+    ctx.lineTo(mouseX - 4, mouseY);
+    ctx.moveTo(mouseX + 4, mouseY);
+    ctx.lineTo(mouseX + cs, mouseY);
+    ctx.moveTo(mouseX, mouseY - cs);
+    ctx.lineTo(mouseX, mouseY - 4);
+    ctx.moveTo(mouseX, mouseY + 4);
+    ctx.lineTo(mouseX, mouseY + cs);
+    ctx.stroke();
+
+    if (player.ultiLocked) {
+      for (let i = 0; i < 4; i++) {
+        const la = (Date.now() * 0.003 + i * Math.PI / 2) % (Math.PI * 2);
+        const lx2 = mouseX + Math.cos(la) * (cr + 8);
+        const ly2 = mouseY + Math.sin(la) * (cr + 8);
+        ctx.beginPath();
+        ctx.moveTo(lx2 - 4, ly2 - 4);
+        ctx.lineTo(lx2 + 4, ly2 + 4);
+        ctx.moveTo(lx2 + 4, ly2 - 4);
+        ctx.lineTo(lx2 - 4, ly2 + 4);
+        ctx.stroke();
+      }
+      ctx.fillStyle = `rgba(255,80,80,0.7)`;
+      ctx.font = 'bold 14px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('LOCKED', mouseX, mouseY - cr - 14);
+    }
+    ctx.shadowBlur = 0;
+
+    if (player.ultiCharging) {
+      const pr = cr + 4 + player.ultiChargeProgress * 12;
+      const color = player.ultiLocked ? [255, 80, 80] : [255, 200, 30];
+      ctx.strokeStyle = `rgba(${color[0]},${color[1]},${color[2]},${0.2 + player.ultiChargeProgress * 0.6})`;
+      ctx.lineWidth = player.ultiLocked ? 3 : 2;
+      ctx.beginPath();
+      ctx.arc(mouseX, mouseY, pr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * player.ultiChargeProgress);
+      ctx.stroke();
+      if (player.ultiLocked) {
+        ctx.strokeStyle = 'rgba(255,80,80,0.8)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(mouseX, mouseY, pr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * player.ultiLockTimer / 0.4);
+        ctx.stroke();
+      }
+    } else if (player.bowCharging) {
+      const pr = cr + 4 + player.bowCharge * 8;
+      ctx.strokeStyle = `rgba(0,255,255,${0.2 + player.bowCharge * 0.5})`;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(mouseX, mouseY, pr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * player.bowCharge);
+      ctx.stroke();
+    }
+  }
+
+  ctx.restore();
+
+  if (killCam.active) {
+    const intensity = killCam.timer / killCam.maxTimer;
+    ctx.fillStyle = `rgba(255,255,255,${killCam.flashAlpha * intensity})`;
+    ctx.fillRect(0, 0, W, H);
+
+    const expandR = (1 - intensity) * 300 + 40;
+    const ringAlpha = intensity * 0.7;
+    ctx.strokeStyle = `rgba(255,255,255,${ringAlpha})`;
+    ctx.lineWidth = 4 + intensity * 8;
+    ctx.shadowColor = `rgba(255,255,255,${ringAlpha})`;
+    ctx.shadowBlur = 30;
+    ctx.beginPath();
+    ctx.arc(killCam.posX, killCam.posY, expandR, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    if (intensity < 0.6) {
+      const [wr, wg, wb] = killCam.winner === 'player' ? [0, 255, 255] : [255, 0, 255];
+      const textAlpha = Math.min(1, (0.6 - intensity) / 0.4);
+      ctx.fillStyle = `rgba(${wr},${wg},${wb},${textAlpha})`;
+      ctx.font = 'bold 32px "Segoe UI", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.shadowColor = `rgba(${wr},${wg},${wb},${textAlpha})`;
+      ctx.shadowBlur = 20;
+      const winnerText = killCam.winner === 'player' ? '击杀!' : '阵亡!';
+      ctx.fillText(winnerText, W / 2, H / 2 + 10);
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  if (ai.difficulty !== 1) {
+    ctx.fillStyle = '#888';
+    ctx.font = '10px monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText('AI难度: ' + (ai.difficulty === 0.5 ? '简单' : '困难') + ' (按1切换)', W - 10, H - 10);
+  }
+
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '10px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('左键蓄力弓 | 右键大招(需50经验) | WASD移动 | R重来 | 1切换AI难度', 10, H - 10);
+  ctx.textAlign = 'start';
+}
+
+let lastTime = 0;
+let accumulator = 0;
+const fixedDt = 1 / 60;
+
+function loop(time) {
+  let rawDt = (time - lastTime) / 1000;
+  lastTime = time;
+  if (rawDt > 0.1) rawDt = 0.1;
+  accumulator += rawDt;
+  while (accumulator >= fixedDt) {
+    update(fixedDt);
+    accumulator -= fixedDt;
+  }
+  draw();
+  requestAnimationFrame(loop);
+}
+
+document.getElementById('msg').textContent = 'PvP决斗 | WASD移动 | 左键蓄力弓 | 弓箭命中攒经验→50可放右键大招 | R重来';
+document.getElementById('msg').style.display = 'block';
+setTimeout(() => { document.getElementById('msg').style.display = 'none'; }, 4000);
+
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
