@@ -1263,7 +1263,6 @@ function resetOnlineGame() {
 }
 
 function handleOnlineGameOver(iWon) {
-  if (matchOver) return;
   matchOver = true;
   const oppName = remoteUser ? remoteUser.name : '对手';
   if (iWon) roundWins.p1++; else roundWins.p2++;
