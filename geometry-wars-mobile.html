@@ -868,7 +868,8 @@ function tryDash(p) {
 function startAI() { hideAll(); if (!currentUser) { showRegister(); return; } gameMode = 'ai'; document.getElementById('hud').style.display = ''; document.getElementById('bar-wrap').style.display = ''; document.getElementById('msg-overlay').style.display = 'none'; document.getElementById('ctrl-layer').classList.add('active'); resetAIGame(); }
 function resetRound() {
   const pColor = currentUser ? currentUser.colorIdx : 0;
-  player = createPlayer(200, GH/2, pColor, true);
+  const localX = (gameMode === 'online' && !isHost) ? 700 : 200;
+  player = createPlayer(localX, GH/2, pColor, true);
   if (gameMode === 'ai') {
     const oldDiff = ai ? ai.difficulty : 1;
     const aiColor = 1;
