@@ -279,6 +279,149 @@ const COLORS = [
   { name: '黄', hex: '#c9c090', rgb: 'rgba(201,192,144,0.15)' },
 ];
 
+// ===================== 浏览器检测与适配 =====================
+(function initBrowserAdaptation() {
+  const ua = navigator.userAgent.toLowerCase();
+  const env = {
+    browser: 'unknown', os: 'unknown', inApp: false, brand: '',
+    warnings: [], blocked: false, blockReason: '', softBlock: false
+  };
+
+  if (/iphone|ipad|ipod/i.test(ua)) env.os = 'ios';
+  else if (/android/i.test(ua)) env.os = 'android';
+  else if (/windows|macintosh|linux/i.test(ua)) env.os = 'desktop';
+
+  if (/micromessenger/i.test(ua)) {
+    env.browser = 'wechat'; env.inApp = true; env.brand = '微信';
+    env.warnings.push('建议在系统浏览器中打开以获得完整体验');
+  } else if (/qq\/[\d.]+(?!\s*MQQBrowser)/i.test(ua) || /\sqq\//i.test(ua)) {
+    env.browser = 'qq'; env.inApp = true; env.brand = 'QQ';
+  } else if (/\sweibo\//i.test(ua)) {
+    env.browser = 'weibo'; env.inApp = true; env.brand = '微博';
+    env.warnings.push('微博内置浏览器功能受限，建议在系统浏览器打开');
+  } else if (/dingtalk/i.test(ua)) {
+    env.browser = 'dingtalk'; env.inApp = true; env.brand = '钉钉';
+    env.warnings.push('钉钉浏览器联机功能可能受限');
+  } else if (/alipay/i.test(ua)) {
+    env.browser = 'alipay'; env.inApp = true; env.brand = '支付宝';
+    env.warnings.push('支付宝浏览器功能受限，建议在系统浏览器打开');
+  } else if (/ucbrowser|ucweb/i.test(ua)) {
+    env.browser = 'uc'; env.brand = 'UC';
+  } else if (/baiduboxapp/i.test(ua) || /baidubrowser/i.test(ua)) {
+    env.browser = 'baidu'; env.inApp = true; env.brand = '百度';
+  } else if (/quark/i.test(ua)) {
+    env.browser = 'quark'; env.brand = '夸克';
+  } else if (/sogou|metasr|se\s[\d.]/i.test(ua) && !/chrome/i.test(ua)) {
+    env.browser = 'sogou'; env.brand = '搜狗';
+  } else if (/360se|360ee|qihu|360browser/i.test(ua)) {
+    env.browser = '360'; env.brand = '360';
+  } else if (/liebao|lbbrowser/i.test(ua)) {
+    env.browser = 'liebao'; env.brand = '猎豹';
+  } else if (/maxthon/i.test(ua)) {
+    env.browser = 'maxthon'; env.brand = '遨游';
+  } else if (/fxios/i.test(ua)) {
+    env.browser = 'firefox'; env.brand = 'Firefox iOS';
+  } else if (/firefox|fennec|focus|klar/i.test(ua)) {
+    env.browser = 'firefox'; env.brand = 'Firefox';
+  } else if (/edgios|edga/i.test(ua)) {
+    env.browser = 'edge'; env.brand = 'Edge';
+  } else if (/crios/i.test(ua)) {
+    env.browser = 'chrome'; env.brand = 'Chrome iOS';
+  } else if (/brave|braveios/i.test(ua)) {
+    env.browser = 'brave'; env.brand = 'Brave';
+  } else if (/kiwi/i.test(ua)) {
+    env.browser = 'kiwi'; env.brand = 'Kiwi';
+  } else if (/opr|opera|opt\/|opios/i.test(ua)) {
+    env.browser = 'opera'; env.brand = 'Opera';
+  } else if (/vivaldi/i.test(ua)) {
+    env.browser = 'vivaldi'; env.brand = 'Vivaldi';
+  } else if (/chrome|crios/i.test(ua) && !/edge/i.test(ua)) {
+    env.browser = 'chrome'; env.brand = 'Chrome';
+    if (/miuibrowser/i.test(ua)) { env.brand = '小米浏览器'; }
+    else if (/huaweibrowser/i.test(ua)) { env.brand = '华为浏览器'; }
+    else if (/samsungbrowser/i.test(ua)) { env.brand = '三星浏览器'; }
+  } else if (/safari/i.test(ua)) {
+    env.browser = 'safari'; env.brand = 'Safari';
+  }
+
+  document.body.classList.add('browser-' + env.browser, 'os-' + env.os);
+  if (env.inApp) document.body.classList.add('in-app');
+
+  // Critical capability checks
+  const c = document.createElement('canvas');
+  if (!c.getContext || !c.getContext('2d')) {
+    env.blocked = true;
+    env.blockReason = '不支持 Canvas，无法渲染画面。';
+  }
+  if (!window.requestAnimationFrame) {
+    env.blocked = true;
+    env.blockReason = '浏览器版本过旧，不支持动画。';
+  }
+  try { localStorage.setItem('__gw_test', '1'); localStorage.removeItem('__gw_test'); } catch(e) {
+    env.softBlock = true;
+    env.warnings.push('本地存储不可用，用户数据和战绩无法保存');
+  }
+
+  // Hard block: truly incompatible
+  if (env.blocked) {
+    showBlockScreen('无法运行', env.blockReason + '\n请使用现代浏览器（Chrome / Safari / Firefox / Edge）打开。', false);
+    document.getElementById('wrap').style.display = 'none';
+    return;
+  }
+
+  // Soft block: allow but warn prominently
+  if (env.softBlock) {
+    showBlockScreen('功能受限', '浏览器不支持本地存储，战绩和用户数据将无法保存。', true);
+  }
+
+  // WeChat / Alipay / DingTalk: lock Online
+  if (env.browser === 'wechat') {
+    window.__browserNoOnline = true;
+    env.warnings.push('联机对战不可用，仅支持人机模式');
+  }
+  if (env.browser === 'alipay' || env.browser === 'dingtalk') {
+    window.__browserNoOnline = true;
+    env.warnings.push('该浏览器不支持 P2P 联机');
+  }
+
+  // Adaptations
+  if (env.os === 'ios') {
+    document.body.style.webkitOverflowScrolling = 'touch';
+  }
+
+  window.__browserEnv = env;
+  console.log('[GW] 浏览器: ' + env.brand + ' | OS: ' + env.os + (env.inApp ? ' | 内嵌' : '') + (window.__browserNoOnline ? ' | 联机不可用' : ''));
+
+  if (env.warnings.length > 0) {
+    setTimeout(() => {
+      env.warnings.forEach(function(w, i) {
+        setTimeout(function() { showBrowserWarning(w); }, i * 4200);
+      });
+    }, 800);
+  }
+})();
+
+function showBlockScreen(title, detail, canDismiss) {
+  var blk = document.getElementById('browser-block');
+  blk.classList.add('show');
+  document.getElementById('browser-block-title').textContent = title;
+  document.getElementById('browser-block-detail').textContent = detail;
+  if (canDismiss) {
+    var btn = document.getElementById('browser-block-btn');
+    btn.style.display = '';
+    btn.textContent = '仍然进入';
+  }
+}
+
+function showBrowserWarning(msg) {
+  var c = document.getElementById('browser-warns');
+  var el = document.createElement('div');
+  el.className = 'warn-item';
+  el.textContent = '\u26A0 ' + msg;
+  c.appendChild(el);
+  setTimeout(function() { if (el.parentNode) el.remove(); }, 5200);
+}
+
 // ===================== 自动更新 =====================
 const VERSION = 15;
 const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wars.html';
