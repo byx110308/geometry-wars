@@ -293,7 +293,7 @@ window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200)
 resizeCanvas();
 
 // ===================== COLORS & VERSION =====================
-const VERSION = 26;
+const VERSION = 27;
 const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wars-mobile.html';
 const CHECK_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/version_m';
 
@@ -455,7 +455,7 @@ function showBrowserWarning(msg) {
 }
 
 // ===================== AUTO UPDATE =====================
-(function checkUpdate(bg) {
+function checkUpdate(bg) {
   if (!UPDATE_URL) return;
   const loc = window.location.href;
   if (loc.startsWith(UPDATE_URL)) return;
@@ -484,7 +484,9 @@ function showBrowserWarning(msg) {
       if (!bg) showUpdateTip('网络错误');
       setTimeout(() => checkUpdate(true), 30000);
     });
-})(true);
+}
+
+checkUpdate(true);
 setInterval(() => { if (!window._updatePending) checkUpdate(true); }, 300000);
 
 function manualCheckUpdate() {
@@ -663,7 +665,7 @@ function setupConnection(c) {
     let data; try { data = JSON.parse(raw); } catch(e) { return; }
     if (data.type === 'hello') { remoteUser = {name:data.name,colorIdx:data.colorIdx}; if (isHost) { conn.send(JSON.stringify({type:'start',hostUser:{name:currentUser.name,colorIdx:currentUser.colorIdx},guestUser:{name:data.name,colorIdx:data.colorIdx}})); startOnlineGame(); } }
     if (data.type === 'start') { remoteUser = isHost ? data.guestUser : data.hostUser; startOnlineGame(); }
-    if (data.type === 'state') { remoteState = data; }
+    if (data.type === 'state') { if (data.seq != null && data.seq <= remoteStateSeq) return; remoteStateSeq = data.seq || 0; remoteStateTarget = { x: data.x, y: data.y }; remoteStateVx = data.vx || 0; remoteStateVy = data.vy || 0; opponent.aimAngle = data.aimAngle; opponent.bowCharging = data.bowCharging; opponent.bowCharge = data.bowCharge; opponent.arrowCd = data.arrowCd; opponent.ultiCharging = data.ultiCharging; opponent.ultiChargeProgress = data.ultiChargeProgress; opponent.ultiCooldown = data.ultiCooldown; opponent.xp = data.xp; opponent.hp = data.hp; opponent.dead = data.dead; if (data.dashCd !== undefined) opponent.dashCd = data.dashCd; if (data.dashing !== undefined) opponent.dashing = data.dashing; if (data.dashTimer !== undefined) opponent.dashTimer = data.dashTimer; if (data.invuln !== undefined) opponent.invuln = data.invuln; }
     if (data.type === 'scoreSync') { document.getElementById('ais').textContent = data.score; }
     if (data.type === 'hit') { applyHitLocally(data); }
     if (data.type === 'fireBullet') { fireBulletRemote(data); }
@@ -678,7 +680,7 @@ function setupConnection(c) {
 function disconnectAndMenu() { clearTimeout(joinTimeout); stopRoomRefresh(); if (peer) { try { if (isHost && peer.id) unregisterRoom(peer.id); peer.destroy(); } catch(e) {} peer = null; } conn = null; gameMode = null; isHost = false; backToMenu(); }
 
 // ===================== GAME STATE =====================
-let gameMode = null, gameOver = false, remoteUser = null, remoteState = null;
+let gameMode = null, gameOver = false, remoteUser = null, remoteState = null, remoteStateSeq = 0, remoteStateTarget = null, remoteStateVx = 0, remoteStateVy = 0, sendSeq = 0;
 const gridSize = 48; let gridOffsetX = 0, gridOffsetY = 0;
 const BASE_SPEED = 540;
 
@@ -1142,7 +1144,7 @@ function startOnlineGame() {
   document.getElementById('p1-label').textContent = currentUser.name;
   document.getElementById('p2-label').textContent = remoteUser ? remoteUser.name : '对手';
   document.getElementById('p2-label').style.color = COLORS[opponent.colorIdx].hex;
-  buildBars(); remoteState = null; remoteReady = true;
+  buildBars(); remoteState = null; remoteStateSeq = 0; remoteStateTarget = null; remoteStateVx = 0; remoteStateVy = 0; sendSeq = 0; remoteReady = true;
 }
 function resetOnlineGame() { roundWins = {p1:0,p2:0}; matchOver = false; document.getElementById('result-panel').style.display = 'none'; resetRound(); }
 function handleOnlineGameOver(iWon) {
@@ -1159,13 +1161,25 @@ function handleOnlineGameOver(iWon) {
   }
 }
 function applyHitLocally(data) {
-  const killed = applyDamage(opponent, player, data.damage, data.bulletX||player.x, data.bulletY||player.y);
-  if (killed && !killCam.active) { player.dead = true; startKillCam(opponent, player.x, player.y); spawnShatter(player.x, player.y, COLORS[player.colorIdx].hex, player.r); snd(120, 0.5, 'sawtooth', 0.12); }
+  if (player.invuln > 0) return;
+  player.hp -= data.damage; if (player.hp < 0) player.hp = 0;
+  spawnExplosion(data.bulletX||player.x, data.bulletY||player.y, COLORS[player.colorIdx].hex, 5);
+  spawnDmg(data.bulletX||player.x, (data.bulletY||player.y)-12, data.damage, COLORS[opponent.colorIdx].hex);
+  screenShake = Math.max(screenShake, Math.min(8, data.damage*0.4));
+  if (Date.now()-player.lastHitTime < 1500) player.combo++; else player.combo = 1;
+  player.lastHitTime = Date.now();
+  snd(200 + player.combo*30, 0.12, 'square', 0.06);
+  if (data.damage >= 80) snd(80, 0.25, 'sawtooth', 0.1);
+  if (player.hp <= 0 && !killCam.active) {
+    player.dead = true; startKillCam(opponent, player.x, player.y);
+    spawnShatter(player.x, player.y, COLORS[player.colorIdx].hex, player.r);
+    snd(120, 0.5, 'sawtooth', 0.12);
+  }
 }
 function fireBulletRemote(data) { oppBullets.push({x1:data.x1,y1:data.y1,x2:data.x2,y2:data.y2,color:COLORS[opponent.colorIdx].hex,timer:0.07+(data.charge||0)*0.13,charge:data.charge||0}); }
 function fireUltRemote(data) { opponent.ultiBeam = {x1:data.x1,y1:data.y1,x2:data.x2,y2:data.y2,timer:data.beamDuration,maxTimer:data.beamDuration,chargeLevel:data.chargeLevel,color:COLORS[opponent.colorIdx].hex}; }
 let sendTimer = 0; const SEND_INTERVAL = 1/25;
-function sendState() { if (!conn || !conn.open || !remoteReady) return; conn.send(JSON.stringify({type:'state',x:player.x,y:player.y,vx:player.vx,vy:player.vy,aimAngle:player.aimAngle,bowCharging:player.bowCharging,bowCharge:player.bowCharge,arrowCd:player.arrowCd,ultiCharging:player.ultiCharging,ultiChargeProgress:player.ultiChargeProgress,ultiCooldown:player.ultiCooldown,xp:player.xp,hp:player.hp,dead:player.dead})); }
+function sendState() { if (!conn || !conn.open || !remoteReady) return; sendSeq++; conn.send(JSON.stringify({type:'state',seq:sendSeq,x:player.x,y:player.y,vx:player.vx,vy:player.vy,aimAngle:player.aimAngle,bowCharging:player.bowCharging,bowCharge:player.bowCharge,arrowCd:player.arrowCd,ultiCharging:player.ultiCharging,ultiChargeProgress:player.ultiChargeProgress,ultiCooldown:player.ultiCooldown,xp:player.xp,hp:player.hp,dead:player.dead,dashCd:player.dashCd,dashing:player.dashing,dashTimer:player.dashTimer,invuln:player.invuln})); }
 
 // ===================== HISTORY UI =====================
 function showHistory() { if (!currentUser) { showRegister(); return; } hideAll(); document.getElementById('history').classList.add('active'); document.getElementById('history').style.display = ''; switchHistoryTab('record'); }
@@ -1426,20 +1440,19 @@ function update(dt) {
     updatePlayerMovement(player, dt, ax, ay);
   }
   if (gameMode === 'online') {
-    if (remoteState && remoteReady) {
-      opponent.x=remoteState.x;opponent.y=remoteState.y;opponent.vx=remoteState.vx;opponent.vy=remoteState.vy;
-      opponent.aimAngle=remoteState.aimAngle;opponent.bowCharging=remoteState.bowCharging;opponent.bowCharge=remoteState.bowCharge;
-      opponent.arrowCd=remoteState.arrowCd;opponent.ultiCharging=remoteState.ultiCharging;
-      opponent.ultiChargeProgress=remoteState.ultiChargeProgress;opponent.ultiCooldown=remoteState.ultiCooldown;
-      opponent.xp=remoteState.xp;opponent.hp=remoteState.hp;opponent.dead=remoteState.dead;
+    if (remoteStateTarget && remoteReady) {
+      const lerpFactor = 15;
+      opponent.x += (remoteStateTarget.x - opponent.x) * Math.min(1, lerpFactor * dt);
+      opponent.y += (remoteStateTarget.y - opponent.y) * Math.min(1, lerpFactor * dt);
+    } else if (remoteReady) {
+      opponent.x += remoteStateVx * dt; opponent.y += remoteStateVy * dt;
+      opponent.x = Math.max(opponent.r, Math.min(GW-opponent.r, opponent.x));
+      opponent.y = Math.max(opponent.r, Math.min(GH-opponent.r, opponent.y));
     }
     updatePlayerInput(player, dt);
     let ax = 0, ay = 0;
     if (touchState.moveId !== null) { ax = touchState.moveX; ay = touchState.moveY; const len = Math.hypot(ax,ay); if (len > 1) { ax/=len; ay/=len; } }
     updatePlayerMovement(player, dt, ax, ay);
-    opponent.x += opponent.vx*dt; opponent.y += opponent.vy*dt;
-    opponent.x = Math.max(opponent.r, Math.min(GW-opponent.r, opponent.x));
-    opponent.y = Math.max(opponent.r, Math.min(GH-opponent.r, opponent.y));
     sendTimer += dt;
     if (sendTimer >= SEND_INTERVAL) { sendTimer = 0; sendState(); }
   }
