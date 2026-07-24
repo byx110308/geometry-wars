@@ -3,3 +3,13 @@
 !geometry-wars.html
 !geometry-wars-mobile.html
 !room_server.py
+!version
+!version_m
+!desktop-app/
+!desktop-app/package.json
+!desktop-app/package-lock.json
+!desktop-app/main.js
+!desktop-app/preload.js
+!desktop-app/geometry-wars.html
+node_modules/
+dist/
