@@ -431,31 +431,43 @@ function checkUpdate(background) {
   if (!UPDATE_URL) return;
   const loc = window.location.href;
   if (loc.startsWith(UPDATE_URL) || loc.startsWith('file://' + UPDATE_URL)) return;
-  fetch(CHECK_URL + '?_t=' + Date.now(), { cache: 'no-store' })
-    .then(r => { if (!r.ok) throw new Error('status ' + r.status); return r.text(); })
-    .then(txt => {
-      const ver = parseInt(txt.trim());
-      if (!ver) { if (!background) showUpdateTip('无法检查更新'); return; }
-      if (ver > VERSION) {
-        if (background && gameMode && !gameOver) {
-          const ov = document.getElementById('msg-overlay');
-          ov.style.display = 'block';
-          ov.innerHTML = '发现新版本<br><span style="font-size:10px;color:#888;">比赛结束后将自动更新</span>';
-          window._updatePending = UPDATE_URL;
-          setTimeout(() => { if (ov.textContent.includes('新版本')) ov.style.display = 'none'; }, 4000);
-        } else {
-          document.title = '几何决斗 - 正在更新...';
-          document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#999;font-family:monospace;font-size:14px;letter-spacing:2px;">发现新版本，正在自动更新...</div>';
-          setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + ver; }, 800);
-        }
-      } else if (!background) {
-        showUpdateTip('已是最新版本 (v' + VERSION + ')');
+  
+  const script = document.createElement('script');
+  script.src = CHECK_URL + '?_t=' + Date.now();
+  let done = false;
+  
+  script.onload = () => {
+    if (done) return; done = true;
+    const ver = window.__gw_ver || 0;
+    delete window.__gw_ver;
+    if (script.parentNode) script.parentNode.removeChild(script);
+    
+    if (!ver) { if (!background) showUpdateTip('无法检查更新'); return; }
+    if (ver > VERSION) {
+      if (background && gameMode && !gameOver) {
+        const ov = document.getElementById('msg-overlay');
+        ov.style.display = 'block';
+        ov.innerHTML = '发现新版本<br><span style="font-size:10px;color:#888;">比赛结束后将自动更新</span>';
+        window._updatePending = UPDATE_URL;
+        setTimeout(() => { if (ov.textContent.includes('新版本')) ov.style.display = 'none'; }, 4000);
+      } else {
+        document.title = '几何决斗 - 正在更新...';
+        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#999;font-family:monospace;font-size:14px;letter-spacing:2px;">发现新版本，正在自动更新...</div>';
+        setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + ver; }, 800);
       }
-    })
-    .catch(() => {
-      if (!background) showUpdateTip('网络错误');
-      setTimeout(() => checkUpdate(true), 30000);
-    });
+    } else if (!background) {
+      showUpdateTip('已是最新版本 (v' + VERSION + ')');
+    }
+  };
+  
+  script.onerror = () => {
+    if (done) return; done = true;
+    if (script.parentNode) script.parentNode.removeChild(script);
+    if (!background) showUpdateTip('网络错误');
+    setTimeout(() => checkUpdate(true), 30000);
+  };
+  
+  document.head.appendChild(script);
 }
 
 checkUpdate(true);
