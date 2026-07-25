@@ -121,9 +121,6 @@ jobs:
           name: 几何决斗-Windows-桌面版
       - uses: actions/download-artifact@v4
         with:
-          name: 几何决斗-macOS-桌面版
-      - uses: actions/download-artifact@v4
-        with:
           name: 几何决斗-Android-鸿蒙-手机版
       - uses: actions/download-artifact@v4
         with:
@@ -138,14 +135,12 @@ jobs:
 
             | 文件 | 系统 |
             |------|------|
-            | .exe | Windows 10+ |
-            | .dmg | macOS |
-            | .AppImage | Linux |
-            | .apk | Android / 鸿蒙 |
+            | .exe | Windows 桌面版 |
+            | .AppImage | Linux 桌面版 |
+            | .apk | Android / 鸿蒙 手机 |
             | .html | 网页版 |
           files: |
             几何决斗-*-Windows便携版.exe
-            几何决斗-*-macOS.dmg
             几何决斗-*-Linux.AppImage
             app-debug.apk
             geometry-wars.html
