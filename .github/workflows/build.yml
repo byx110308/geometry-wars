@@ -105,45 +105,39 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: 几何决斗-Linux-桌面版
-          path: release
       - uses: actions/download-artifact@v4
         with:
           name: 几何决斗-Windows-桌面版
-          path: release
       - uses: actions/download-artifact@v4
         with:
           name: 几何决斗-macOS-桌面版
-          path: release
       - uses: actions/download-artifact@v4
         with:
           name: 几何决斗-Android-鸿蒙-手机版
-          path: release
       - uses: actions/download-artifact@v4
         with:
           name: 几何决斗-网页版HTML
-          path: release
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
           name: 最新版本下载
           body: |
-            点击下方文件下载对应平台安装包。
+            固定下载页，每次更新自动刷新。
 
             | 文件 | 系统 |
             |------|------|
-            | 几何决斗-Windows-桌面版.zip | Windows 10+ |
-            | 几何决斗-macOS-桌面版.zip | macOS |
-            | 几何决斗-Linux-桌面版.zip | Linux |
-            | 几何决斗-Android-鸿蒙-手机版.zip | Android / 鸿蒙 |
-            | 几何决斗-网页版HTML.zip | 网页版 (浏览器打开) |
-
-            更新日志见 [commits](https://github.com/BYX110308/geometry-wars/commits/main)
+            | .exe | Windows 10+ |
+            | .dmg | macOS |
+            | .AppImage | Linux |
+            | .apk | Android / 鸿蒙 |
+            | .html | 网页版 |
           files: |
-            release/几何决斗-Windows-桌面版/*
-            release/几何决斗-macOS-桌面版/*
-            release/几何决斗-Linux-桌面版/*
-            release/几何决斗-Android-鸿蒙-手机版/*
-            release/几何决斗-网页版HTML/*
+            几何决斗-*-Windows便携版.exe
+            几何决斗-*-macOS.dmg
+            几何决斗-*-Linux.AppImage
+            app-debug.apk
+            geometry-wars.html
+            geometry-wars-mobile.html
           draft: false
           prerelease: false
