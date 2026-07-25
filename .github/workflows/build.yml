@@ -104,19 +104,18 @@ jobs:
       - run: npm ci
       - run: npx cap add ios
       - run: npx cap sync ios
-      - name: Build IPA
-        working-directory: mobile-app/ios
+      - name: Build iOS
+        working-directory: mobile-app/ios/App
         run: |
-          xcodebuild -workspace App.xcworkspace \
+          xcodebuild -project App.xcodeproj \
             -scheme App \
             -sdk iphoneos \
             -configuration Debug \
             -derivedDataPath build \
-            -allowProvisioningUpdates \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
       - uses: actions/upload-artifact@v4
         with:
           name: iOS-手机版
-          path: mobile-app/ios/build/Build/Products/Debug-iphoneos/App.app
+          path: mobile-app/ios/App/build/Build/Products/Debug-iphoneos/App.app
