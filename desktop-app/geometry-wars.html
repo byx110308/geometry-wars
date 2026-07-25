@@ -424,55 +424,33 @@ function showBrowserWarning(msg) {
 
 // ===================== 自动更新 =====================
 const VERSION = 17;
-const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wars.html';
-const CHECK_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/version';
+const RELEASES_API = 'https://api.github.com/repos/BYX110308/geometry-wars/releases/latest';
 
 function checkUpdate(background) {
-  if (!UPDATE_URL) return;
-  const loc = window.location.href;
-  if (loc.startsWith(UPDATE_URL) || loc.startsWith('file://' + UPDATE_URL)) return;
-  
-  const script = document.createElement('script');
-  script.src = CHECK_URL + '?_t=' + Date.now();
-  let done = false;
-  
-  script.onload = () => {
-    if (done) return; done = true;
-    const ver = window.__gw_ver || 0;
-    delete window.__gw_ver;
-    if (script.parentNode) script.parentNode.removeChild(script);
-    
-    if (!ver) { if (!background) showUpdateTip('无法检查更新'); return; }
-    if (ver > VERSION) {
-      if (background && gameMode && !gameOver) {
-        const ov = document.getElementById('msg-overlay');
-        ov.style.display = 'block';
-        ov.innerHTML = '发现新版本<br><span style="font-size:10px;color:#888;">比赛结束后将自动更新</span>';
-        window._updatePending = UPDATE_URL;
-        setTimeout(() => { if (ov.textContent.includes('新版本')) ov.style.display = 'none'; }, 4000);
-      } else {
-        if (window.__electron) {
-          window.open(UPDATE_URL + '?_v=' + ver, '_blank');
-          if (!background) showUpdateTip('发现新版本 v' + ver + '，请手动下载');
+  fetch(RELEASES_API + '?_t=' + Date.now(), { cache: 'no-store' })
+    .then(r => { if (!r.ok) throw new Error('status ' + r.status); return r.json(); })
+    .then(release => {
+      const ver = parseInt((release.tag_name || '').replace(/[^0-9]/g, '')) || 0;
+      if (!ver) { if (!background) showUpdateTip('无法检查更新'); return; }
+      if (ver > VERSION) {
+        if (background && gameMode && !gameOver) {
+          const ov = document.getElementById('msg-overlay');
+          ov.style.display = 'block';
+          ov.innerHTML = '发现新版本 v' + ver + '<br><span style="font-size:10px;color:#888;">比赛结束后可下载</span>';
+          window._updatePending = release.html_url;
+          setTimeout(() => { if (ov.textContent.includes('新版本')) ov.style.display = 'none'; }, 4000);
         } else {
-          document.title = '几何决斗 - 正在更新...';
-          document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#999;font-family:monospace;font-size:14px;letter-spacing:2px;">发现新版本，正在自动更新...</div>';
-          setTimeout(() => { window.location.href = UPDATE_URL + '?_v=' + ver; }, 800);
+          window.open(release.html_url, '_blank');
+          if (!background) showUpdateTip('发现新版本 v' + ver);
         }
+      } else if (!background) {
+        showUpdateTip('已是最新版本 (v' + VERSION + ')');
       }
-    } else if (!background) {
-      showUpdateTip('已是最新版本 (v' + VERSION + ')');
-    }
-  };
-  
-  script.onerror = () => {
-    if (done) return; done = true;
-    if (script.parentNode) script.parentNode.removeChild(script);
-    if (!background) showUpdateTip('网络错误');
-    setTimeout(() => checkUpdate(true), 30000);
-  };
-  
-  document.head.appendChild(script);
+    })
+    .catch(() => {
+      if (!background) showUpdateTip('网络错误');
+      setTimeout(() => checkUpdate(true), 60000);
+    });
 }
 
 checkUpdate(true);
@@ -577,7 +555,7 @@ function backToMenu() {
   document.getElementById('menu').classList.add('active');
   document.getElementById('menu').style.display = '';
   if (peer) { peer.destroy(); peer = null; conn = null; }
-  if (window._updatePending) setTimeout(() => { window.__electron ? window.open(UPDATE_URL + '?_v=' + VERSION, '_blank') : window.location.href = UPDATE_URL + '?_v=' + VERSION; }, 600);
+  if (window._updatePending) setTimeout(() => { window.open(window._updatePending, '_blank'); }, 600);
 }
 function hideAll() {
   document.querySelectorAll('.overlay').forEach(o => { o.classList.remove('active'); o.style.display = 'none'; });
@@ -1489,7 +1467,7 @@ function handleOnlineGameOver(iWon) {
     const won = roundWins.p1 >= ROUNDS_TO_WIN;
     recordMatch('online', oppName, won, roundWins.p1, roundWins.p2);
     showOnlineResult(won, roundWins.p1, roundWins.p2);
-    if (window._updatePending) setTimeout(() => { window.__electron ? window.open(UPDATE_URL + '?_v=' + VERSION, '_blank') : window.location.href = UPDATE_URL + '?_v=' + VERSION; }, 3000);
+    if (window._updatePending) setTimeout(() => { window.open(window._updatePending, '_blank'); }, 3000);
   } else {
     roundPause = 1.5;
   }
@@ -2192,7 +2170,7 @@ function update(dt) {
           } else {
             showOnlineResult(won, roundWins.p1, roundWins.p2);
           }
-          if (window._updatePending) setTimeout(() => { window.__electron ? window.open(UPDATE_URL + '?_v=' + VERSION, '_blank') : window.location.href = UPDATE_URL + '?_v=' + VERSION; }, 3000);
+          if (window._updatePending) setTimeout(() => { window.open(window._updatePending, '_blank'); }, 3000);
         } else {
           roundPause = 1.5;
         }
