@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "几何决斗 - 桌面版",
   "main": "main.js",
+  "author": "Geometry Wars",
+  "homepage": "https://gitee.com/byx0308/geometry-wars",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --win --mac --linux",
@@ -20,15 +22,9 @@
     ],
     "win": {
       "target": [
-        "nsis",
         "portable"
       ],
       "icon": null
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "shortcutName": "几何决斗"
     },
     "mac": {
       "target": [
@@ -42,8 +38,7 @@
     },
     "linux": {
       "target": [
-        "AppImage",
-        "deb"
+        "AppImage"
       ],
       "category": "Game",
       "icon": null
