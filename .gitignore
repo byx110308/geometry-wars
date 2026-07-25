@@ -16,3 +16,9 @@ dist/
 !.github/
 !.github/workflows/
 !.github/workflows/build.yml
+!mobile-app/
+!mobile-app/package.json
+!mobile-app/package-lock.json
+!mobile-app/capacitor.config.json
+!mobile-app/www/
+!mobile-app/www/index.html

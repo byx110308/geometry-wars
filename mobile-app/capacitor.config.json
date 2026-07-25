@@ -1,0 +1,13 @@
+{
+  "appId": "com.geometrywars.mobile",
+  "appName": "几何决斗",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "iosScheme": "capacitor",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}

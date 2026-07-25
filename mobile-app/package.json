@@ -1,0 +1,18 @@
+{
+  "name": "geometry-wars-mobile",
+  "version": "1.0.0",
+  "description": "几何决斗 - 手机版",
+  "scripts": {
+    "sync": "npx cap sync",
+    "build:android": "npx cap sync android && npx cap build android",
+    "build:ios": "npx cap sync ios && npx cap build ios",
+    "open:android": "npx cap open android",
+    "open:ios": "npx cap open ios"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/ios": "^6.0.0"
+  }
+}
