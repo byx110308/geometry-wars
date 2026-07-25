@@ -93,29 +93,3 @@ jobs:
         with:
           name: Android-鸿蒙-手机版
           path: mobile-app/android/app/build/outputs/apk/debug/app-debug.apk
-
-  build-ios-mobile:
-    runs-on: macos-latest
-    defaults: { run: { working-directory: mobile-app } }
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20 }
-      - run: npm ci
-      - run: npx cap add ios
-      - run: npx cap sync ios
-      - name: Build iOS
-        working-directory: mobile-app/ios/App
-        run: |
-          xcodebuild -project App.xcodeproj \
-            -scheme App \
-            -sdk iphoneos \
-            -configuration Debug \
-            -derivedDataPath build \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
-      - uses: actions/upload-artifact@v4
-        with:
-          name: iOS-手机版
-          path: mobile-app/ios/App/build/Build/Products/Debug-iphoneos/App.app
