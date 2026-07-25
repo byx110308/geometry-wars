@@ -13,3 +13,6 @@
 !desktop-app/geometry-wars.html
 node_modules/
 dist/
+!.github/
+!.github/workflows/
+!.github/workflows/build.yml
