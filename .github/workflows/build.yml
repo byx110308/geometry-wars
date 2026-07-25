@@ -93,3 +93,35 @@ jobs:
         with:
           name: 几何决斗-Android-鸿蒙-手机版
           path: mobile-app/android/app/build/outputs/apk/debug/app-debug.apk
+
+  # ======================== 固定发布页 ========================
+  release:
+    needs: [build-linux, build-windows, build-macos, build-android-mobile, upload-html]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: 最新版本下载
+          body: |
+            点击下方文件下载对应平台安装包。
+
+            | 文件 | 系统 |
+            |------|------|
+            | 几何决斗-Windows-桌面版.zip | Windows 10+ |
+            | 几何决斗-macOS-桌面版.zip | macOS |
+            | 几何决斗-Linux-桌面版.zip | Linux |
+            | 几何决斗-Android-鸿蒙-手机版.zip | Android / 鸿蒙 |
+            | 几何决斗-网页版HTML.zip | 网页版 (浏览器打开) |
+
+            更新日志见 [commits](https://github.com/BYX110308/geometry-wars/commits/main)
+          files: |
+            几何决斗-Windows-桌面版/**/*
+            几何决斗-macOS-桌面版/**/*
+            几何决斗-Linux-桌面版/**/*
+            几何决斗-Android-鸿蒙-手机版/**/*
+            几何决斗-网页版HTML/**/*
+          draft: false
+          prerelease: false
