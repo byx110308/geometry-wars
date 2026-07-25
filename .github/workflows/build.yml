@@ -55,7 +55,17 @@ jobs:
           name: macOS-桌面版
           path: desktop-app/dist/几何决斗*.dmg
 
-  # ======================== 手机端 ========================
+  # ======================== 网页文件 ========================
+  upload-html:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 网页版HTML
+          path: |
+            geometry-wars.html
+            geometry-wars-mobile.html
   build-android-mobile:
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: mobile-app } }
