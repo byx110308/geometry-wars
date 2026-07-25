@@ -18,14 +18,17 @@
     "files": [
       "main.js",
       "preload.js",
-      "geometry-wars.html"
+      "geometry-wars.html",
+      "icon.png",
+      "icon.ico",
+      "icon.iconset"
     ],
     "win": {
       "target": [
         "portable"
       ],
       "artifactName": "${productName}-${version}-Windows便携版.${ext}",
-      "icon": null
+      "icon": "icon.png"
     },
     "mac": {
       "target": [
@@ -36,7 +39,7 @@
       "category": "public.app-category.games",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
-      "icon": null
+      "icon": "icon.png"
     },
     "linux": {
       "target": [
@@ -44,7 +47,7 @@
       ],
       "artifactName": "${productName}-${version}-Linux.${ext}",
       "category": "Game",
-      "icon": null
+      "icon": "icon.png"
     }
   },
   "devDependencies": {

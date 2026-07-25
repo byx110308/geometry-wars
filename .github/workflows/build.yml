@@ -87,6 +87,16 @@ jobs:
       - run: npm ci
       - run: npx cap add android
       - run: npx cap sync android
+      - name: Copy Android Icons
+        run: |
+          cp mobile-app/android-res/mipmap-mdpi/ic_launcher.png mobile-app/android/app/src/main/res/mipmap-mdpi/ || true
+          cp mobile-app/android-res/mipmap-mdpi/ic_launcher_round.png mobile-app/android/app/src/main/res/mipmap-mdpi/ || true
+          cp mobile-app/android-res/mipmap-hdpi/ic_launcher.png mobile-app/android/app/src/main/res/mipmap-hdpi/ || true
+          cp mobile-app/android-res/mipmap-hdpi/ic_launcher_round.png mobile-app/android/app/src/main/res/mipmap-hdpi/ || true
+          cp mobile-app/android-res/mipmap-xhdpi/ic_launcher.png mobile-app/android/app/src/main/res/mipmap-xhdpi/ || true
+          cp mobile-app/android-res/mipmap-xhdpi/ic_launcher_round.png mobile-app/android/app/src/main/res/mipmap-xhdpi/ || true
+          cp mobile-app/android-res/mipmap-xxhdpi/ic_launcher.png mobile-app/android/app/src/main/res/mipmap-xxhdpi/ || true
+          cp mobile-app/android-res/mipmap-xxhdpi/ic_launcher_round.png mobile-app/android/app/src/main/res/mipmap-xxhdpi/ || true
       - name: Build APK
         working-directory: mobile-app/android
         run: |

@@ -11,6 +11,10 @@
 !desktop-app/main.js
 !desktop-app/preload.js
 !desktop-app/geometry-wars.html
+!desktop-app/icon.png
+!desktop-app/icon.ico
+!desktop-app/icon.iconset/
+!desktop-app/icon.iconset/*.png
 node_modules/
 dist/
 !.github/
@@ -22,3 +26,7 @@ dist/
 !mobile-app/capacitor.config.json
 !mobile-app/www/
 !mobile-app/www/index.html
+!mobile-app/icon.png
+!mobile-app/android-res/
+!mobile-app/android-res/*/ic_launcher.png
+!mobile-app/android-res/*/ic_launcher_round.png
