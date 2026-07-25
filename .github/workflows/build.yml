@@ -24,7 +24,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: 几何决斗-Linux-桌面版
-          path: desktop-app/dist/几何决斗*.AppImage
+          path: desktop-app/dist/*.AppImage
 
   build-windows:
     runs-on: windows-latest
@@ -40,7 +40,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: 几何决斗-Windows-桌面版
-          path: desktop-app/dist/几何决斗*.exe
+          path: desktop-app/dist/*.exe
 
   build-macos:
     runs-on: macos-latest
@@ -56,7 +56,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: 几何决斗-macOS-桌面版
-          path: desktop-app/dist/几何决斗*.dmg
+          path: desktop-app/dist/*.dmg
 
   # ======================== 网页文件 ========================
   upload-html:
@@ -131,19 +131,20 @@ jobs:
           tag_name: latest
           name: 最新版本下载
           body: |
-            固定下载页，每次更新自动刷新。
+            **几何决斗** · 固定下载页
+
+            每次更新自动刷新。
 
             | 文件 | 系统 |
             |------|------|
-            | .exe | Windows 桌面版 |
-            | .AppImage | Linux 桌面版 |
-            | .apk | Android / 鸿蒙 手机 |
+            | Windows.exe | Windows 桌面 |
+            | Linux.AppImage | Linux 桌面 |
+            | .apk | Android / 鸿蒙 |
             | .html | 网页版 |
           files: |
-            几何决斗-*-Windows便携版.exe
-            几何决斗-*-Linux.AppImage
+            *-Linux.AppImage
+            *-Windows.exe
             app-debug.apk
-            geometry-wars.html
-            geometry-wars-mobile.html
+            geometry-wars*.html
           draft: false
           prerelease: false
