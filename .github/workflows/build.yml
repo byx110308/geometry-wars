@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   # ======================== 桌面端 ========================
   build-linux:
@@ -100,6 +103,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
+        with:
+          name: 几何决斗-Linux-桌面版
+          path: release
+      - uses: actions/download-artifact@v4
+        with:
+          name: 几何决斗-Windows-桌面版
+          path: release
+      - uses: actions/download-artifact@v4
+        with:
+          name: 几何决斗-macOS-桌面版
+          path: release
+      - uses: actions/download-artifact@v4
+        with:
+          name: 几何决斗-Android-鸿蒙-手机版
+          path: release
+      - uses: actions/download-artifact@v4
+        with:
+          name: 几何决斗-网页版HTML
+          path: release
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -118,10 +140,10 @@ jobs:
 
             更新日志见 [commits](https://github.com/BYX110308/geometry-wars/commits/main)
           files: |
-            几何决斗-Windows-桌面版/**/*
-            几何决斗-macOS-桌面版/**/*
-            几何决斗-Linux-桌面版/**/*
-            几何决斗-Android-鸿蒙-手机版/**/*
-            几何决斗-网页版HTML/**/*
+            release/几何决斗-Windows-桌面版/*
+            release/几何决斗-macOS-桌面版/*
+            release/几何决斗-Linux-桌面版/*
+            release/几何决斗-Android-鸿蒙-手机版/*
+            release/几何决斗-网页版HTML/*
           draft: false
           prerelease: false
