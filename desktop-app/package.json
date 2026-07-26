@@ -15,7 +15,6 @@
   "build": {
     "appId": "com.geometrywars.app",
     "productName": "几何决斗",
-    "icon": "icon.png",
     "files": [
       "main.js",
       "preload.js",
@@ -23,10 +22,9 @@
       "icon.png"
     ],
     "win": {
-      "target": [
-        "portable"
-      ],
-      "artifactName": "${productName}-${version}-Windows便携版.${ext}"
+      "target": ["portable"],
+      "artifactName": "${productName}-${version}-Windows便携版.${ext}",
+      "icon": "icon.png"
     },
     "mac": {
       "target": ["dmg", "zip"],
@@ -38,7 +36,8 @@
     "linux": {
       "target": ["AppImage"],
       "artifactName": "${productName}-${version}-Linux.${ext}",
-      "category": "Game"
+      "category": "Game",
+      "icon": "icon.png"
     }
   },
   "devDependencies": {
