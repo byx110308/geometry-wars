@@ -109,7 +109,7 @@ jobs:
 
   # ======================== 固定发布页 ========================
   release:
-    needs: [build-linux, build-windows, build-android-mobile, upload-html]
+    needs: [build-linux, build-windows, build-macos, build-android-mobile, upload-html]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -119,6 +119,10 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: 几何决斗-Windows-桌面版
+      - uses: actions/download-artifact@v4
+        with:
+          name: 几何决斗-macOS-桌面版
+        continue-on-error: true
       - uses: actions/download-artifact@v4
         with:
           name: 几何决斗-Android-鸿蒙-手机版
@@ -138,11 +142,13 @@ jobs:
             | 文件 | 系统 |
             |------|------|
             | Windows.exe | Windows 桌面 |
+            | macOS.dmg | macOS 桌面 |
             | Linux.AppImage | Linux 桌面 |
             | .apk | Android / 鸿蒙 |
             | .html | 网页版 |
           files: |
             *-Linux.AppImage
+            *-macOS.dmg
             *-Windows*.exe
             app-debug.apk
             geometry-wars*.html
