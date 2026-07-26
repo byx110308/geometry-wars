@@ -12,19 +12,13 @@
 html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0f;font-family:'Courier New',monospace;touch-action:manipulation}
 #wrap{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
 canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);max-width:100vw;max-height:100vh;object-fit:contain}
-
-/* rotate hint */
 #rotate-hint{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,10,15,0.95);z-index:100;flex-direction:column;align-items:center;justify-content:center;color:#999;font-size:13px;letter-spacing:3px}
 #rotate-hint .icon{font-size:48px;margin-bottom:16px;color:#d4a574;animation:pulse 1.5s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
 @media(orientation:portrait){#rotate-hint{display:flex}}
-
-/* overlays */
 .overlay{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:10}
 .overlay.active{pointer-events:auto}
 .overlay.active>*{pointer-events:auto}
-
-/* menu */
 #menu{background:rgba(10,10,15,0.93)}
 #menu h1{font-size:clamp(22px,5vw,40px);color:#ddd;letter-spacing:6px;margin-bottom:4px;text-align:center}
 #menu .subtitle{font-size:clamp(10px,2vw,13px);color:#666;letter-spacing:5px;margin-bottom:28px}
@@ -33,8 +27,6 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
 .menu-btn.secondary{font-size:clamp(10px,2.2vw,11px);width:min(180px,55vw);padding:7px 0;color:#555;margin:3px 0}
 .menu-btn.secondary:active,.menu-btn.secondary:hover{border-color:#555;color:#888}
 #user-info{color:#666;font-size:clamp(10px,2vw,11px);letter-spacing:2px;margin-bottom:22px;text-align:center}
-
-/* register */
 #register{background:rgba(10,10,15,0.94)}
 #register h2{font-size:clamp(16px,4vw,20px);color:#ddd;letter-spacing:5px;margin-bottom:14px}
 #register .field{margin:5px 0}
@@ -46,8 +38,6 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
 .color-opt:active,.color-opt:hover{border-color:#888}
 .color-opt.selected{border-color:#ddd}
 #register .err{color:#c97d8a;font-size:10px;height:14px;margin-top:2px}
-
-/* lobby */
 #lobby{background:rgba(10,10,15,0.92)}
 #lobby h2{font-size:clamp(16px,4vw,20px);color:#ddd;letter-spacing:5px;margin-bottom:18px}
 #lobby .status-text{color:#999;font-size:clamp(10px,2vw,12px);letter-spacing:2px;margin:6px 0;min-height:16px;text-align:center}
@@ -57,8 +47,6 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
 #join-input:focus{border-color:#888}
 .spinner{width:16px;height:16px;border:2px solid #333;border-top-color:#888;animation:spin .8s linear infinite;margin:6px auto}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* HUD */
 #hud{position:absolute;top:8px;left:50%;transform:translateX(-50%);display:flex;gap:clamp(30px,8vw,60px);color:#999;font-size:clamp(9px,1.8vw,11px);letter-spacing:2px;pointer-events:none;z-index:5;font-family:'Courier New',monospace}
 #hud .val{color:#ddd;font-size:clamp(13px,2.5vw,16px)}
 #msg-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ddd;font-size:clamp(12px,2.5vw,15px);letter-spacing:3px;text-align:center;pointer-events:none;z-index:5;display:none;font-family:'Courier New',monospace;line-height:1.6}
@@ -67,24 +55,14 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
 .bar{width:min(120px,22vw);height:3px;background:rgba(255,255,255,0.06);overflow:hidden}
 .bar-fill{height:100%;transition:width .1s}
 .bar-label{color:#555;font-size:clamp(7px,1.3vw,8px);text-align:center;letter-spacing:1px;font-family:'Courier New',monospace}
-
-/* game controls */
 #ctrl-layer{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:6;display:none}
 #ctrl-layer.active{pointer-events:auto;display:block}
 #ctrl-layer.active>*{pointer-events:auto}
-
-/* joystick */
 #stick-base{position:absolute;width:90px;height:90px;border:1.5px solid rgba(255,255,255,0.12);border-radius:50%;transform:translate(-50%,-50%);display:none;pointer-events:none}
 #stick-thumb{position:absolute;width:36px;height:36px;background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.3);border-radius:50%;transform:translate(-50%,-50%);display:none;pointer-events:none;transition:background .15s}
 #stick-thumb.active{background:rgba(255,255,255,0.3)}
-
-/* aim indicator */
 #aim-dot{position:absolute;width:6px;height:6px;background:rgba(255,255,255,0.5);border-radius:50%;transform:translate(-50%,-50%);display:none;pointer-events:none}
-
-/* charge ring */
 #charge-ring{position:absolute;transform:translate(-50%,-50%);display:none;pointer-events:none}
-
-/* action buttons */
 .ctrl-btn{position:absolute;border:1.5px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.55);font-family:'Courier New',monospace;text-align:center;letter-spacing:2px;transition:background .15s,border-color .15s,color .15s,box-shadow .15s;border-radius:4px;font-size:clamp(9px,1.8vw,11px)}
 .ctrl-btn:active,.ctrl-btn.pressed{background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.6);color:rgba(255,255,255,0.85)}
 .ctrl-btn.fire{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.6)}
@@ -98,8 +76,6 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
 .ctrl-btn.ult.primed{animation:none;color:#d4a574;background:rgba(212,165,116,0.22);border-color:rgba(212,165,116,0.7);box-shadow:0 0 14px rgba(212,165,116,0.45);opacity:1}
 .ctrl-btn.dash{background:rgba(126,168,184,0.08);border-color:rgba(126,168,184,0.2);color:rgba(126,168,184,0.5)}
 .ctrl-btn.dash:active,.ctrl-btn.dash.pressed{background:rgba(126,168,184,0.18);border-color:rgba(126,168,184,0.5);color:rgba(126,168,184,0.8)}
-
-/* history */
 #history{background:rgba(10,10,15,0.92)}
 #history h2{font-size:clamp(16px,4vw,20px);color:#ddd;letter-spacing:5px;margin-bottom:14px}
 #history .tab-row{display:flex;gap:0;margin-bottom:12px;border-bottom:1px solid #222;width:min(360px,85vw)}
@@ -117,19 +93,13 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
 #history .stat-item{flex:1;text-align:center;padding:6px;background:rgba(255,255,255,0.02);border:1px solid #1a1a1a}
 #history .stat-num{font-size:18px;color:#d4a574;letter-spacing:1px}
 #history .stat-label{font-size:9px;color:#555;letter-spacing:1px;margin-top:1px}
-
-/* admin */
 #admin-panel h2{font-size:clamp(16px,4vw,20px);color:#ddd;letter-spacing:5px;margin-bottom:14px}
 #admin-pw{width:min(200px,55vw);padding:9px;font-size:14px;text-align:center;letter-spacing:2px;background:rgba(255,255,255,0.03);border:1px solid #333;color:#ddd;outline:none;font-family:'Courier New',monospace;margin:6px 0;border-radius:2px}
 #admin-err{color:#c97d8a;font-size:10px;height:14px;margin:3px 0}
-
-/* more & edit mode */
 #more{background:rgba(10,10,15,0.92)}
 #more h2{font-size:clamp(16px,4vw,20px);color:#ddd;letter-spacing:5px;margin-bottom:18px}
 .edit-mode .ctrl-btn{border-style:dashed !important;transition:none}
 .edit-mode .ctrl-btn.selected{border-style:solid !important;border-color:#d4a574 !important;box-shadow:0 0 12px rgba(212,165,116,0.45)}
-
-/* browser block & warnings */
 #browser-block{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,10,15,0.97);z-index:200;flex-direction:column;align-items:center;justify-content:center;color:#999;font-size:clamp(12px,2.5vw,14px);letter-spacing:2px;text-align:center;line-height:1.8;padding:20px}
 #browser-block.show{display:flex}
 #browser-block .bicon{font-size:40px;margin-bottom:14px;color:#c97d8a}
@@ -141,572 +111,504 @@ canvas{display:block;position:absolute;top:50%;left:50%;transform:translate(-50%
 </style>
 </head>
 <body>
-
 <div id="rotate-hint">
-  <div class="icon">↻</div>
-  <div>请旋转设备至横屏</div>
-  <div style="font-size:9px;color:#555;margin-top:6px;letter-spacing:2px;">ROTATE TO LANDSCAPE</div>
+<div class="icon">↻</div>
+<div>请旋转设备至横屏</div>
+<div style="font-size:9px;color:#555;margin-top:6px;letter-spacing:2px;">ROTATE TO LANDSCAPE</div>
 </div>
-
 <div id="browser-block">
-  <div class="bicon">✕</div>
-  <div class="btitle" id="browser-block-title"></div>
-  <div class="bdetail" id="browser-block-detail"></div>
-  <button class="menu-btn secondary" id="browser-block-btn" style="display:none" onclick="document.getElementById('browser-block').classList.remove('show');document.getElementById('wrap').style.display='';">仍然进入</button>
+<div class="bicon">✕</div>
+<div class="btitle" id="browser-block-title"></div>
+<div class="bdetail" id="browser-block-detail"></div>
+<button class="menu-btn secondary" id="browser-block-btn" style="display:none" onclick="document.getElementById('browser-block').classList.remove('show');document.getElementById('wrap').style.display='';">仍然进入</button>
 </div>
 <div id="browser-warns"></div>
-
 <div id="wrap">
-  <canvas id="c"></canvas>
-
-  <!-- controls -->
-  <div id="ctrl-layer">
-    <div id="stick-base"></div>
-    <div id="stick-thumb"></div>
-    <div id="aim-dot"></div>
-    <canvas id="charge-ring" width="80" height="80"></canvas>
-    <button class="ctrl-btn dash" id="btn-dash" style="width:46px;height:46px;border-radius:50%;bottom:clamp(80px,15vh,110px);right:clamp(126px,24vw,166px);font-size:8px" data-d-b="clamp(80px,15vh,110px)" data-d-r="clamp(126px,24vw,166px)">DASH</button>
-    <button class="ctrl-btn fire" id="btn-fire" style="width:clamp(56px,11vw,66px);height:clamp(56px,11vw,66px);border-radius:50%;bottom:clamp(80px,15vh,110px);right:clamp(50px,10vw,100px);font-size:clamp(10px,1.8vw,12px);letter-spacing:1px" data-d-b="clamp(80px,15vh,110px)" data-d-r="clamp(50px,10vw,100px)">FIRE</button>
-    <button class="ctrl-btn ult dim" id="btn-ult" style="width:clamp(30px,6vw,38px);height:clamp(30px,6vw,38px);border-radius:50%;bottom:clamp(152px,26vh,178px);right:clamp(64px,12vw,113px);font-size:clamp(6px,1.2vw,8px);letter-spacing:1px" data-d-b="clamp(152px,26vh,178px)" data-d-r="clamp(64px,12vw,113px)">U</button>
-    <button class="ctrl-btn" id="btn-menu" style="width:clamp(32px,6vw,40px);height:clamp(32px,6vw,40px);border-radius:50%;top:clamp(6px,1.5vh,12px);right:clamp(6px,1.5vw,12px);font-size:8px;letter-spacing:0;position:absolute">✕</button>
-  </div>
-
-  <!-- 比赛结果 -->
-  <div id="result-panel" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(10,10,15,0.88);z-index:15;flex-direction:column;align-items:center;justify-content:center;gap:14px;">
-    <div id="result-title" style="font-size:clamp(20px,5vw,30px);font-weight:bold;color:#ddd;letter-spacing:6px;text-align:center;"></div>
-    <div id="result-detail" style="color:#888;font-size:clamp(10px,2vw,13px);letter-spacing:2px;"></div>
-    <div id="result-btns" style="display:flex;flex-direction:column;align-items:center;gap:6px;"></div>
-  </div>
-
-  <!-- 重赛邀请 -->
-  <div id="invite-panel" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(10,10,15,0.88);z-index:16;flex-direction:column;align-items:center;justify-content:center;gap:14px;">
-    <div id="invite-title" style="font-size:clamp(18px,4vw,22px);color:#ddd;letter-spacing:4px;text-align:center;"></div>
-    <div id="invite-btns" style="display:flex;gap:12px;"></div>
-  </div>
-
-  <!-- menu -->
-  <div id="menu" class="overlay active">
-    <button class="menu-btn secondary" onclick="manualCheckUpdate()" style="position:absolute;top:10px;right:12px;width:auto;padding:4px 10px;font-size:clamp(8px,1.6vw,10px);letter-spacing:2px;z-index:11;margin:0">检查更新</button>
-    <h1>几何决斗</h1>
-    <div class="subtitle">GEOMETRY WARS · 移动版</div>
-    <div id="user-info"><span>未注册</span></div>
-    <button class="menu-btn" id="btn-start-ai" onclick="startAI()">人机对战</button>
-    <button class="menu-btn" id="btn-start-online" onclick="showLobby()">联机对战</button>
-    <button class="menu-btn secondary" onclick="showRegister()">注册 / 切换账号</button>
-    <button class="menu-btn secondary" onclick="showMore()">更多</button>
-    <button class="menu-btn secondary" onclick="showAdmin()">管理</button>
-  </div>
-
-  <!-- register -->
-  <div id="register" class="overlay" style="display:none">
-    <h2>注册账号</h2>
-    <div class="field"><label>玩家名称</label><input type="text" id="reg-name" maxlength="12" placeholder="输入名称..."></div>
-    <div class="field"><label>密码</label><input type="password" id="reg-pass" maxlength="16" placeholder="输入密码..."></div>
-    <div class="field"><label>选择颜色</label><div class="color-options" id="color-options"></div></div>
-    <div class="err" id="reg-err"></div>
-    <button class="menu-btn" onclick="doRegister()">确认</button>
-    <button class="menu-btn secondary" onclick="backToMenu()">返回</button>
-  </div>
-
-  <!-- lobby -->
-  <div id="lobby" class="overlay" style="display:none">
-    <h2>联机对战</h2>
-    <button class="menu-btn" onclick="createRoom()">创建房间</button>
-    <div class="status-text" id="lobby-status"></div>
-    <div id="room-code" style="display:none"></div>
-    <input type="text" id="join-input" placeholder="输入6位房间码..." maxlength="6">
-    <button class="menu-btn" onclick="joinRoom()">加入房间</button>
-    <div class="spinner" id="lobby-spinner" style="display:none"></div>
-    <button class="menu-btn secondary" onclick="disconnectAndMenu()">返回</button>
-  </div>
-
-  <!-- history -->
-  <div id="history" class="overlay" style="display:none">
-    <h2>历史记录</h2>
-    <div class="tab-row">
-      <button class="tab-btn on" onclick="switchHistoryTab('record')">战绩</button>
-      <button class="tab-btn" onclick="switchHistoryTab('room')">房间</button>
-    </div>
-    <div class="tab-content on" id="tab-record"><div class="stat-bar" id="stats-bar"></div><div id="record-list"></div></div>
-    <div class="tab-content" id="tab-room"><div id="room-list"></div></div>
-    <button class="menu-btn secondary" onclick="backToMenu()" style="margin-top:12px">返回</button>
-  </div>
-
-  <!-- 更多 -->
-  <div id="more" class="overlay" style="display:none">
-    <h2>更多选项</h2>
-    <button class="menu-btn" onclick="enterEditMode()">改键位</button>
-    <button class="menu-btn" onclick="showHistoryFromMore()">历史战绩</button>
-    <button class="menu-btn secondary" onclick="backToMenu()" style="margin-top:10px">返回</button>
-  </div>
-
-  <!-- 改键位操作栏 -->
-  <div id="edit-bar" style="display:none;position:absolute;bottom:clamp(4px,1vh,10px);left:50%;transform:translateX(-50%);z-index:20;gap:6px;align-items:center">
-    <button class="menu-btn secondary" id="eb-smaller" onclick="resizeSelected(-8)" style="width:28px;height:28px;padding:0;margin:0;font-size:14px;line-height:26px;border-radius:50%">−</button>
-    <span id="eb-size" style="color:#888;font-size:clamp(9px,1.6vw,10px);letter-spacing:1px;min-width:36px;text-align:center">--</span>
-    <button class="menu-btn secondary" id="eb-larger" onclick="resizeSelected(8)" style="width:28px;height:28px;padding:0;margin:0;font-size:14px;line-height:26px;border-radius:50%">+</button>
-    <button class="menu-btn secondary" onclick="resetLayout()" style="width:auto;padding:5px 10px;margin:0 0 0 8px;font-size:clamp(9px,1.8vw,11px)">默认</button>
-    <button class="menu-btn secondary" onclick="exitEditMode(true)" style="width:auto;padding:5px 10px;margin:0;font-size:clamp(9px,1.8vw,11px);border-color:#d4a574;color:#d4a574">完成</button>
-  </div>
-
-  <!-- admin -->
-  <div id="admin-panel" class="overlay" style="display:none">
-    <h2>管理员验证</h2>
-    <input type="password" id="admin-pw" maxlength="20" placeholder="输入管理密码...">
-    <div class="err" id="admin-err"></div>
-    <button class="menu-btn" onclick="adminVerify()">确认</button>
-    <button class="menu-btn secondary" onclick="backToMenu()">返回</button>
-  </div>
-
-  <!-- HUD -->
-  <div id="hud" style="display:none">
-    <div><span id="p1-label">玩家</span> <span class="val" id="ps">0</span></div>
-    <div id="round-indicator" style="color:#666;font-size:clamp(9px,1.8vw,11px);letter-spacing:3px">B 0 - 0</div>
-    <div><span id="p2-label">对手</span> <span class="val" id="ais" style="color:#f0f">0</span></div>
-  </div>
-  <div id="msg-overlay"></div>
-  <div class="bar-wrap" id="bar-wrap" style="display:none">
-    <div class="bar-col" id="bar-col-1"></div>
-    <div class="bar-col" id="bar-col-2"></div>
-  </div>
+<canvas id="c"></canvas>
+<div id="ctrl-layer">
+<div id="stick-base"></div>
+<div id="stick-thumb"></div>
+<div id="aim-dot"></div>
+<canvas id="charge-ring" width="80" height="80"></canvas>
+<button class="ctrl-btn dash" id="btn-dash" style="width:46px;height:46px;border-radius:50%;bottom:clamp(80px,15vh,110px);right:clamp(126px,24vw,166px);font-size:8px" data-d-b="clamp(80px,15vh,110px)" data-d-r="clamp(126px,24vw,166px)">DASH</button>
+<button class="ctrl-btn fire" id="btn-fire" style="width:clamp(56px,11vw,66px);height:clamp(56px,11vw,66px);border-radius:50%;bottom:clamp(80px,15vh,110px);right:clamp(50px,10vw,100px);font-size:clamp(10px,1.8vw,12px);letter-spacing:1px" data-d-b="clamp(80px,15vh,110px)" data-d-r="clamp(50px,10vw,100px)">FIRE</button>
+<button class="ctrl-btn ult dim" id="btn-ult" style="width:clamp(30px,6vw,38px);height:clamp(30px,6vw,38px);border-radius:50%;bottom:clamp(152px,26vh,178px);right:clamp(64px,12vw,113px);font-size:clamp(6px,1.2vw,8px);letter-spacing:1px" data-d-b="clamp(152px,26vh,178px)" data-d-r="clamp(64px,12vw,113px)">U</button>
+<button class="ctrl-btn" id="btn-menu" style="width:clamp(32px,6vw,40px);height:clamp(32px,6vw,40px);border-radius:50%;top:clamp(6px,1.5vh,12px);right:clamp(6px,1.5vw,12px);font-size:8px;letter-spacing:0;position:absolute">✕</button>
 </div>
-
+<div id="result-panel" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(10,10,15,0.88);z-index:15;flex-direction:column;align-items:center;justify-content:center;gap:14px;">
+<div id="result-title" style="font-size:clamp(20px,5vw,30px);font-weight:bold;color:#ddd;letter-spacing:6px;text-align:center;"></div>
+<div id="result-detail" style="color:#888;font-size:clamp(10px,2vw,13px);letter-spacing:2px;"></div>
+<div id="result-btns" style="display:flex;flex-direction:column;align-items:center;gap:6px;"></div>
+</div>
+<div id="invite-panel" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(10,10,15,0.88);z-index:16;flex-direction:column;align-items:center;justify-content:center;gap:14px;">
+<div id="invite-title" style="font-size:clamp(18px,4vw,22px);color:#ddd;letter-spacing:4px;text-align:center;"></div>
+<div id="invite-btns" style="display:flex;gap:12px;"></div>
+</div>
+<div id="menu" class="overlay active">
+<button class="menu-btn secondary" onclick="manualCheckUpdate()" style="position:absolute;top:10px;right:12px;width:auto;padding:4px 10px;font-size:clamp(8px,1.6vw,10px);letter-spacing:2px;z-index:11;margin:0">检查更新</button>
+<h1>几何决斗</h1>
+<div class="subtitle">GEOMETRY WARS · 移动版</div>
+<div id="user-info"><span>未注册</span></div>
+<button class="menu-btn" id="btn-start-ai" onclick="startAI()">人机对战</button>
+<button class="menu-btn" id="btn-start-online" onclick="showLobby()">联机对战</button>
+<button class="menu-btn secondary" onclick="showRegister()">注册 / 切换账号</button>
+<button class="menu-btn secondary" onclick="showMore()">更多</button>
+<button class="menu-btn secondary" onclick="showAdmin()">管理</button>
+</div>
+<div id="register" class="overlay" style="display:none">
+<h2>注册账号</h2>
+<div class="field"><label>玩家名称</label><input type="text" id="reg-name" maxlength="12" placeholder="输入名称..."></div>
+<div class="field"><label>密码</label><input type="password" id="reg-pass" maxlength="16" placeholder="输入密码..."></div>
+<div class="field"><label>选择颜色</label><div class="color-options" id="color-options"></div></div>
+<div class="err" id="reg-err"></div>
+<button class="menu-btn" onclick="doRegister()">确认</button>
+<button class="menu-btn secondary" onclick="backToMenu()">返回</button>
+</div>
+<div id="lobby" class="overlay" style="display:none">
+<h2>联机对战</h2>
+<button class="menu-btn" onclick="createRoom()">创建房间</button>
+<div class="status-text" id="lobby-status"></div>
+<div id="room-code" style="display:none"></div>
+<input type="text" id="join-input" placeholder="输入6位房间码..." maxlength="6">
+<button class="menu-btn" onclick="joinRoom()">加入房间</button>
+<div class="spinner" id="lobby-spinner" style="display:none"></div>
+<button class="menu-btn secondary" onclick="disconnectAndMenu()">返回</button>
+</div>
+<div id="history" class="overlay" style="display:none">
+<h2>历史记录</h2>
+<div class="tab-row">
+<button class="tab-btn on" onclick="switchHistoryTab('record')">战绩</button>
+<button class="tab-btn" onclick="switchHistoryTab('room')">房间</button>
+</div>
+<div class="tab-content on" id="tab-record"><div class="stat-bar" id="stats-bar"></div><div id="record-list"></div></div>
+<div class="tab-content" id="tab-room"><div id="room-list"></div></div>
+<button class="menu-btn secondary" onclick="backToMenu()" style="margin-top:12px">返回</button>
+</div>
+<div id="more" class="overlay" style="display:none">
+<h2>更多选项</h2>
+<button class="menu-btn" onclick="enterEditMode()">改键位</button>
+<button class="menu-btn" onclick="showHistoryFromMore()">历史战绩</button>
+<button class="menu-btn secondary" onclick="backToMenu()" style="margin-top:10px">返回</button>
+</div>
+<div id="edit-bar" style="display:none;position:absolute;bottom:clamp(4px,1vh,10px);left:50%;transform:translateX(-50%);z-index:20;gap:6px;align-items:center">
+<button class="menu-btn secondary" id="eb-smaller" onclick="resizeSelected(-8)" style="width:28px;height:28px;padding:0;margin:0;font-size:14px;line-height:26px;border-radius:50%">−</button>
+<span id="eb-size" style="color:#888;font-size:clamp(9px,1.6vw,10px);letter-spacing:1px;min-width:36px;text-align:center">--</span>
+<button class="menu-btn secondary" id="eb-larger" onclick="resizeSelected(8)" style="width:28px;height:28px;padding:0;margin:0;font-size:14px;line-height:26px;border-radius:50%">+</button>
+<button class="menu-btn secondary" onclick="resetLayout()" style="width:auto;padding:5px 10px;margin:0 0 0 8px;font-size:clamp(9px,1.8vw,11px)">默认</button>
+<button class="menu-btn secondary" onclick="exitEditMode(true)" style="width:auto;padding:5px 10px;margin:0;font-size:clamp(9px,1.8vw,11px);border-color:#d4a574;color:#d4a574">完成</button>
+</div>
+<div id="admin-panel" class="overlay" style="display:none">
+<h2>管理员验证</h2>
+<input type="password" id="admin-pw" maxlength="20" placeholder="输入管理密码...">
+<div class="err" id="admin-err"></div>
+<button class="menu-btn" onclick="adminVerify()">确认</button>
+<button class="menu-btn secondary" onclick="backToMenu()">返回</button>
+</div>
+<div id="hud" style="display:none">
+<div><span id="p1-label">玩家</span> <span class="val" id="ps">0</span></div>
+<div id="round-indicator" style="color:#666;font-size:clamp(9px,1.8vw,11px);letter-spacing:3px">B 0 - 0</div>
+<div><span id="p2-label">对手</span> <span class="val" id="ais" style="color:#f0f">0</span></div>
+</div>
+<div id="msg-overlay"></div>
+<div class="bar-wrap" id="bar-wrap" style="display:none">
+<div class="bar-col" id="bar-col-1"></div>
+<div class="bar-col" id="bar-col-2"></div>
+</div>
+</div>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
-// ===================== GAME CONSTANTS =====================
 const c = document.getElementById('c');
 const ctx = c.getContext('2d');
 const GW = 900, GH = 600;
 let scale = 1;
-
 function resizeCanvas() {
-  const ww = window.innerWidth;
-  const wh = window.innerHeight;
-  scale = Math.min(ww / GW, wh / GH);
-  c.width = GW;
-  c.height = GH;
-  c.style.width = (GW * scale) + 'px';
-  c.style.height = (GH * scale) + 'px';
+const ww = window.innerWidth;
+const wh = window.innerHeight;
+scale = Math.min(ww / GW, wh / GH);
+c.width = GW;
+c.height = GH;
+c.style.width = (GW * scale) + 'px';
+c.style.height = (GH * scale) + 'px';
 }
 window.addEventListener('resize', resizeCanvas);
 window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200));
 resizeCanvas();
-
-// ===================== COLORS & VERSION =====================
 const VERSION = 27;
 const UPDATE_URL = 'https://gitee.com/byx0308/geometry-wars/raw/main/geometry-wars-mobile.html';
 const CHECK_URL = 'https://raw.githubusercontent.com/BYX110308/geometry-wars/main/version_m.js';
-
 const COLORS = [
-  {name:'白',hex:'#e0e0e0',rgb:'rgba(224,224,224,0.15)'},
-  {name:'灰',hex:'#909090',rgb:'rgba(144,144,144,0.15)'},
-  {name:'橙',hex:'#d4a574',rgb:'rgba(212,165,116,0.15)'},
-  {name:'青',hex:'#7ea8b8',rgb:'rgba(126,168,184,0.15)'},
-  {name:'绿',hex:'#9db88f',rgb:'rgba(157,184,143,0.15)'},
-  {name:'赤',hex:'#c97d8a',rgb:'rgba(201,125,138,0.15)'},
-  {name:'紫',hex:'#9a9bcf',rgb:'rgba(154,155,207,0.15)'},
-  {name:'黄',hex:'#c9c090',rgb:'rgba(201,192,144,0.15)'}
+{name:'白',hex:'#e0e0e0',rgb:'rgba(224,224,224,0.15)'},
+{name:'灰',hex:'#909090',rgb:'rgba(144,144,144,0.15)'},
+{name:'橙',hex:'#d4a574',rgb:'rgba(212,165,116,0.15)'},
+{name:'青',hex:'#7ea8b8',rgb:'rgba(126,168,184,0.15)'},
+{name:'绿',hex:'#9db88f',rgb:'rgba(157,184,143,0.15)'},
+{name:'赤',hex:'#c97d8a',rgb:'rgba(201,125,138,0.15)'},
+{name:'紫',hex:'#9a9bcf',rgb:'rgba(154,155,207,0.15)'},
+{name:'黄',hex:'#c9c090',rgb:'rgba(201,192,144,0.15)'}
 ];
-
-// ===================== BROWSER DETECTION & ADAPTATION =====================
 (function initBrowserAdaptation() {
-  const ua = navigator.userAgent.toLowerCase();
-  const env = {
-    browser: 'unknown', os: 'unknown', inApp: false, brand: '',
-    warnings: [], blocked: false, blockReason: '', softBlock: false
-  };
-
-  if (/iphone|ipad|ipod/i.test(ua)) env.os = 'ios';
-  else if (/android/i.test(ua)) env.os = 'android';
-  else if (/windows|macintosh|linux/i.test(ua)) env.os = 'desktop';
-
-  if (/micromessenger/i.test(ua)) {
-    env.browser = 'wechat'; env.inApp = true; env.brand = '微信';
-    env.warnings.push('建议在系统浏览器中打开以获得完整体验');
-  } else if (/qq\/[\d.]+(?!\s*MQQBrowser)/i.test(ua) || /\sqq\//i.test(ua)) {
-    env.browser = 'qq'; env.inApp = true; env.brand = 'QQ';
-  } else if (/\sweibo\//i.test(ua)) {
-    env.browser = 'weibo'; env.inApp = true; env.brand = '微博';
-    env.warnings.push('微博内置浏览器功能受限，建议在系统浏览器打开');
-  } else if (/dingtalk/i.test(ua)) {
-    env.browser = 'dingtalk'; env.inApp = true; env.brand = '钉钉';
-    env.warnings.push('钉钉浏览器联机功能可能受限');
-  } else if (/alipay/i.test(ua)) {
-    env.browser = 'alipay'; env.inApp = true; env.brand = '支付宝';
-    env.warnings.push('支付宝浏览器功能受限，建议在系统浏览器打开');
-  } else if (/ucbrowser|ucweb/i.test(ua)) {
-    env.browser = 'uc'; env.brand = 'UC';
-  } else if (/baiduboxapp/i.test(ua) || /baidubrowser/i.test(ua)) {
-    env.browser = 'baidu'; env.inApp = true; env.brand = '百度';
-  } else if (/quark/i.test(ua)) {
-    env.browser = 'quark'; env.brand = '夸克';
-  } else if (/sogou|metasr|se\s[\d.]/i.test(ua) && !/chrome/i.test(ua)) {
-    env.browser = 'sogou'; env.brand = '搜狗';
-  } else if (/360se|360ee|qihu|360browser/i.test(ua)) {
-    env.browser = '360'; env.brand = '360';
-  } else if (/liebao|lbbrowser/i.test(ua)) {
-    env.browser = 'liebao'; env.brand = '猎豹';
-  } else if (/maxthon/i.test(ua)) {
-    env.browser = 'maxthon'; env.brand = '遨游';
-  } else if (/fxios/i.test(ua)) {
-    env.browser = 'firefox'; env.brand = 'Firefox iOS';
-  } else if (/firefox|fennec|focus|klar/i.test(ua)) {
-    env.browser = 'firefox'; env.brand = 'Firefox';
-  } else if (/edgios|edga/i.test(ua)) {
-    env.browser = 'edge'; env.brand = 'Edge';
-  } else if (/crios/i.test(ua)) {
-    env.browser = 'chrome'; env.brand = 'Chrome iOS';
-  } else if (/brave|braveios/i.test(ua)) {
-    env.browser = 'brave'; env.brand = 'Brave';
-  } else if (/kiwi/i.test(ua)) {
-    env.browser = 'kiwi'; env.brand = 'Kiwi';
-  } else if (/opr|opera|opt\/|opios/i.test(ua)) {
-    env.browser = 'opera'; env.brand = 'Opera';
-  } else if (/vivaldi/i.test(ua)) {
-    env.browser = 'vivaldi'; env.brand = 'Vivaldi';
-  } else if (/chrome|crios/i.test(ua) && !/edge/i.test(ua)) {
-    env.browser = 'chrome'; env.brand = 'Chrome';
-    if (/miuibrowser/i.test(ua)) { env.brand = '小米浏览器'; }
-    else if (/huaweibrowser/i.test(ua)) { env.brand = '华为浏览器'; }
-    else if (/samsungbrowser/i.test(ua)) { env.brand = '三星浏览器'; }
-  } else if (/safari/i.test(ua)) {
-    env.browser = 'safari'; env.brand = 'Safari';
-  }
-
-  document.body.classList.add('browser-' + env.browser, 'os-' + env.os);
-  if (env.inApp) document.body.classList.add('in-app');
-
-  // Critical capability checks
-  const c = document.createElement('canvas');
-  if (!c.getContext || !c.getContext('2d')) {
-    env.blocked = true;
-    env.blockReason = '不支持 Canvas，无法渲染画面。';
-  }
-  if (!window.requestAnimationFrame) {
-    env.blocked = true;
-    env.blockReason = '浏览器版本过旧，不支持动画。';
-  }
-  try { localStorage.setItem('__gw_test', '1'); localStorage.removeItem('__gw_test'); } catch(e) {
-    env.softBlock = true;
-    env.warnings.push('本地存储不可用，用户数据和战绩无法保存');
-  }
-
-  // Hard block: truly incompatible
-  if (env.blocked) {
-    showBlockScreen('无法运行', env.blockReason + '\n请使用现代浏览器（Chrome / Safari / Firefox / Edge）打开。', false);
-    document.getElementById('wrap').style.display = 'none';
-    return;
-  }
-
-  // Soft block: allow but warn prominently
-  if (env.softBlock) {
-    showBlockScreen('功能受限', '浏览器不支持本地存储，战绩和用户数据将无法保存。', true);
-  }
-
-  // WeChat specific: lock Online when PeerJS/WebRTC is likely broken
-  // WeChat on iOS >=14.5 supports WebRTC, but many versions don't
-  // WeChat on Android: TBS kernel often lacks RTCPeerConnection
-  if (env.browser === 'wechat') {
-    window.__browserNoOnline = true;
-    env.warnings.push('联机对战不可用，仅支持人机模式');
-  }
-  if (env.browser === 'alipay' || env.browser === 'dingtalk') {
-    window.__browserNoOnline = true;
-    env.warnings.push('该浏览器不支持 P2P 联机');
-  }
-
-  // Adaptations
-  if (env.os === 'ios') {
-    document.body.style.webkitOverflowScrolling = 'touch';
-  }
-
-  window.__browserEnv = env;
-  console.log('[GW] 浏览器: ' + env.brand + ' | OS: ' + env.os + (env.inApp ? ' | 内嵌' : '') + (window.__browserNoOnline ? ' | 联机不可用' : ''));
-
-  // Show warnings after a short delay
-  if (env.warnings.length > 0) {
-    setTimeout(() => {
-      env.warnings.forEach(function(w, i) {
-        setTimeout(function() { showBrowserWarning(w); }, i * 4200);
-      });
-    }, 800);
-  }
+const ua = navigator.userAgent.toLowerCase();
+const env = {
+browser: 'unknown', os: 'unknown', inApp: false, brand: '',
+warnings: [], blocked: false, blockReason: '', softBlock: false
+};
+if (/iphone|ipad|ipod/i.test(ua)) env.os = 'ios';
+else if (/android/i.test(ua)) env.os = 'android';
+else if (/windows|macintosh|linux/i.test(ua)) env.os = 'desktop';
+if (/micromessenger/i.test(ua)) {
+env.browser = 'wechat'; env.inApp = true; env.brand = '微信';
+env.warnings.push('建议在系统浏览器中打开以获得完整体验');
+} else if (/qq\/[\d.]+(?!\s*MQQBrowser)/i.test(ua) || /\sqq\
+env.browser = 'qq'; env.inApp = true; env.brand = 'QQ';
+} else if (/\sweibo\
+env.browser = 'weibo'; env.inApp = true; env.brand = '微博';
+env.warnings.push('微博内置浏览器功能受限，建议在系统浏览器打开');
+} else if (/dingtalk/i.test(ua)) {
+env.browser = 'dingtalk'; env.inApp = true; env.brand = '钉钉';
+env.warnings.push('钉钉浏览器联机功能可能受限');
+} else if (/alipay/i.test(ua)) {
+env.browser = 'alipay'; env.inApp = true; env.brand = '支付宝';
+env.warnings.push('支付宝浏览器功能受限，建议在系统浏览器打开');
+} else if (/ucbrowser|ucweb/i.test(ua)) {
+env.browser = 'uc'; env.brand = 'UC';
+} else if (/baiduboxapp/i.test(ua) || /baidubrowser/i.test(ua)) {
+env.browser = 'baidu'; env.inApp = true; env.brand = '百度';
+} else if (/quark/i.test(ua)) {
+env.browser = 'quark'; env.brand = '夸克';
+} else if (/sogou|metasr|se\s[\d.]/i.test(ua) && !/chrome/i.test(ua)) {
+env.browser = 'sogou'; env.brand = '搜狗';
+} else if (/360se|360ee|qihu|360browser/i.test(ua)) {
+env.browser = '360'; env.brand = '360';
+} else if (/liebao|lbbrowser/i.test(ua)) {
+env.browser = 'liebao'; env.brand = '猎豹';
+} else if (/maxthon/i.test(ua)) {
+env.browser = 'maxthon'; env.brand = '遨游';
+} else if (/fxios/i.test(ua)) {
+env.browser = 'firefox'; env.brand = 'Firefox iOS';
+} else if (/firefox|fennec|focus|klar/i.test(ua)) {
+env.browser = 'firefox'; env.brand = 'Firefox';
+} else if (/edgios|edga/i.test(ua)) {
+env.browser = 'edge'; env.brand = 'Edge';
+} else if (/crios/i.test(ua)) {
+env.browser = 'chrome'; env.brand = 'Chrome iOS';
+} else if (/brave|braveios/i.test(ua)) {
+env.browser = 'brave'; env.brand = 'Brave';
+} else if (/kiwi/i.test(ua)) {
+env.browser = 'kiwi'; env.brand = 'Kiwi';
+} else if (/opr|opera|opt\/|opios/i.test(ua)) {
+env.browser = 'opera'; env.brand = 'Opera';
+} else if (/vivaldi/i.test(ua)) {
+env.browser = 'vivaldi'; env.brand = 'Vivaldi';
+} else if (/chrome|crios/i.test(ua) && !/edge/i.test(ua)) {
+env.browser = 'chrome'; env.brand = 'Chrome';
+if (/miuibrowser/i.test(ua)) { env.brand = '小米浏览器'; }
+else if (/huaweibrowser/i.test(ua)) { env.brand = '华为浏览器'; }
+else if (/samsungbrowser/i.test(ua)) { env.brand = '三星浏览器'; }
+} else if (/safari/i.test(ua)) {
+env.browser = 'safari'; env.brand = 'Safari';
+}
+document.body.classList.add('browser-' + env.browser, 'os-' + env.os);
+if (env.inApp) document.body.classList.add('in-app');
+const c = document.createElement('canvas');
+if (!c.getContext || !c.getContext('2d')) {
+env.blocked = true;
+env.blockReason = '不支持 Canvas，无法渲染画面。';
+}
+if (!window.requestAnimationFrame) {
+env.blocked = true;
+env.blockReason = '浏览器版本过旧，不支持动画。';
+}
+try { localStorage.setItem('__gw_test', '1'); localStorage.removeItem('__gw_test'); } catch(e) {
+env.softBlock = true;
+env.warnings.push('本地存储不可用，用户数据和战绩无法保存');
+}
+if (env.blocked) {
+showBlockScreen('无法运行', env.blockReason + '\n请使用现代浏览器（Chrome / Safari / Firefox / Edge）打开。', false);
+document.getElementById('wrap').style.display = 'none';
+return;
+}
+if (env.softBlock) {
+showBlockScreen('功能受限', '浏览器不支持本地存储，战绩和用户数据将无法保存。', true);
+}
+if (env.browser === 'wechat') {
+window.__browserNoOnline = true;
+env.warnings.push('联机对战不可用，仅支持人机模式');
+}
+if (env.browser === 'alipay' || env.browser === 'dingtalk') {
+window.__browserNoOnline = true;
+env.warnings.push('该浏览器不支持 P2P 联机');
+}
+if (env.os === 'ios') {
+document.body.style.webkitOverflowScrolling = 'touch';
+}
+window.__browserEnv = env;
+console.log('[GW] 浏览器: ' + env.brand + ' | OS: ' + env.os + (env.inApp ? ' | 内嵌' : '') + (window.__browserNoOnline ? ' | 联机不可用' : ''));
+if (env.warnings.length > 0) {
+setTimeout(() => {
+env.warnings.forEach(function(w, i) {
+setTimeout(function() { showBrowserWarning(w); }, i * 4200);
+});
+}, 800);
+}
 })();
-
 function showBlockScreen(title, detail, canDismiss) {
-  var blk = document.getElementById('browser-block');
-  blk.classList.add('show');
-  document.getElementById('browser-block-title').textContent = title;
-  document.getElementById('browser-block-detail').textContent = detail;
-  if (canDismiss) {
-    var btn = document.getElementById('browser-block-btn');
-    btn.style.display = '';
-    btn.textContent = '仍然进入';
-  }
+var blk = document.getElementById('browser-block');
+blk.classList.add('show');
+document.getElementById('browser-block-title').textContent = title;
+document.getElementById('browser-block-detail').textContent = detail;
+if (canDismiss) {
+var btn = document.getElementById('browser-block-btn');
+btn.style.display = '';
+btn.textContent = '仍然进入';
 }
-
+}
 function showBrowserWarning(msg) {
-  var c = document.getElementById('browser-warns');
-  var el = document.createElement('div');
-  el.className = 'warn-item';
-  el.textContent = '\u26A0 ' + msg;
-  c.appendChild(el);
-  setTimeout(function() { if (el.parentNode) el.remove(); }, 5200);
+var c = document.getElementById('browser-warns');
+var el = document.createElement('div');
+el.className = 'warn-item';
+el.textContent = '\u26A0 ' + msg;
+c.appendChild(el);
+setTimeout(function() { if (el.parentNode) el.remove(); }, 5200);
 }
-
-// ===================== AUTO UPDATE =====================
 function checkUpdate(bg) {
-  fetch(CHECK_URL + '?_t=' + Date.now())
-    .then(r => { if (!r.ok) throw new Error('status ' + r.status); return r.text(); })
-    .then(txt => {
-      const m = txt.match(/\d+/);
-      const ver = m ? parseInt(m[0]) : 0;
-      if (!ver) { if (!bg) showUpdateTip('无法检查更新'); return; }
-      if (ver > VERSION) {
-        if (bg && gameMode && !gameOver) {
-          const ov = document.getElementById('msg-overlay');
-          ov.style.display = 'block';
-          ov.innerHTML = '发现新版本 v' + ver + '<br><span style="font-size:10px;color:#888">比赛结束后可下载</span>';
-          window._updatePending = UPDATE_URL + '?_v=' + ver;
-          setTimeout(() => { if (ov.textContent.includes('新版本')) ov.style.display = 'none'; }, 4000);
-        } else {
-          window.open(UPDATE_URL + '?_v=' + ver, '_blank');
-          if (!bg) showUpdateTip('发现新版本 v' + ver);
-        }
-      } else if (!bg) {
-        showUpdateTip('已是最新版本 (v' + VERSION + ')');
-      }
-    })
-    .catch(() => {
-      if (!bg) showUpdateTip('网络错误');
-      setTimeout(() => checkUpdate(true), 60000);
-    });
+fetch(CHECK_URL + '?_t=' + Date.now())
+.then(r => { if (!r.ok) throw new Error('status ' + r.status); return r.text(); })
+.then(txt => {
+const m = txt.match(/\d+/);
+const ver = m ? parseInt(m[0]) : 0;
+if (!ver) { if (!bg) showUpdateTip('无法检查更新'); return; }
+if (ver > VERSION) {
+if (bg && gameMode && !gameOver) {
+const ov = document.getElementById('msg-overlay');
+ov.style.display = 'block';
+ov.innerHTML = '发现新版本 v' + ver + '<br><span style="font-size:10px;color:#888">比赛结束后可下载</span>';
+window._updatePending = UPDATE_URL + '?_v=' + ver;
+setTimeout(() => { if (ov.textContent.includes('新版本')) ov.style.display = 'none'; }, 4000);
+} else {
+window.open(UPDATE_URL + '?_v=' + ver, '_blank');
+if (!bg) showUpdateTip('发现新版本 v' + ver);
 }
-
+} else if (!bg) {
+showUpdateTip('已是最新版本 (v' + VERSION + ')');
+}
+})
+.catch(() => {
+if (!bg) showUpdateTip('网络错误');
+setTimeout(() => checkUpdate(true), 60000);
+});
+}
 checkUpdate(true);
 setInterval(() => { if (!window._updatePending) checkUpdate(true); }, 300000);
-
 function manualCheckUpdate() {
-  const btn = document.querySelector('#menu button[onclick^="manualCheckUpdate"]');
-  if (btn) { btn.textContent = '检查中...'; btn.style.color = '#888'; }
-  checkUpdate(false);
+const btn = document.querySelector('#menu button[onclick^="manualCheckUpdate"]');
+if (btn) { btn.textContent = '检查中...'; btn.style.color = '#888'; }
+checkUpdate(false);
 }
 function showUpdateTip(msg) {
-  const btn = document.querySelector('#menu button[onclick^="manualCheckUpdate"]');
-  if (btn) { btn.textContent = msg; btn.style.color = '#888'; setTimeout(() => { btn.textContent = '检查更新'; btn.style.color = '#555'; }, 2500); }
+const btn = document.querySelector('#menu button[onclick^="manualCheckUpdate"]');
+if (btn) { btn.textContent = msg; btn.style.color = '#888'; setTimeout(() => { btn.textContent = '检查更新'; btn.style.color = '#555'; }, 2500); }
 }
-
-// ===================== USER SYSTEM =====================
 let currentUser = null;
 function loadHistory() { try { return JSON.parse(localStorage.getItem('gw_hist_m') || '{"matches":[],"rooms":[]}'); } catch(e) { return {matches:[],rooms:[]}; } }
 function saveHistory(h) { localStorage.setItem('gw_hist_m', JSON.stringify(h)); }
 function recordMatch(mode, opponent, iWon, myScore, oppScore) {
-  const h = loadHistory();
-  h.matches.unshift({time:Date.now(),mode,opponent,result:iWon?'win':'lose',myScore,oppScore});
-  if (h.matches.length > 50) h.matches.length = 50;
-  saveHistory(h);
+const h = loadHistory();
+h.matches.unshift({time:Date.now(),mode,opponent,result:iWon?'win':'lose',myScore,oppScore});
+if (h.matches.length > 50) h.matches.length = 50;
+saveHistory(h);
 }
 function recordRoom(code, role) {
-  const h = loadHistory();
-  h.rooms.unshift({time:Date.now(),code,role});
-  h.rooms = h.rooms.filter((r,i,a) => a.findIndex(x => x.code === r.code) === i);
-  if (h.rooms.length > 20) h.rooms.length = 20;
-  saveHistory(h);
+const h = loadHistory();
+h.rooms.unshift({time:Date.now(),code,role});
+h.rooms = h.rooms.filter((r,i,a) => a.findIndex(x => x.code === r.code) === i);
+if (h.rooms.length > 20) h.rooms.length = 20;
+saveHistory(h);
 }
 function loadUser() {
-  const raw = localStorage.getItem('gw_user_m');
-  if (raw) { try { currentUser = JSON.parse(raw); } catch(e) { currentUser = null; } }
-  updateMenuUserInfo();
+const raw = localStorage.getItem('gw_user_m');
+if (raw) { try { currentUser = JSON.parse(raw); } catch(e) { currentUser = null; } }
+updateMenuUserInfo();
 }
 function saveUser() { if (currentUser) localStorage.setItem('gw_user_m', JSON.stringify(currentUser)); updateMenuUserInfo(); }
 function updateMenuUserInfo() {
-  const el = document.getElementById('user-info');
-  if (currentUser) {
-    const cl = COLORS[currentUser.colorIdx];
-    el.innerHTML = '<span style="display:inline-block;width:8px;height:8px;background:' + cl.hex + ';border:1px solid currentColor;vertical-align:middle;margin:0 4px;box-shadow:0 0 6px ' + cl.hex + ';"></span>' + currentUser.name + ' <span style="color:#555">|</span> 已登录';
-  } else { el.innerHTML = '<span>未注册</span>'; }
+const el = document.getElementById('user-info');
+if (currentUser) {
+const cl = COLORS[currentUser.colorIdx];
+el.innerHTML = '<span style="display:inline-block;width:8px;height:8px;background:' + cl.hex + ';border:1px solid currentColor;vertical-align:middle;margin:0 4px;box-shadow:0 0 6px ' + cl.hex + ';"></span>' + currentUser.name + ' <span style="color:#555">|</span> 已登录';
+} else { el.innerHTML = '<span>未注册</span>'; }
 }
 function hashSimple(pw) { let h = 0; for (let i = 0; i < pw.length; i++) { h = ((h << 5) - h) + pw.charCodeAt(i); h |= 0; } return h.toString(36); }
 let selectedColorIdx = 0;
 function renderColorOptions() {
-  const container = document.getElementById('color-options');
-  container.innerHTML = '';
-  COLORS.forEach((cl, i) => {
-    const div = document.createElement('div');
-    div.className = 'color-opt' + (i === selectedColorIdx ? ' selected' : '');
-    div.style.background = cl.hex;
-    div.onclick = () => { selectedColorIdx = i; renderColorOptions(); };
-    container.appendChild(div);
-  });
+const container = document.getElementById('color-options');
+container.innerHTML = '';
+COLORS.forEach((cl, i) => {
+const div = document.createElement('div');
+div.className = 'color-opt' + (i === selectedColorIdx ? ' selected' : '');
+div.style.background = cl.hex;
+div.onclick = () => { selectedColorIdx = i; renderColorOptions(); };
+container.appendChild(div);
+});
 }
 function showRegister() {
-  hideAll(); document.getElementById('register').classList.add('active'); document.getElementById('register').style.display = '';
-  if (currentUser) { document.getElementById('reg-name').value = currentUser.name; document.getElementById('reg-pass').value = ''; selectedColorIdx = currentUser.colorIdx; }
-  else { document.getElementById('reg-name').value = ''; document.getElementById('reg-pass').value = ''; selectedColorIdx = 0; }
-  document.getElementById('reg-err').textContent = ''; renderColorOptions();
+hideAll(); document.getElementById('register').classList.add('active'); document.getElementById('register').style.display = '';
+if (currentUser) { document.getElementById('reg-name').value = currentUser.name; document.getElementById('reg-pass').value = ''; selectedColorIdx = currentUser.colorIdx; }
+else { document.getElementById('reg-name').value = ''; document.getElementById('reg-pass').value = ''; selectedColorIdx = 0; }
+document.getElementById('reg-err').textContent = ''; renderColorOptions();
 }
 function doRegister() {
-  const name = document.getElementById('reg-name').value.trim();
-  const pass = document.getElementById('reg-pass').value;
-  const errEl = document.getElementById('reg-err');
-  if (name.length < 2) { errEl.textContent = '名称至少2个字符'; return; }
-  if (pass.length < 1) { errEl.textContent = '请设置密码'; return; }
-  if (pass.length > 16) { errEl.textContent = '密码最多16个字符'; return; }
-  currentUser = { name, passHashed: hashSimple(pass), colorIdx: selectedColorIdx };
-  saveUser(); errEl.textContent = ''; backToMenu();
+const name = document.getElementById('reg-name').value.trim();
+const pass = document.getElementById('reg-pass').value;
+const errEl = document.getElementById('reg-err');
+if (name.length < 2) { errEl.textContent = '名称至少2个字符'; return; }
+if (pass.length < 1) { errEl.textContent = '请设置密码'; return; }
+if (pass.length > 16) { errEl.textContent = '密码最多16个字符'; return; }
+currentUser = { name, passHashed: hashSimple(pass), colorIdx: selectedColorIdx };
+saveUser(); errEl.textContent = ''; backToMenu();
 }
 function backToMenu() {
-  clearTimeout(joinTimeout); stopRoomRefresh();
-  hideAll(); document.getElementById('menu').classList.add('active'); document.getElementById('menu').style.display = '';
-  if (peer) { peer.destroy(); peer = null; conn = null; }
-  if (window._updatePending) setTimeout(() => { window.open(window._updatePending, '_blank'); }, 600);
+clearTimeout(joinTimeout); stopRoomRefresh();
+hideAll(); document.getElementById('menu').classList.add('active'); document.getElementById('menu').style.display = '';
+if (peer) { peer.destroy(); peer = null; conn = null; }
+if (window._updatePending) setTimeout(() => { window.open(window._updatePending, '_blank'); }, 600);
 }
 function hideAll() {
-  document.querySelectorAll('.overlay').forEach(o => { o.classList.remove('active'); o.style.display = 'none'; });
-  document.getElementById('hud').style.display = 'none';
-  document.getElementById('bar-wrap').style.display = 'none';
-  document.getElementById('msg-overlay').style.display = 'none';
-  document.getElementById('room-code').style.display = 'none';
-  document.getElementById('lobby-status').textContent = '';
-  document.getElementById('lobby-spinner').style.display = 'none';
-  document.getElementById('ctrl-layer').classList.remove('active','edit-mode');
-  document.getElementById('result-panel').style.display = 'none';
-  document.getElementById('invite-panel').style.display = 'none';
-  document.getElementById('edit-bar').style.display = 'none';
-  editMode = false; editDragId = null; editTarget = null;
-  gameMode = null; gameOver = false; killCam.active = false;
+document.querySelectorAll('.overlay').forEach(o => { o.classList.remove('active'); o.style.display = 'none'; });
+document.getElementById('hud').style.display = 'none';
+document.getElementById('bar-wrap').style.display = 'none';
+document.getElementById('msg-overlay').style.display = 'none';
+document.getElementById('room-code').style.display = 'none';
+document.getElementById('lobby-status').textContent = '';
+document.getElementById('lobby-spinner').style.display = 'none';
+document.getElementById('ctrl-layer').classList.remove('active','edit-mode');
+document.getElementById('result-panel').style.display = 'none';
+document.getElementById('invite-panel').style.display = 'none';
+document.getElementById('edit-bar').style.display = 'none';
+editMode = false; editDragId = null; editTarget = null;
+gameMode = null; gameOver = false; killCam.active = false;
 }
-
-// ===================== PEERJS ONLINE =====================
 let peer = null, conn = null, isHost = false, remoteReady = false, joinTimeout = null, roomRefreshTimer = null;
 const ROOM_SERVER = (function() {
-  const h = window.location.hostname;
-  if (h && h !== 'localhost' && h !== '127.0.0.1') return window.location.protocol + '//' + h + ':8765';
-  return 'http://localhost:8765';
+const h = window.location.hostname;
+if (h && h !== 'localhost' && h !== '127.0.0.1') return window.location.protocol + '
+return 'http://localhost:8765';
 })();
 async function fetchRoomList() { try { const res = await fetch(ROOM_SERVER + '/rooms', {signal:AbortSignal.timeout(3000)}); if (!res.ok) return []; return await res.json(); } catch(e) { return []; } }
 async function registerRoom(code) { try { await fetch(ROOM_SERVER + '/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,name:currentUser.name,players:1}),signal:AbortSignal.timeout(3000)}); } catch(e) {} }
 async function unregisterRoom(code) { try { await fetch(ROOM_SERVER + '/unregister',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code}),signal:AbortSignal.timeout(3000)}); } catch(e) {} }
 async function refreshRoom(code) { try { await fetch(ROOM_SERVER + '/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code}),signal:AbortSignal.timeout(3000)}); } catch(e) {} }
 function renderLiveRooms(rooms) {
-  const el = document.getElementById('live-rooms'); if (!el) return;
-  if (!rooms || !rooms.length) { el.innerHTML = '<div style="color:#444;font-size:11px">暂无房间</div>'; return; }
-  el.innerHTML = rooms.map(r => '<div style="padding:6px 8px;border-bottom:1px solid #1a1a1a;display:flex;justify-content:space-between;align-items:center"><div><span class="room-code-sm" onclick="document.getElementById(\'join-input\').value=\'' + r.code + '\';document.getElementById(\'join-input\').focus()">' + r.code + '</span><span style="font-size:9px;color:#555;margin-left:8px">' + r.host + '</span></div><span style="font-size:9px;color:#555">' + r.players + 'P</span></div>').join('');
+const el = document.getElementById('live-rooms'); if (!el) return;
+if (!rooms || !rooms.length) { el.innerHTML = '<div style="color:#444;font-size:11px">暂无房间</div>'; return; }
+el.innerHTML = rooms.map(r => '<div style="padding:6px 8px;border-bottom:1px solid #1a1a1a;display:flex;justify-content:space-between;align-items:center"><div><span class="room-code-sm" onclick="document.getElementById(\'join-input\').value=\'' + r.code + '\';document.getElementById(\'join-input\').focus()">' + r.code + '</span><span style="font-size:9px;color:#555;margin-left:8px">' + r.host + '</span></div><span style="font-size:9px;color:#555">' + r.players + 'P</span></div>').join('');
 }
 async function startRoomRefresh() { const rooms = await fetchRoomList(); renderLiveRooms(rooms); roomRefreshTimer = setInterval(async () => { const r = await fetchRoomList(); renderLiveRooms(r); }, 3000); }
 function stopRoomRefresh() { clearInterval(roomRefreshTimer); roomRefreshTimer = null; }
 function initPeer(id) {
-  if (peer) { peer.destroy(); }
-  peer = new Peer(id, {
-    config: { iceServers: [
-      {urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'},{urls:'stun:stun2.l.google.com:19302'},{urls:'stun:stun3.l.google.com:19302'},{urls:'stun:stun4.l.google.com:19302'},
-      {urls:'turn:openrelay.metered.ca:80',username:'openrelayproject',credential:'openrelayproject'},
-      {urls:'turn:openrelay.metered.ca:443',username:'openrelayproject',credential:'openrelayproject'},
-      {urls:'turn:openrelay.metered.ca:80?transport=tcp',username:'openrelayproject',credential:'openrelayproject'},
-      {urls:'turn:openrelay.metered.ca:443?transport=tcp',username:'openrelayproject',credential:'openrelayproject'},
-      {urls:'turn:numb.viagenie.ca:3478',username:'webrtc@live.com',credential:'muazkh'},
-      {urls:'turn:numb.viagenie.ca:3478?transport=tcp',username:'webrtc@live.com',credential:'muazkh'}
-    ], iceCandidatePoolSize: 4, iceTransportPolicy: 'all' },
-    debug: 0, connectTimeout: 15000
-  });
-  peer.on('open', (pid) => { console.log('Peer open:', pid); });
-  peer.on('error', (err) => {
-    let msg = '连接失败: ' + err.type;
-    if (err.type === 'unavailable-id') msg = '房间码已被占用';
-    else if (err.type === 'network' || err.type === 'server-error') msg = '无法连接信令服务器';
-    document.getElementById('lobby-status').textContent = msg;
-    document.getElementById('lobby-spinner').style.display = 'none';
-  });
-  peer.on('disconnected', () => { if (peer && !peer.destroyed) { document.getElementById('lobby-status').textContent = '信令断开，重连中...'; peer.reconnect(); } });
+if (peer) { peer.destroy(); }
+peer = new Peer(id, {
+config: { iceServers: [
+{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'},{urls:'stun:stun2.l.google.com:19302'},{urls:'stun:stun3.l.google.com:19302'},{urls:'stun:stun4.l.google.com:19302'},
+{urls:'turn:openrelay.metered.ca:80',username:'openrelayproject',credential:'openrelayproject'},
+{urls:'turn:openrelay.metered.ca:443',username:'openrelayproject',credential:'openrelayproject'},
+{urls:'turn:openrelay.metered.ca:80?transport=tcp',username:'openrelayproject',credential:'openrelayproject'},
+{urls:'turn:openrelay.metered.ca:443?transport=tcp',username:'openrelayproject',credential:'openrelayproject'},
+{urls:'turn:numb.viagenie.ca:3478',username:'webrtc@live.com',credential:'muazkh'},
+{urls:'turn:numb.viagenie.ca:3478?transport=tcp',username:'webrtc@live.com',credential:'muazkh'}
+], iceCandidatePoolSize: 4, iceTransportPolicy: 'all' },
+debug: 0, connectTimeout: 15000
+});
+peer.on('open', (pid) => { console.log('Peer open:', pid); });
+peer.on('error', (err) => {
+let msg = '连接失败: ' + err.type;
+if (err.type === 'unavailable-id') msg = '房间码已被占用';
+else if (err.type === 'network' || err.type === 'server-error') msg = '无法连接信令服务器';
+document.getElementById('lobby-status').textContent = msg;
+document.getElementById('lobby-spinner').style.display = 'none';
+});
+peer.on('disconnected', () => { if (peer && !peer.destroyed) { document.getElementById('lobby-status').textContent = '信令断开，重连中...'; peer.reconnect(); } });
 }
 function showLobby() { if (!currentUser) { showRegister(); return; } if (window.__browserNoOnline) { showBrowserWarning('当前浏览器不支持联机对战' + (window.__browserEnv ? '（' + window.__browserEnv.brand + '）' : '')); backToMenu(); return; } hideAll(); document.getElementById('lobby').classList.add('active'); document.getElementById('lobby').style.display = ''; document.getElementById('lobby-status').textContent = ''; document.getElementById('room-code').style.display = 'none'; document.getElementById('join-input').value = ''; document.getElementById('lobby-spinner').style.display = 'none'; stopRoomRefresh(); startRoomRefresh(); }
 function createRoom() {
-  const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
-  initPeer(roomId);
-  document.getElementById('lobby-spinner').style.display = 'block';
-  document.getElementById('lobby-status').textContent = '正在创建房间...';
-  peer.on('open', (pid) => {
-    isHost = true; recordRoom(pid, 'host'); registerRoom(pid);
-    let ri = setInterval(() => refreshRoom(pid), 60000);
-    document.getElementById('lobby-spinner').style.display = 'none';
-    document.getElementById('lobby-status').textContent = '等待对手加入... 房间码: ' + pid;
-    document.getElementById('room-code').style.display = '';
-    document.getElementById('room-code').textContent = pid;
-    document.getElementById('room-code').onclick = () => { navigator.clipboard.writeText(pid).then(() => { document.getElementById('room-code').style.color = '#4a4'; setTimeout(() => { document.getElementById('room-code').style.color = '#d4a574'; }, 600); }).catch(() => {}); };
-    peer.on('connection', (c) => { if (conn) { c.close(); return; } clearInterval(ri); unregisterRoom(pid); setupConnection(c); });
-  });
+const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+initPeer(roomId);
+document.getElementById('lobby-spinner').style.display = 'block';
+document.getElementById('lobby-status').textContent = '正在创建房间...';
+peer.on('open', (pid) => {
+isHost = true; recordRoom(pid, 'host'); registerRoom(pid);
+let ri = setInterval(() => refreshRoom(pid), 60000);
+document.getElementById('lobby-spinner').style.display = 'none';
+document.getElementById('lobby-status').textContent = '等待对手加入... 房间码: ' + pid;
+document.getElementById('room-code').style.display = '';
+document.getElementById('room-code').textContent = pid;
+document.getElementById('room-code').onclick = () => { navigator.clipboard.writeText(pid).then(() => { document.getElementById('room-code').style.color = '#4a4'; setTimeout(() => { document.getElementById('room-code').style.color = '#d4a574'; }, 600); }).catch(() => {}); };
+peer.on('connection', (c) => { if (conn) { c.close(); return; } clearInterval(ri); unregisterRoom(pid); setupConnection(c); });
+});
 }
 function joinRoom() {
-  const code = document.getElementById('join-input').value.trim();
-  if (!code) { document.getElementById('lobby-status').textContent = '请输入房间码'; return; }
-  initPeer(); document.getElementById('lobby-spinner').style.display = 'block'; document.getElementById('lobby-status').textContent = '正在加入房间...';
-  peer.on('open', () => { isHost = false; const c = peer.connect(code, {reliable:true}); setupConnection(c); joinTimeout = setTimeout(() => { if (gameMode !== 'online') { document.getElementById('lobby-status').textContent = '加入超时'; document.getElementById('lobby-spinner').style.display = 'none'; if (c) c.close(); if (peer) { peer.destroy(); peer = null; } } }, 15000); });
-  peer.on('error', (err) => {
-    clearTimeout(joinTimeout); let msg = '连接失败: ' + err.type;
-    if (err.type === 'peer-unavailable') msg = '找不到该房间';
-    else if (err.type === 'server-error') msg = '信令服务器连接失败';
-    else if (err.type === 'network') msg = '网络错误，请检查网络';
-    else if (err.type === 'unavailable-id') msg = '房间码已被占用';
-    document.getElementById('lobby-status').textContent = msg; document.getElementById('lobby-spinner').style.display = 'none';
-  });
+const code = document.getElementById('join-input').value.trim();
+if (!code) { document.getElementById('lobby-status').textContent = '请输入房间码'; return; }
+initPeer(); document.getElementById('lobby-spinner').style.display = 'block'; document.getElementById('lobby-status').textContent = '正在加入房间...';
+peer.on('open', () => { isHost = false; const c = peer.connect(code, {reliable:true}); setupConnection(c); joinTimeout = setTimeout(() => { if (gameMode !== 'online') { document.getElementById('lobby-status').textContent = '加入超时'; document.getElementById('lobby-spinner').style.display = 'none'; if (c) c.close(); if (peer) { peer.destroy(); peer = null; } } }, 15000); });
+peer.on('error', (err) => {
+clearTimeout(joinTimeout); let msg = '连接失败: ' + err.type;
+if (err.type === 'peer-unavailable') msg = '找不到该房间';
+else if (err.type === 'server-error') msg = '信令服务器连接失败';
+else if (err.type === 'network') msg = '网络错误，请检查网络';
+else if (err.type === 'unavailable-id') msg = '房间码已被占用';
+document.getElementById('lobby-status').textContent = msg; document.getElementById('lobby-spinner').style.display = 'none';
+});
 }
 function setupConnection(c) {
-  conn = c; clearTimeout(joinTimeout);
-  conn.on('open', () => {
-    clearTimeout(joinTimeout); recordRoom(conn.peer, 'guest');
-    document.getElementById('lobby-spinner').style.display = 'none';
-    document.getElementById('lobby-status').textContent = '对手已连接！即将开始...';
-    conn.send(JSON.stringify({type:'hello',name:currentUser.name,colorIdx:currentUser.colorIdx}));
-  });
-  conn.on('data', (raw) => {
-    let data; try { data = JSON.parse(raw); } catch(e) { return; }
-    if (data.type === 'hello') { remoteUser = {name:data.name,colorIdx:data.colorIdx}; if (isHost) { conn.send(JSON.stringify({type:'start',hostUser:{name:currentUser.name,colorIdx:currentUser.colorIdx},guestUser:{name:data.name,colorIdx:data.colorIdx}})); startOnlineGame(); } }
-    if (data.type === 'start') { remoteUser = isHost ? data.guestUser : data.hostUser; startOnlineGame(); }
-    if (data.type === 'state') { if (data.seq != null && data.seq <= remoteStateSeq) return; remoteStateSeq = data.seq || 0; remoteStateTarget = { x: data.x, y: data.y }; remoteStateVx = data.vx || 0; remoteStateVy = data.vy || 0; opponent.aimAngle = data.aimAngle; opponent.bowCharging = data.bowCharging; opponent.bowCharge = data.bowCharge; opponent.arrowCd = data.arrowCd; opponent.ultiCharging = data.ultiCharging; opponent.ultiChargeProgress = data.ultiChargeProgress; opponent.ultiCooldown = data.ultiCooldown; opponent.xp = data.xp; opponent.hp = data.hp; opponent.dead = data.dead; if (data.dashCd !== undefined) opponent.dashCd = data.dashCd; if (data.dashing !== undefined) opponent.dashing = data.dashing; if (data.dashTimer !== undefined) opponent.dashTimer = data.dashTimer; if (data.invuln !== undefined) opponent.invuln = data.invuln; }
-    if (data.type === 'scoreSync') { document.getElementById('ais').textContent = data.score; }
-    if (data.type === 'hit') { applyHitLocally(data); }
-    if (data.type === 'fireBullet') { fireBulletRemote(data); }
-    if (data.type === 'fireUlt') { fireUltRemote(data); }
-    if (data.type === 'gameOver') { handleOnlineGameOver(data.winner === (isHost ? 'host' : 'guest')); }
-    if (data.type === 'rematchRequest') { showInviteReceived(); }
-    if (data.type === 'rematchResponse') { hideInvitePanel(); if (data.accept) { resetOnlineGame(); } else { disconnectAndMenu(); } }
-  });
-  conn.on('close', () => { if (gameMode === 'online') { const msg = document.getElementById('msg-overlay'); msg.style.display = 'block'; msg.textContent = '对手断开连接\n即将返回菜单...'; setTimeout(() => { msg.style.display = 'none'; backToMenu(); }, 2500); } conn = null; });
-  conn.on('error', () => { if (gameMode === 'online') { const msg = document.getElementById('msg-overlay'); msg.style.display = 'block'; msg.textContent = '网络连接错误'; setTimeout(() => { msg.style.display = 'none'; }, 2000); } });
+conn = c; clearTimeout(joinTimeout);
+conn.on('open', () => {
+clearTimeout(joinTimeout); recordRoom(conn.peer, 'guest');
+document.getElementById('lobby-spinner').style.display = 'none';
+document.getElementById('lobby-status').textContent = '对手已连接！即将开始...';
+conn.send(JSON.stringify({type:'hello',name:currentUser.name,colorIdx:currentUser.colorIdx}));
+});
+conn.on('data', (raw) => {
+let data; try { data = JSON.parse(raw); } catch(e) { return; }
+if (data.type === 'hello') { remoteUser = {name:data.name,colorIdx:data.colorIdx}; if (isHost) { conn.send(JSON.stringify({type:'start',hostUser:{name:currentUser.name,colorIdx:currentUser.colorIdx},guestUser:{name:data.name,colorIdx:data.colorIdx}})); startOnlineGame(); } }
+if (data.type === 'start') { remoteUser = isHost ? data.guestUser : data.hostUser; startOnlineGame(); }
+if (data.type === 'state') { if (data.seq != null && data.seq <= remoteStateSeq) return; remoteStateSeq = data.seq || 0; remoteStateTarget = { x: data.x, y: data.y }; remoteStateVx = data.vx || 0; remoteStateVy = data.vy || 0; opponent.aimAngle = data.aimAngle; opponent.bowCharging = data.bowCharging; opponent.bowCharge = data.bowCharge; opponent.arrowCd = data.arrowCd; opponent.ultiCharging = data.ultiCharging; opponent.ultiChargeProgress = data.ultiChargeProgress; opponent.ultiCooldown = data.ultiCooldown; opponent.xp = data.xp; opponent.hp = data.hp; opponent.dead = data.dead; if (data.dashCd !== undefined) opponent.dashCd = data.dashCd; if (data.dashing !== undefined) opponent.dashing = data.dashing; if (data.dashTimer !== undefined) opponent.dashTimer = data.dashTimer; if (data.invuln !== undefined) opponent.invuln = data.invuln; }
+if (data.type === 'scoreSync') { document.getElementById('ais').textContent = data.score; }
+if (data.type === 'hit') { applyHitLocally(data); }
+if (data.type === 'fireBullet') { fireBulletRemote(data); }
+if (data.type === 'fireUlt') { fireUltRemote(data); }
+if (data.type === 'gameOver') { handleOnlineGameOver(data.winner === (isHost ? 'host' : 'guest')); }
+if (data.type === 'rematchRequest') { showInviteReceived(); }
+if (data.type === 'rematchResponse') { hideInvitePanel(); if (data.accept) { resetOnlineGame(); } else { disconnectAndMenu(); } }
+});
+conn.on('close', () => { if (gameMode === 'online') { const msg = document.getElementById('msg-overlay'); msg.style.display = 'block'; msg.textContent = '对手断开连接\n即将返回菜单...'; setTimeout(() => { msg.style.display = 'none'; backToMenu(); }, 2500); } conn = null; });
+conn.on('error', () => { if (gameMode === 'online') { const msg = document.getElementById('msg-overlay'); msg.style.display = 'block'; msg.textContent = '网络连接错误'; setTimeout(() => { msg.style.display = 'none'; }, 2000); } });
 }
 function disconnectAndMenu() { clearTimeout(joinTimeout); stopRoomRefresh(); if (peer) { try { if (isHost && peer.id) unregisterRoom(peer.id); peer.destroy(); } catch(e) {} peer = null; } conn = null; gameMode = null; isHost = false; backToMenu(); }
-
-// ===================== GAME STATE =====================
 let gameMode = null, gameOver = false, remoteUser = null, remoteState = null, remoteStateSeq = 0, remoteStateTarget = null, remoteStateVx = 0, remoteStateVy = 0, sendSeq = 0;
 const gridSize = 48; let gridOffsetX = 0, gridOffsetY = 0;
 const BASE_SPEED = 540;
-
 function createPlayer(x, y, colorIdx, isLocal) {
-  return { x, y, r: 16, hp: 1000, maxHp: 1000, xp: 0, maxXp: 50, score: 0, vx: 0, vy: 0, aimAngle: x < GW/2 ? 0 : Math.PI,
-    bowCharge: 0, bowCharging: false, arrowCd: 0, dead: false, ultiCharging: false, ultiChargeProgress: 0,
-    ultiCooldown: 0, ultiBeam: null, ultiMaxTimer: 0, ultiLockTimer: 0, ultiLocked: false, colorIdx, isLocal,
-    dashCd: 0, dashMaxCd: 2.5, dashing: false, dashTimer: 0, invuln: 0, combo: 0, lastHitTime: 0, stillTimer: 0
-  };
+return { x, y, r: 16, hp: 1000, maxHp: 1000, xp: 0, maxXp: 50, score: 0, vx: 0, vy: 0, aimAngle: x < GW/2 ? 0 : Math.PI,
+bowCharge: 0, bowCharging: false, arrowCd: 0, dead: false, ultiCharging: false, ultiChargeProgress: 0,
+ultiCooldown: 0, ultiBeam: null, ultiMaxTimer: 0, ultiLockTimer: 0, ultiLocked: false, colorIdx, isLocal,
+dashCd: 0, dashMaxCd: 2.5, dashing: false, dashTimer: 0, invuln: 0, combo: 0, lastHitTime: 0, stillTimer: 0
+};
 }
 let player = null, opponent = null, bullets = [], oppBullets = [], particles = [], ai = null;
 let killCam = {active:false,timer:0,maxTimer:1.8,winner:'',posX:0,posY:0,shakeX:0,shakeY:0,flashAlpha:0};
 let roundWins = {p1:0,p2:0}; const ROUNDS_TO_WIN = 2; let roundPause = 0, matchOver = false;
 let dmgNumbers = [], screenShake = 0;
-
-// ===================== TOUCH INPUT =====================
 let touchState = { moveId: null, aimId: null, fireId: null, moveX: 0, moveY: 0, moveBaseX: 0, moveBaseY: 0,
-  aimX: 0, aimY: 0, fireDown: false };
+aimX: 0, aimY: 0, fireDown: false };
 let aimTouchActive = false;
 let ultPrimed = false;
 let fireStartX = 0, fireStartY = 0;
-
 function canvasCoords(e) {
-  const rect = c.getBoundingClientRect();
-  const x = (e.clientX - rect.left) / scale;
-  const y = (e.clientY - rect.top) / scale;
-  return { x: Math.max(0, Math.min(GW, x)), y: Math.max(0, Math.min(GH, y)) };
+const rect = c.getBoundingClientRect();
+const x = (e.clientX - rect.left) / scale;
+const y = (e.clientY - rect.top) / scale;
+return { x: Math.max(0, Math.min(GW, x)), y: Math.max(0, Math.min(GH, y)) };
 }
-
 const ctrlLayer = document.getElementById('ctrl-layer');
 const stickBase = document.getElementById('stick-base');
 const stickThumb = document.getElementById('stick-thumb');
@@ -716,958 +618,894 @@ const crCtx = chargeRing.getContext('2d');
 const btnUlt = document.getElementById('btn-ult');
 const btnFire = document.getElementById('btn-fire');
 const btnDash = document.getElementById('btn-dash');
-
 function showStick(x, y) {
-  stickBase.style.display = 'block';
-  stickThumb.style.display = 'block';
-  stickBase.style.left = x + 'px';
-  stickBase.style.top = y + 'px';
-  stickThumb.style.left = x + 'px';
-  stickThumb.style.top = y + 'px';
+stickBase.style.display = 'block';
+stickThumb.style.display = 'block';
+stickBase.style.left = x + 'px';
+stickBase.style.top = y + 'px';
+stickThumb.style.left = x + 'px';
+stickThumb.style.top = y + 'px';
 }
 function hideStick() {
-  stickBase.style.display = 'none';
-  stickThumb.style.display = 'none';
-  stickThumb.classList.remove('active');
+stickBase.style.display = 'none';
+stickThumb.style.display = 'none';
+stickThumb.classList.remove('active');
 }
 function moveStickThumb(dx, dy) {
-  const dist = Math.hypot(dx, dy);
-  const maxR = 38;
-  const clamp = Math.min(dist, maxR);
-  const nx = dist > 0 ? dx / dist * clamp : 0;
-  const ny = dist > 0 ? dy / dist * clamp : 0;
-  stickThumb.style.left = (parseFloat(stickBase.style.left) + nx) + 'px';
-  stickThumb.style.top = (parseFloat(stickBase.style.top) + ny) + 'px';
-  if (dist > 8) stickThumb.classList.add('active');
-  else stickThumb.classList.remove('active');
+const dist = Math.hypot(dx, dy);
+const maxR = 38;
+const clamp = Math.min(dist, maxR);
+const nx = dist > 0 ? dx / dist * clamp : 0;
+const ny = dist > 0 ? dy / dist * clamp : 0;
+stickThumb.style.left = (parseFloat(stickBase.style.left) + nx) + 'px';
+stickThumb.style.top = (parseFloat(stickBase.style.top) + ny) + 'px';
+if (dist > 8) stickThumb.classList.add('active');
+else stickThumb.classList.remove('active');
 }
-
 function updateAimUI(gx, gy) {
-  aimDot.style.display = 'block';
-  aimDot.style.left = (gx * scale) + 'px';
-  aimDot.style.top = (gy * scale) + 'px';
+aimDot.style.display = 'block';
+aimDot.style.left = (gx * scale) + 'px';
+aimDot.style.top = (gy * scale) + 'px';
 }
-
 ctrlLayer.addEventListener('touchstart', function(e) {
-  e.preventDefault();
-  for (let i = 0; i < e.changedTouches.length; i++) {
-    const t = e.changedTouches[i];
-    const target = t.target;
-    const rect = c.getBoundingClientRect();
-    const sx = t.clientX - rect.left, sy = t.clientY - rect.top;
-    const gx = sx / scale, gy = sy / scale;
-    const midX = rect.width / 2;
-
-    // Edit mode: drag buttons
-    if (editMode && target.closest && target.closest('.ctrl-btn') && target.id !== 'btn-menu') {
-      editTarget = target.closest('.ctrl-btn');
-      editDragId = t.identifier;
-      const br = editTarget.getBoundingClientRect();
-      editOffX = t.clientX - br.left - br.width/2;
-      editOffY = t.clientY - br.top - br.height/2;
-      btnDash.classList.remove('selected'); btnFire.classList.remove('selected'); btnUlt.classList.remove('selected');
-      editTarget.classList.add('selected');
-      document.getElementById('eb-size').textContent = Math.round(editTarget.offsetWidth);
-      continue;
-    }
-
-    if (target.id === 'btn-fire' && gameMode && !gameOver) {
-      touchState.fireDown = true;
-      touchState.fireId = t.identifier;
-      fireStartX = gx; fireStartY = gy;
-      btnFire.classList.add('pressed');
-      if (player && !player.dead) player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
-      initAudio();
-      continue;
-    }
-    if (target.id === 'btn-ult' && gameMode && !gameOver && !matchOver) {
-      initAudio();
-      if (player && player.xp >= player.maxXp && player.ultiCooldown <= 0 && !player.dead) {
-        ultPrimed = !ultPrimed;
-        if (ultPrimed) {
-          btnUlt.classList.add('primed');
-          btnUlt.classList.remove('ready');
-          btnFire.classList.add('ult-mode');
-        } else {
-          btnUlt.classList.remove('primed');
-          btnFire.classList.remove('ult-mode');
-        }
-      }
-      btnUlt.classList.add('pressed');
-      setTimeout(() => btnUlt.classList.remove('pressed'), 120);
-      continue;
-    }
-    if (target.id === 'btn-dash' && gameMode && !gameOver) {
-      btnDash.classList.add('pressed');
-      if (player && !matchOver) { initAudio(); tryDash(player); }
-      setTimeout(() => btnDash.classList.remove('pressed'), 150);
-      continue;
-    }
-    if (target.id === 'btn-menu') { disconnectAndMenu(); continue; }
-
-    if (sx < midX && touchState.moveId === null) {
-      touchState.moveId = t.identifier;
-      touchState.moveBaseX = sx;
-      touchState.moveBaseY = sy;
-      showStick(sx, sy);
-    } else if (sx >= midX && touchState.aimId === null && gameMode && !gameOver) {
-      touchState.aimId = t.identifier;
-      aimTouchActive = true;
-      touchState.aimX = gx; touchState.aimY = gy;
-      updateAimUI(gx, gy);
-      if (player && !player.dead) player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
-    }
-  }
+e.preventDefault();
+for (let i = 0; i < e.changedTouches.length; i++) {
+const t = e.changedTouches[i];
+const target = t.target;
+const rect = c.getBoundingClientRect();
+const sx = t.clientX - rect.left, sy = t.clientY - rect.top;
+const gx = sx / scale, gy = sy / scale;
+const midX = rect.width / 2;
+if (editMode && target.closest && target.closest('.ctrl-btn') && target.id !== 'btn-menu') {
+editTarget = target.closest('.ctrl-btn');
+editDragId = t.identifier;
+const br = editTarget.getBoundingClientRect();
+editOffX = t.clientX - br.left - br.width/2;
+editOffY = t.clientY - br.top - br.height/2;
+btnDash.classList.remove('selected'); btnFire.classList.remove('selected'); btnUlt.classList.remove('selected');
+editTarget.classList.add('selected');
+document.getElementById('eb-size').textContent = Math.round(editTarget.offsetWidth);
+continue;
+}
+if (target.id === 'btn-fire' && gameMode && !gameOver) {
+touchState.fireDown = true;
+touchState.fireId = t.identifier;
+fireStartX = gx; fireStartY = gy;
+btnFire.classList.add('pressed');
+if (player && !player.dead) player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
+initAudio();
+continue;
+}
+if (target.id === 'btn-ult' && gameMode && !gameOver && !matchOver) {
+initAudio();
+if (player && player.xp >= player.maxXp && player.ultiCooldown <= 0 && !player.dead) {
+ultPrimed = !ultPrimed;
+if (ultPrimed) {
+btnUlt.classList.add('primed');
+btnUlt.classList.remove('ready');
+btnFire.classList.add('ult-mode');
+} else {
+btnUlt.classList.remove('primed');
+btnFire.classList.remove('ult-mode');
+}
+}
+btnUlt.classList.add('pressed');
+setTimeout(() => btnUlt.classList.remove('pressed'), 120);
+continue;
+}
+if (target.id === 'btn-dash' && gameMode && !gameOver) {
+btnDash.classList.add('pressed');
+if (player && !matchOver) { initAudio(); tryDash(player); }
+setTimeout(() => btnDash.classList.remove('pressed'), 150);
+continue;
+}
+if (target.id === 'btn-menu') { disconnectAndMenu(); continue; }
+if (sx < midX && touchState.moveId === null) {
+touchState.moveId = t.identifier;
+touchState.moveBaseX = sx;
+touchState.moveBaseY = sy;
+showStick(sx, sy);
+} else if (sx >= midX && touchState.aimId === null && gameMode && !gameOver) {
+touchState.aimId = t.identifier;
+aimTouchActive = true;
+touchState.aimX = gx; touchState.aimY = gy;
+updateAimUI(gx, gy);
+if (player && !player.dead) player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
+}
+}
 }, {passive: false});
-
 ctrlLayer.addEventListener('touchmove', function(e) {
-  e.preventDefault();
-  for (let i = 0; i < e.changedTouches.length; i++) {
-    const t = e.changedTouches[i];
-    const rect = c.getBoundingClientRect();
-    const sx = t.clientX - rect.left;
-    const sy = t.clientY - rect.top;
-    const gx = sx / scale, gy = sy / scale;
-
-    if (t.identifier === touchState.moveId) {
-      const dx = sx - touchState.moveBaseX;
-      const dy = sy - touchState.moveBaseY;
-      moveStickThumb(dx, dy);
-      const dist = Math.hypot(dx, dy);
-      const norm = Math.min(1, dist / 38);
-      touchState.moveX = dist > 8 ? (dx / dist) * norm : 0;
-      touchState.moveY = dist > 8 ? (dy / dist) * norm : 0;
-    }
-    if (t.identifier === editDragId && editTarget) {
-      const newLeft = t.clientX - editOffX - editTarget.offsetWidth/2;
-      const newTop = t.clientY - editOffY - editTarget.offsetHeight/2;
-      const pr = c.getBoundingClientRect();
-      editTarget.style.right = (pr.right - newLeft - editTarget.offsetWidth) + 'px';
-      editTarget.style.bottom = (pr.bottom - newTop - editTarget.offsetHeight) + 'px';
-    }
-    if (t.identifier === touchState.aimId) {
-      touchState.aimX = gx; touchState.aimY = gy;
-      updateAimUI(gx, gy);
-      if (player && !player.dead) player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
-    }
-    if (t.identifier === touchState.fireId) {
-      const dx = gx - fireStartX, dy = gy - fireStartY;
-      if (Math.hypot(dx, dy) > 6 && player && !player.dead) {
-        player.aimAngle = Math.atan2(dy, dx);
-      }
-    }
-  }
+e.preventDefault();
+for (let i = 0; i < e.changedTouches.length; i++) {
+const t = e.changedTouches[i];
+const rect = c.getBoundingClientRect();
+const sx = t.clientX - rect.left;
+const sy = t.clientY - rect.top;
+const gx = sx / scale, gy = sy / scale;
+if (t.identifier === touchState.moveId) {
+const dx = sx - touchState.moveBaseX;
+const dy = sy - touchState.moveBaseY;
+moveStickThumb(dx, dy);
+const dist = Math.hypot(dx, dy);
+const norm = Math.min(1, dist / 38);
+touchState.moveX = dist > 8 ? (dx / dist) * norm : 0;
+touchState.moveY = dist > 8 ? (dy / dist) * norm : 0;
+}
+if (t.identifier === editDragId && editTarget) {
+const newLeft = t.clientX - editOffX - editTarget.offsetWidth/2;
+const newTop = t.clientY - editOffY - editTarget.offsetHeight/2;
+const pr = c.getBoundingClientRect();
+editTarget.style.right = (pr.right - newLeft - editTarget.offsetWidth) + 'px';
+editTarget.style.bottom = (pr.bottom - newTop - editTarget.offsetHeight) + 'px';
+}
+if (t.identifier === touchState.aimId) {
+touchState.aimX = gx; touchState.aimY = gy;
+updateAimUI(gx, gy);
+if (player && !player.dead) player.aimAngle = Math.atan2(gy - player.y, gx - player.x);
+}
+if (t.identifier === touchState.fireId) {
+const dx = gx - fireStartX, dy = gy - fireStartY;
+if (Math.hypot(dx, dy) > 6 && player && !player.dead) {
+player.aimAngle = Math.atan2(dy, dx);
+}
+}
+}
 }, {passive: false});
-
 ctrlLayer.addEventListener('touchend', function(e) {
-  e.preventDefault();
-  for (let i = 0; i < e.changedTouches.length; i++) {
-    const t = e.changedTouches[i];
-    if (t.identifier === touchState.moveId) {
-      touchState.moveId = null; touchState.moveX = 0; touchState.moveY = 0;
-      hideStick();
-    }
-    if (t.identifier === touchState.aimId) {
-      touchState.aimId = null; aimTouchActive = false;
-      aimDot.style.display = 'none';
-    }
-    if (t.identifier === touchState.fireId) {
-      touchState.fireDown = false; touchState.fireId = null;
-      btnFire.classList.remove('pressed');
-      aimDot.style.display = 'none';
-    }
-    if (t.identifier === editDragId) {
-      editDragId = null;
-    }
-  }
+e.preventDefault();
+for (let i = 0; i < e.changedTouches.length; i++) {
+const t = e.changedTouches[i];
+if (t.identifier === touchState.moveId) {
+touchState.moveId = null; touchState.moveX = 0; touchState.moveY = 0;
+hideStick();
+}
+if (t.identifier === touchState.aimId) {
+touchState.aimId = null; aimTouchActive = false;
+aimDot.style.display = 'none';
+}
+if (t.identifier === touchState.fireId) {
+touchState.fireDown = false; touchState.fireId = null;
+btnFire.classList.remove('pressed');
+aimDot.style.display = 'none';
+}
+if (t.identifier === editDragId) {
+editDragId = null;
+}
+}
 }, {passive: false});
-
 ctrlLayer.addEventListener('touchcancel', function(e) {
-  touchState.moveId = null; touchState.moveX = 0; touchState.moveY = 0;
-  touchState.aimId = null; aimTouchActive = false;
-  touchState.fireDown = false; touchState.fireId = null;
-  editDragId = null;
-  hideStick(); aimDot.style.display = 'none';
-  btnUlt.classList.remove('pressed','primed');
-  btnFire.classList.remove('pressed','ult-mode');
-  btnDash.classList.remove('pressed');
+touchState.moveId = null; touchState.moveX = 0; touchState.moveY = 0;
+touchState.aimId = null; aimTouchActive = false;
+touchState.fireDown = false; touchState.fireId = null;
+editDragId = null;
+hideStick(); aimDot.style.display = 'none';
+btnUlt.classList.remove('pressed','primed');
+btnFire.classList.remove('pressed','ult-mode');
+btnDash.classList.remove('pressed');
 });
-
-// ===================== AUDIO =====================
 let audioCtx = null;
 function initAudio() { if (audioCtx) return; try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} }
 function snd(freq, dur, type, vol, fade) {
-  if (!audioCtx) return;
-  const t = audioCtx.currentTime;
-  const o = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  o.type = type || 'square';
-  o.frequency.setValueAtTime(freq, t);
-  g.gain.setValueAtTime(vol || 0.08, t);
-  g.gain.exponentialRampToValueAtTime(0.001, t + (fade || dur));
-  o.connect(g); g.connect(audioCtx.destination);
-  o.start(t); o.stop(t + dur);
-  if (navigator.vibrate) navigator.vibrate(Math.min(50, dur * 1000));
+if (!audioCtx) return;
+const t = audioCtx.currentTime;
+const o = audioCtx.createOscillator();
+const g = audioCtx.createGain();
+o.type = type || 'square';
+o.frequency.setValueAtTime(freq, t);
+g.gain.setValueAtTime(vol || 0.08, t);
+g.gain.exponentialRampToValueAtTime(0.001, t + (fade || dur));
+o.connect(g); g.connect(audioCtx.destination);
+o.start(t); o.stop(t + dur);
+if (navigator.vibrate) navigator.vibrate(Math.min(50, dur * 1000));
 }
-
-// ===================== EFFECTS =====================
 function spawnExplosion(x, y, color, count) {
-  for (let i = 0; i < count; i++) {
-    const ang = Math.random() * Math.PI * 2, spd = 60 + Math.random() * 200;
-    particles.push({x,y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,life:0.25+Math.random()*0.5,maxLife:0.25+Math.random()*0.5,color,size:1+Math.random()*3});
-  }
+for (let i = 0; i < count; i++) {
+const ang = Math.random() * Math.PI * 2, spd = 60 + Math.random() * 200;
+particles.push({x,y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,life:0.25+Math.random()*0.5,maxLife:0.25+Math.random()*0.5,color,size:1+Math.random()*3});
+}
 }
 function spawnShatter(x, y, color, r) {
-  const hex = color, rc = parseInt(hex.slice(1,3),16), gc = parseInt(hex.slice(3,5),16), bc = parseInt(hex.slice(5,7),16);
-  const half = (r || 16) * 0.85;
-  for (let i = 0; i < 8; i++) {
-    const baseAng = (i/8)*Math.PI*2, spd = 120+Math.random()*250, ang = baseAng+(Math.random()-0.5)*0.4;
-    particles.push({x,y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,life:0.5+Math.random()*0.6,maxLife:0.5+Math.random()*0.6,color,size:half,r:rc,g:gc,b:bc,rot:baseAng+Math.PI/4,rotSpd:(Math.random()-0.5)*8,type:'shatter',baseAng});
-  }
-  for (let i = 0; i < 6; i++) {
-    const ang = Math.random()*Math.PI*2, spd = 60+Math.random()*150;
-    particles.push({x,y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,life:0.2+Math.random()*0.4,maxLife:0.2+Math.random()*0.4,color,size:1+Math.random()*3,r:rc,g:gc,b:bc});
-  }
+const hex = color, rc = parseInt(hex.slice(1,3),16), gc = parseInt(hex.slice(3,5),16), bc = parseInt(hex.slice(5,7),16);
+const half = (r || 16) * 0.85;
+for (let i = 0; i < 8; i++) {
+const baseAng = (i/8)*Math.PI*2, spd = 120+Math.random()*250, ang = baseAng+(Math.random()-0.5)*0.4;
+particles.push({x,y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,life:0.5+Math.random()*0.6,maxLife:0.5+Math.random()*0.6,color,size:half,r:rc,g:gc,b:bc,rot:baseAng+Math.PI/4,rotSpd:(Math.random()-0.5)*8,type:'shatter',baseAng});
+}
+for (let i = 0; i < 6; i++) {
+const ang = Math.random()*Math.PI*2, spd = 60+Math.random()*150;
+particles.push({x,y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,life:0.2+Math.random()*0.4,maxLife:0.2+Math.random()*0.4,color,size:1+Math.random()*3,r:rc,g:gc,b:bc});
+}
 }
 function spawnDmg(x, y, val, color) { dmgNumbers.push({x,y,text:String(val),life:0.6,maxLife:0.6,color:color||'#ddd'}); }
 function applyDamage(attacker, defender, dmg, hitX, hitY) {
-  if (defender.invuln > 0) return false;
-  defender.hp -= dmg; if (defender.hp < 0) defender.hp = 0;
-  attacker.hp = Math.min(attacker.maxHp, attacker.hp + Math.ceil(dmg * 0.1));
-  attacker.xp = Math.min(attacker.maxXp, attacker.xp + Math.ceil(dmg * 0.5));
-  attacker.score += dmg; updateScoreDisplay();
-  spawnExplosion(hitX, hitY, COLORS[defender.colorIdx].hex, 5);
-  spawnDmg(hitX, hitY - 12, dmg, COLORS[attacker.colorIdx].hex);
-  screenShake = Math.max(screenShake, Math.min(8, dmg * 0.4));
-  if (Date.now() - attacker.lastHitTime < 1500) attacker.combo++; else attacker.combo = 1;
-  attacker.lastHitTime = Date.now();
-  snd(200 + attacker.combo * 30, 0.12, 'square', 0.06);
-  if (dmg >= 80) snd(80, 0.25, 'sawtooth', 0.1);
-  return defender.hp <= 0;
+if (defender.invuln > 0) return false;
+defender.hp -= dmg; if (defender.hp < 0) defender.hp = 0;
+attacker.hp = Math.min(attacker.maxHp, attacker.hp + Math.ceil(dmg * 0.1));
+attacker.xp = Math.min(attacker.maxXp, attacker.xp + Math.ceil(dmg * 0.5));
+attacker.score += dmg; updateScoreDisplay();
+spawnExplosion(hitX, hitY, COLORS[defender.colorIdx].hex, 5);
+spawnDmg(hitX, hitY - 12, dmg, COLORS[attacker.colorIdx].hex);
+screenShake = Math.max(screenShake, Math.min(8, dmg * 0.4));
+if (Date.now() - attacker.lastHitTime < 1500) attacker.combo++; else attacker.combo = 1;
+attacker.lastHitTime = Date.now();
+snd(200 + attacker.combo * 30, 0.12, 'square', 0.06);
+if (dmg >= 80) snd(80, 0.25, 'sawtooth', 0.1);
+return defender.hp <= 0;
 }
 function getBeamEnd(x, y, angle) {
-  const dx = Math.cos(angle), dy = Math.sin(angle);
-  let t = Infinity;
-  if (dx > 0.0001) t = Math.min(t, (GW - x) / dx); else if (dx < -0.0001) t = Math.min(t, -x / dx);
-  if (dy > 0.0001) t = Math.min(t, (GH - y) / dy); else if (dy < -0.0001) t = Math.min(t, -y / dy);
-  return { x: x + dx * Math.max(1, t), y: y + dy * Math.max(1, t) };
+const dx = Math.cos(angle), dy = Math.sin(angle);
+let t = Infinity;
+if (dx > 0.0001) t = Math.min(t, (GW - x) / dx); else if (dx < -0.0001) t = Math.min(t, -x / dx);
+if (dy > 0.0001) t = Math.min(t, (GH - y) / dy); else if (dy < -0.0001) t = Math.min(t, -y / dy);
+return { x: x + dx * Math.max(1, t), y: y + dy * Math.max(1, t) };
 }
 function pointToSegmentDist(px, py, x1, y1, x2, y2) {
-  const dx = x2 - x1, dy = y2 - y1, lenSq = dx * dx + dy * dy;
-  if (lenSq < 0.0001) return Math.hypot(px - x1, py - y1);
-  let t = ((px - x1) * dx + (py - y1) * dy) / lenSq;
-  t = Math.max(0, Math.min(1, t));
-  return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+const dx = x2 - x1, dy = y2 - y1, lenSq = dx * dx + dy * dy;
+if (lenSq < 0.0001) return Math.hypot(px - x1, py - y1);
+let t = ((px - x1) * dx + (py - y1) * dy) / lenSq;
+t = Math.max(0, Math.min(1, t));
+return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
 }
 function fireBullet(shooter, bulletsArr) {
-  const angle = shooter.aimAngle, charge = shooter.bowCharge;
-  const startX = shooter.x + Math.cos(angle) * (shooter.r + 4), startY = shooter.y + Math.sin(angle) * (shooter.r + 4);
-  const end = getBeamEnd(shooter.x, shooter.y, angle);
-  const ray = {x1:startX,y1:startY,x2:end.x,y2:end.y,color:COLORS[shooter.colorIdx].hex,timer:0.07+charge*0.13,charge};
-  bulletsArr.push(ray);
-  for (let i = 0; i < 6 + charge * 10; i++) {
-    const a = angle + (Math.random() - 0.5) * 0.5, spd = 80 + Math.random() * 200 + charge * 200;
-    particles.push({x:startX,y:startY,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd,life:0.08+charge*0.08,maxLife:0.08+charge*0.08,color:COLORS[shooter.colorIdx].hex,size:1+Math.random()*(1+charge*2),type:'spark'});
-  }
-  const rLen = Math.hypot(ray.x2 - ray.x1, ray.y2 - ray.y1);
-  for (let i = 0; i < 4 + charge * 8; i++) {
-    const t = Math.random(), sx = ray.x1 + (ray.x2 - ray.x1) * t, sy = ray.y1 + (ray.y2 - ray.y1) * t;
-    particles.push({x:sx,y:sy,vx:(Math.random()-0.5)*60,vy:(Math.random()-0.5)*60,life:0.06+charge*0.06,maxLife:0.06+charge*0.06,color:COLORS[shooter.colorIdx].hex,size:0.8+Math.random()*1.5,type:'spark'});
-  }
-  const target = (shooter === player) ? opponent : (shooter === ai ? player : null);
-  if (target && !target.dead) {
-    const dist = pointToSegmentDist(target.x, target.y, ray.x1, ray.y1, ray.x2, ray.y2);
-    if (dist < target.r + 5) {
-      const dmg = charge > 0 ? 5 + Math.floor(charge * 22) : 15;
-      const killed = applyDamage(shooter, target, dmg, target.x, target.y);
-      snd(900 + charge * 500, 0.06, 'square', 0.06, 0.04);
-      if (gameMode === 'online' && shooter === player && conn && conn.open) { conn.send(JSON.stringify({type:'hit',damage:dmg,bulletX:target.x,bulletY:target.y})); }
-      if (killed) { target.dead = true; startKillCam(shooter, target.x, target.y); spawnShatter(target.x, target.y, COLORS[target.colorIdx].hex, target.r); snd(120, 0.5, 'sawtooth', 0.12); }
-    }
-  }
+const angle = shooter.aimAngle, charge = shooter.bowCharge;
+const startX = shooter.x + Math.cos(angle) * (shooter.r + 4), startY = shooter.y + Math.sin(angle) * (shooter.r + 4);
+const end = getBeamEnd(shooter.x, shooter.y, angle);
+const ray = {x1:startX,y1:startY,x2:end.x,y2:end.y,color:COLORS[shooter.colorIdx].hex,timer:0.07+charge*0.13,charge};
+bulletsArr.push(ray);
+for (let i = 0; i < 6 + charge * 10; i++) {
+const a = angle + (Math.random() - 0.5) * 0.5, spd = 80 + Math.random() * 200 + charge * 200;
+particles.push({x:startX,y:startY,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd,life:0.08+charge*0.08,maxLife:0.08+charge*0.08,color:COLORS[shooter.colorIdx].hex,size:1+Math.random()*(1+charge*2),type:'spark'});
+}
+const rLen = Math.hypot(ray.x2 - ray.x1, ray.y2 - ray.y1);
+for (let i = 0; i < 4 + charge * 8; i++) {
+const t = Math.random(), sx = ray.x1 + (ray.x2 - ray.x1) * t, sy = ray.y1 + (ray.y2 - ray.y1) * t;
+particles.push({x:sx,y:sy,vx:(Math.random()-0.5)*60,vy:(Math.random()-0.5)*60,life:0.06+charge*0.06,maxLife:0.06+charge*0.06,color:COLORS[shooter.colorIdx].hex,size:0.8+Math.random()*1.5,type:'spark'});
+}
+const target = (shooter === player) ? opponent : (shooter === ai ? player : null);
+if (target && !target.dead) {
+const dist = pointToSegmentDist(target.x, target.y, ray.x1, ray.y1, ray.x2, ray.y2);
+if (dist < target.r + 5) {
+const dmg = charge > 0 ? 5 + Math.floor(charge * 22) : 15;
+const killed = applyDamage(shooter, target, dmg, target.x, target.y);
+snd(900 + charge * 500, 0.06, 'square', 0.06, 0.04);
+if (gameMode === 'online' && shooter === player && conn && conn.open) { conn.send(JSON.stringify({type:'hit',damage:dmg,bulletX:target.x,bulletY:target.y})); }
+if (killed) { target.dead = true; startKillCam(shooter, target.x, target.y); spawnShatter(target.x, target.y, COLORS[target.colorIdx].hex, target.r); snd(120, 0.5, 'sawtooth', 0.12); }
+}
+}
 }
 function fireUlt(shooter, target, chargeLevel) {
-  const cl = Math.max(0.25, Math.min(1, chargeLevel));
-  const end = getBeamEnd(shooter.x, shooter.y, shooter.aimAngle);
-  const damage = cl >= 1.0 ? 999 : Math.floor(cl * 85 + 10);
-  const bd = 0.15 + cl * 0.25;
-  shooter.ultiBeam = {x1:shooter.x,y1:shooter.y,x2:end.x,y2:end.y,timer:bd,maxTimer:bd,chargeLevel:cl,color:COLORS[shooter.colorIdx].hex};
-  shooter.ultiCooldown = cl >= 1.0 ? 7 : 4;
-  shooter.ultiChargeProgress = 0; shooter.ultiCharging = false; shooter.ultiMaxTimer = 0; shooter.ultiLockTimer = 0; shooter.ultiLocked = false;
-  let hitDealt = 0;
-  if (target && !target.dead) {
-    const hitRadius = 8 + cl * 18;
-    const dist = pointToSegmentDist(target.x, target.y, shooter.x, shooter.y, end.x, end.y);
-    if (dist < target.r + hitRadius) {
-      const killed = applyDamage(shooter, target, damage, target.x, target.y);
-      spawnExplosion(target.x, target.y, '#fff', Math.floor(15 + cl * 50));
-      spawnExplosion(target.x, target.y, '#ff0', Math.floor(10 + cl * 30));
-      hitDealt = damage; snd(60, 0.6, 'sawtooth', 0.15); screenShake = Math.max(screenShake, 15);
-      if (killed) { target.dead = true; startKillCam(shooter, target.x, target.y); spawnShatter(target.x, target.y, COLORS[target.colorIdx].hex, target.r); snd(50, 0.8, 'sawtooth', 0.18); }
-    }
-  }
-  for (let i = 0; i < 8 + cl * 20; i++) { const pct = Math.random(); spawnExplosion(shooter.x + (end.x - shooter.x) * pct, shooter.y + (end.y - shooter.y) * pct, COLORS[shooter.colorIdx].hex, 2); }
-  return hitDealt;
+const cl = Math.max(0.25, Math.min(1, chargeLevel));
+const end = getBeamEnd(shooter.x, shooter.y, shooter.aimAngle);
+const damage = cl >= 1.0 ? 999 : Math.floor(cl * 85 + 10);
+const bd = 0.15 + cl * 0.25;
+shooter.ultiBeam = {x1:shooter.x,y1:shooter.y,x2:end.x,y2:end.y,timer:bd,maxTimer:bd,chargeLevel:cl,color:COLORS[shooter.colorIdx].hex};
+shooter.ultiCooldown = cl >= 1.0 ? 7 : 4;
+shooter.ultiChargeProgress = 0; shooter.ultiCharging = false; shooter.ultiMaxTimer = 0; shooter.ultiLockTimer = 0; shooter.ultiLocked = false;
+let hitDealt = 0;
+if (target && !target.dead) {
+const hitRadius = 8 + cl * 18;
+const dist = pointToSegmentDist(target.x, target.y, shooter.x, shooter.y, end.x, end.y);
+if (dist < target.r + hitRadius) {
+const killed = applyDamage(shooter, target, damage, target.x, target.y);
+spawnExplosion(target.x, target.y, '#fff', Math.floor(15 + cl * 50));
+spawnExplosion(target.x, target.y, '#ff0', Math.floor(10 + cl * 30));
+hitDealt = damage; snd(60, 0.6, 'sawtooth', 0.15); screenShake = Math.max(screenShake, 15);
+if (killed) { target.dead = true; startKillCam(shooter, target.x, target.y); spawnShatter(target.x, target.y, COLORS[target.colorIdx].hex, target.r); snd(50, 0.8, 'sawtooth', 0.18); }
+}
+}
+for (let i = 0; i < 8 + cl * 20; i++) { const pct = Math.random(); spawnExplosion(shooter.x + (end.x - shooter.x) * pct, shooter.y + (end.y - shooter.y) * pct, COLORS[shooter.colorIdx].hex, 2); }
+return hitDealt;
 }
 function startKillCam(winner, px, py) {
-  if (killCam.active) return;
-  killCam.active = true; killCam.timer = killCam.maxTimer; killCam.winner = winner.isLocal ? 'player' : 'opponent';
-  killCam.posX = px; killCam.posY = py; killCam.shakeX = 0; killCam.shakeY = 0; killCam.flashAlpha = 0.8;
-  const pc = COLORS[winner.colorIdx].hex;
-  for (let i = 0; i < 80; i++) { const ang = Math.random() * Math.PI * 2, spd = 80 + Math.random() * 350; particles.push({x:px,y:py,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,life:0.5+Math.random()*1.2,maxLife:0.5+Math.random()*1.2,color:pc,size:2+Math.random()*6}); }
+if (killCam.active) return;
+killCam.active = true; killCam.timer = killCam.maxTimer; killCam.winner = winner.isLocal ? 'player' : 'opponent';
+killCam.posX = px; killCam.posY = py; killCam.shakeX = 0; killCam.shakeY = 0; killCam.flashAlpha = 0.8;
+const pc = COLORS[winner.colorIdx].hex;
+for (let i = 0; i < 80; i++) { const ang = Math.random() * Math.PI * 2, spd = 80 + Math.random() * 350; particles.push({x:px,y:py,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,life:0.5+Math.random()*1.2,maxLife:0.5+Math.random()*1.2,color:pc,size:2+Math.random()*6}); }
 }
 function tryDash(p) {
-  if (p.dashCd > 0 || p.dashing || p.dead || p.ultiCharging) return;
-  let dx = 0, dy = 0;
-  if (touchState.moveId !== null && (Math.abs(touchState.moveX) > 0 || Math.abs(touchState.moveY) > 0)) { dx = touchState.moveX; dy = touchState.moveY; }
-  else { dx = Math.cos(p.aimAngle); dy = Math.sin(p.aimAngle); }
-  const len = Math.hypot(dx, dy) || 1;
-  p._dashVx = dx / len * BASE_SPEED * 2.2; p._dashVy = dy / len * BASE_SPEED * 2.2;
-  p.dashing = true; p.dashTimer = 0.15; p.dashCd = p.dashMaxCd; p.invuln = 0.18;
-  spawnExplosion(p.x, p.y, COLORS[p.colorIdx].hex, 8); snd(300, 0.1, 'triangle', 0.05);
+if (p.dashCd > 0 || p.dashing || p.dead || p.ultiCharging) return;
+let dx = 0, dy = 0;
+if (touchState.moveId !== null && (Math.abs(touchState.moveX) > 0 || Math.abs(touchState.moveY) > 0)) { dx = touchState.moveX; dy = touchState.moveY; }
+else { dx = Math.cos(p.aimAngle); dy = Math.sin(p.aimAngle); }
+const len = Math.hypot(dx, dy) || 1;
+p._dashVx = dx / len * BASE_SPEED * 2.2; p._dashVy = dy / len * BASE_SPEED * 2.2;
+p.dashing = true; p.dashTimer = 0.15; p.dashCd = p.dashMaxCd; p.invuln = 0.18;
+spawnExplosion(p.x, p.y, COLORS[p.colorIdx].hex, 8); snd(300, 0.1, 'triangle', 0.05);
 }
-
-// ===================== GAME MODES =====================
 function startAI() { hideAll(); if (!currentUser) { showRegister(); return; } gameMode = 'ai'; document.getElementById('hud').style.display = ''; document.getElementById('bar-wrap').style.display = ''; document.getElementById('msg-overlay').style.display = 'none'; document.getElementById('ctrl-layer').classList.add('active'); resetAIGame(); }
 function resetRound() {
-  const pColor = currentUser ? currentUser.colorIdx : 0;
-  const localX = (gameMode === 'online' && !isHost) ? 700 : 200;
-  player = createPlayer(localX, GH/2, pColor, true);
-  if (gameMode === 'ai') {
-    const oldDiff = ai ? ai.difficulty : 1;
-    const aiColor = 1;
-    ai = {x:700,y:GH/2,r:16,hp:1000,maxHp:1000,xp:0,maxXp:50,score:0,vx:0,vy:0,aimAngle:Math.PI,bowCharge:0,bowCharging:false,arrowCd:0,dead:false,difficulty:oldDiff,
-      ultiCharging:false,ultiChargeProgress:0,ultiCooldown:0,ultiBeam:null,ultiMaxTimer:0,ultiLockTimer:0,ultiLocked:false,
-      orbitAngle:Math.random()*Math.PI*2,dodgeTimer:0,dodgeVx:0,dodgeVy:0,prevPlayerX:0,prevPlayerY:0,learnTimer:0,predictedOffset:0,aimNoise:0,
-      hitCount:0,missCount:0,predictionConfidence:0.5,shotTimestamp:0,shotPlayerX:0,shotPlayerY:0,playerDodgeBiasX:0,playerDodgeBiasY:0,colorIdx:aiColor,isLocal:false};
-    opponent = ai;
-  } else {
-    const localX = isHost ? 200 : 700, remoteX = isHost ? 700 : 200;
-    const remoteColor = remoteUser ? remoteUser.colorIdx : 1;
-    opponent = createPlayer(remoteX, GH/2, remoteColor, false);
-  }
-  bullets = []; oppBullets = []; particles = []; dmgNumbers = [];
-  killCam = {active:false,timer:0,maxTimer:1.8,winner:'',posX:0,posY:0,shakeX:0,shakeY:0,flashAlpha:0};
-  roundPause = 0; document.getElementById('msg-overlay').style.display = 'none';
-  document.getElementById('ps').textContent = player.score; document.getElementById('ais').textContent = opponent.score;
-  ultPrimed = false; btnUlt.classList.remove('primed'); btnFire.classList.remove('ult-mode');
+const pColor = currentUser ? currentUser.colorIdx : 0;
+const localX = (gameMode === 'online' && !isHost) ? 700 : 200;
+player = createPlayer(localX, GH/2, pColor, true);
+if (gameMode === 'ai') {
+const oldDiff = ai ? ai.difficulty : 1;
+const aiColor = 1;
+ai = {x:700,y:GH/2,r:16,hp:1000,maxHp:1000,xp:0,maxXp:50,score:0,vx:0,vy:0,aimAngle:Math.PI,bowCharge:0,bowCharging:false,arrowCd:0,dead:false,difficulty:oldDiff,
+ultiCharging:false,ultiChargeProgress:0,ultiCooldown:0,ultiBeam:null,ultiMaxTimer:0,ultiLockTimer:0,ultiLocked:false,
+orbitAngle:Math.random()*Math.PI*2,dodgeTimer:0,dodgeVx:0,dodgeVy:0,prevPlayerX:0,prevPlayerY:0,learnTimer:0,predictedOffset:0,aimNoise:0,
+hitCount:0,missCount:0,predictionConfidence:0.5,shotTimestamp:0,shotPlayerX:0,shotPlayerY:0,playerDodgeBiasX:0,playerDodgeBiasY:0,colorIdx:aiColor,isLocal:false};
+opponent = ai;
+} else {
+const localX = isHost ? 200 : 700, remoteX = isHost ? 700 : 200;
+const remoteColor = remoteUser ? remoteUser.colorIdx : 1;
+opponent = createPlayer(remoteX, GH/2, remoteColor, false);
+}
+bullets = []; oppBullets = []; particles = []; dmgNumbers = [];
+killCam = {active:false,timer:0,maxTimer:1.8,winner:'',posX:0,posY:0,shakeX:0,shakeY:0,flashAlpha:0};
+roundPause = 0; document.getElementById('msg-overlay').style.display = 'none';
+document.getElementById('ps').textContent = player.score; document.getElementById('ais').textContent = opponent.score;
+ultPrimed = false; btnUlt.classList.remove('primed'); btnFire.classList.remove('ult-mode');
 }
 function resetAIGame() { roundWins = {p1:0,p2:0}; matchOver = false; resetRound(); document.getElementById('result-panel').style.display = 'none'; document.getElementById('p1-label').textContent = currentUser.name; document.getElementById('p2-label').textContent = 'AI'; document.getElementById('p2-label').style.color = '#f0f'; buildBars(); }
 function showResultPanel(won, p1Score, p2Score) {
-  document.getElementById('result-panel').style.display = 'flex';
-  document.getElementById('result-title').textContent = won ? '比赛胜利' : 'AI 获胜';
-  document.getElementById('result-title').style.color = won ? '#d4a574' : '#c97d8a';
-  document.getElementById('result-detail').textContent = '三局两胜  ' + p1Score + ' : ' + p2Score;
-  document.getElementById('result-btns').innerHTML =
-    '<button class="menu-btn" onclick="restartFromResult()" style="border-color:#d4a574;color:#d4a574;">再来一局</button>' +
-    '<button class="menu-btn secondary" onclick="exitFromResult()">返回菜单</button>';
+document.getElementById('result-panel').style.display = 'flex';
+document.getElementById('result-title').textContent = won ? '比赛胜利' : 'AI 获胜';
+document.getElementById('result-title').style.color = won ? '#d4a574' : '#c97d8a';
+document.getElementById('result-detail').textContent = '三局两胜 ' + p1Score + ' : ' + p2Score;
+document.getElementById('result-btns').innerHTML =
+'<button class="menu-btn" onclick="restartFromResult()" style="border-color:#d4a574;color:#d4a574;">再来一局</button>' +
+'<button class="menu-btn secondary" onclick="exitFromResult()">返回菜单</button>';
 }
 function showOnlineResult(won, p1Score, p2Score) {
-  document.getElementById('result-panel').style.display = 'flex';
-  document.getElementById('result-title').textContent = won ? '比赛胜利' : '比赛失败';
-  document.getElementById('result-title').style.color = won ? '#d4a574' : '#c97d8a';
-  document.getElementById('result-detail').textContent = '三局两胜  ' + p1Score + ' : ' + p2Score;
-  document.getElementById('result-btns').innerHTML =
-    '<button class="menu-btn" onclick="rematchOnline()" style="border-color:#d4a574;color:#d4a574;">重新邀请</button>' +
-    '<button class="menu-btn secondary" onclick="exitFromResult()">返回菜单</button>';
+document.getElementById('result-panel').style.display = 'flex';
+document.getElementById('result-title').textContent = won ? '比赛胜利' : '比赛失败';
+document.getElementById('result-title').style.color = won ? '#d4a574' : '#c97d8a';
+document.getElementById('result-detail').textContent = '三局两胜 ' + p1Score + ' : ' + p2Score;
+document.getElementById('result-btns').innerHTML =
+'<button class="menu-btn" onclick="rematchOnline()" style="border-color:#d4a574;color:#d4a574;">重新邀请</button>' +
+'<button class="menu-btn secondary" onclick="exitFromResult()">返回菜单</button>';
 }
 function restartFromResult() { document.getElementById('result-panel').style.display = 'none'; resetAIGame(); }
 function rematchOnline() {
-  if (conn && conn.open) {
-    conn.send(JSON.stringify({ type: 'rematchRequest' }));
-    showInviteSent();
-  }
+if (conn && conn.open) {
+conn.send(JSON.stringify({ type: 'rematchRequest' }));
+showInviteSent();
+}
 }
 function showInviteSent() {
-  document.getElementById('result-panel').style.display = 'none';
-  document.getElementById('invite-panel').style.display = 'flex';
-  document.getElementById('invite-title').textContent = '已发送邀请，等待对手回应...';
-  document.getElementById('invite-btns').innerHTML =
-    '<button class="menu-btn secondary" onclick="cancelInvite()">取消</button>';
+document.getElementById('result-panel').style.display = 'none';
+document.getElementById('invite-panel').style.display = 'flex';
+document.getElementById('invite-title').textContent = '已发送邀请，等待对手回应...';
+document.getElementById('invite-btns').innerHTML =
+'<button class="menu-btn secondary" onclick="cancelInvite()">取消</button>';
 }
 function showInviteReceived() {
-  document.getElementById('result-panel').style.display = 'none';
-  document.getElementById('invite-panel').style.display = 'flex';
-  document.getElementById('invite-title').textContent = '对手邀请重赛';
-  document.getElementById('invite-btns').innerHTML =
-    '<button class="menu-btn" onclick="acceptRematch()" style="border-color:#d4a574;color:#d4a574;">同意</button>' +
-    '<button class="menu-btn secondary" onclick="declineRematch()">拒绝</button>';
+document.getElementById('result-panel').style.display = 'none';
+document.getElementById('invite-panel').style.display = 'flex';
+document.getElementById('invite-title').textContent = '对手邀请重赛';
+document.getElementById('invite-btns').innerHTML =
+'<button class="menu-btn" onclick="acceptRematch()" style="border-color:#d4a574;color:#d4a574;">同意</button>' +
+'<button class="menu-btn secondary" onclick="declineRematch()">拒绝</button>';
 }
 function acceptRematch() {
-  if (conn && conn.open) { conn.send(JSON.stringify({ type: 'rematchResponse', accept: true })); }
-  hideInvitePanel();
-  resetOnlineGame();
+if (conn && conn.open) { conn.send(JSON.stringify({ type: 'rematchResponse', accept: true })); }
+hideInvitePanel();
+resetOnlineGame();
 }
 function declineRematch() {
-  if (conn && conn.open) { conn.send(JSON.stringify({ type: 'rematchResponse', accept: false })); }
-  hideInvitePanel();
-  disconnectAndMenu();
+if (conn && conn.open) { conn.send(JSON.stringify({ type: 'rematchResponse', accept: false })); }
+hideInvitePanel();
+disconnectAndMenu();
 }
 function cancelInvite() {
-  hideInvitePanel();
-  document.getElementById('result-panel').style.display = 'flex';
+hideInvitePanel();
+document.getElementById('result-panel').style.display = 'flex';
 }
 function hideInvitePanel() { document.getElementById('invite-panel').style.display = 'none'; }
 function exitFromResult() { document.getElementById('result-panel').style.display = 'none'; backToMenu(); }
 function buildBars() {
-  const c1 = document.getElementById('bar-col-1'), c2 = document.getElementById('bar-col-2');
-  const labels1 = ['生命', '经验 0/50', 'y=kx [左键]', 'sin(x) [右键]'];
-  const labels2 = gameMode === 'ai' ? ['AI 生命', 'AI 经验 0/50', 'AI y=kx', 'AI sin(x)'] : ['生命', '经验 0/50', 'y=kx', 'sin(x)'];
-  const ids1 = ['hpbar','xpbar','bowbar','ultbar'], ids2 = ['aihpbar','aixpbar','aibowbar','aiultbar'];
-  const colors1 = ['#999','#666','#666','#d4a574'], colors2 = ['#888','#555','#555','#d4a574'];
-  const labels1Id = ['hplabel','xplabel','bowlabel','ultlabel'], labels2Id = ['aihplabel','aixplabel','aibowlabel','aiultlabel'];
-  c1.innerHTML = ''; c2.innerHTML = '';
-  for (let i = 0; i < 4; i++) {
-    c1.innerHTML += '<div class="bar"><div class="bar-fill" id="'+ids1[i]+'" style="background:'+colors1[i]+';width:'+(i===0?'100%':'0%')+'"></div></div><div class="bar-label" id="'+labels1Id[i]+'">'+labels1[i]+'</div>';
-    c2.innerHTML += '<div class="bar"><div class="bar-fill" id="'+ids2[i]+'" style="background:'+colors2[i]+';width:'+(i===0?'100%':'0%')+'"></div></div><div class="bar-label" id="'+labels2Id[i]+'">'+labels2[i]+'</div>';
-  }
+const c1 = document.getElementById('bar-col-1'), c2 = document.getElementById('bar-col-2');
+const labels1 = ['生命', '经验 0/50', 'y=kx [左键]', 'sin(x) [右键]'];
+const labels2 = gameMode === 'ai' ? ['AI 生命', 'AI 经验 0/50', 'AI y=kx', 'AI sin(x)'] : ['生命', '经验 0/50', 'y=kx', 'sin(x)'];
+const ids1 = ['hpbar','xpbar','bowbar','ultbar'], ids2 = ['aihpbar','aixpbar','aibowbar','aiultbar'];
+const colors1 = ['#999','#666','#666','#d4a574'], colors2 = ['#888','#555','#555','#d4a574'];
+const labels1Id = ['hplabel','xplabel','bowlabel','ultlabel'], labels2Id = ['aihplabel','aixplabel','aibowlabel','aiultlabel'];
+c1.innerHTML = ''; c2.innerHTML = '';
+for (let i = 0; i < 4; i++) {
+c1.innerHTML += '<div class="bar"><div class="bar-fill" id="'+ids1[i]+'" style="background:'+colors1[i]+';width:'+(i===0?'100%':'0%')+'"></div></div><div class="bar-label" id="'+labels1Id[i]+'">'+labels1[i]+'</div>';
+c2.innerHTML += '<div class="bar"><div class="bar-fill" id="'+ids2[i]+'" style="background:'+colors2[i]+';width:'+(i===0?'100%':'0%')+'"></div></div><div class="bar-label" id="'+labels2Id[i]+'">'+labels2[i]+'</div>';
+}
 }
 function updateScoreDisplay() {
-  if (gameMode === 'ai') { document.getElementById('ps').textContent = player.score; document.getElementById('ais').textContent = ai.score; }
-  else { document.getElementById('ps').textContent = player.score; document.getElementById('ais').textContent = opponent.score; if (conn && conn.open) conn.send(JSON.stringify({type:'scoreSync',score:player.score})); }
+if (gameMode === 'ai') { document.getElementById('ps').textContent = player.score; document.getElementById('ais').textContent = ai.score; }
+else { document.getElementById('ps').textContent = player.score; document.getElementById('ais').textContent = opponent.score; if (conn && conn.open) conn.send(JSON.stringify({type:'scoreSync',score:player.score})); }
 }
 function startOnlineGame() {
-  hideAll(); gameMode = 'online'; roundWins = {p1:0,p2:0}; matchOver = false;
-  document.getElementById('hud').style.display = ''; document.getElementById('bar-wrap').style.display = '';
-  document.getElementById('ctrl-layer').classList.add('active');
-  const localX = isHost ? 200 : 700, remoteX = isHost ? 700 : 200;
-  player = createPlayer(localX, GH/2, currentUser.colorIdx, true);
-  const remoteColor = remoteUser ? remoteUser.colorIdx : 1;
-  opponent = createPlayer(remoteX, GH/2, remoteColor, false);
-  bullets = []; oppBullets = []; particles = []; ultPrimed = false;
-  btnUlt.classList.remove('primed'); btnFire.classList.remove('ult-mode');
-  killCam = {active:false,timer:0,maxTimer:1.8,winner:'',posX:0,posY:0,shakeX:0,shakeY:0,flashAlpha:0};
-  document.getElementById('ps').textContent = '0'; document.getElementById('ais').textContent = '0';
-  document.getElementById('p1-label').textContent = currentUser.name;
-  document.getElementById('p2-label').textContent = remoteUser ? remoteUser.name : '对手';
-  document.getElementById('p2-label').style.color = COLORS[opponent.colorIdx].hex;
-  buildBars(); remoteState = null; remoteStateSeq = 0; remoteStateTarget = null; remoteStateVx = 0; remoteStateVy = 0; sendSeq = 0; remoteReady = true;
+hideAll(); gameMode = 'online'; roundWins = {p1:0,p2:0}; matchOver = false;
+document.getElementById('hud').style.display = ''; document.getElementById('bar-wrap').style.display = '';
+document.getElementById('ctrl-layer').classList.add('active');
+const localX = isHost ? 200 : 700, remoteX = isHost ? 700 : 200;
+player = createPlayer(localX, GH/2, currentUser.colorIdx, true);
+const remoteColor = remoteUser ? remoteUser.colorIdx : 1;
+opponent = createPlayer(remoteX, GH/2, remoteColor, false);
+bullets = []; oppBullets = []; particles = []; ultPrimed = false;
+btnUlt.classList.remove('primed'); btnFire.classList.remove('ult-mode');
+killCam = {active:false,timer:0,maxTimer:1.8,winner:'',posX:0,posY:0,shakeX:0,shakeY:0,flashAlpha:0};
+document.getElementById('ps').textContent = '0'; document.getElementById('ais').textContent = '0';
+document.getElementById('p1-label').textContent = currentUser.name;
+document.getElementById('p2-label').textContent = remoteUser ? remoteUser.name : '对手';
+document.getElementById('p2-label').style.color = COLORS[opponent.colorIdx].hex;
+buildBars(); remoteState = null; remoteStateSeq = 0; remoteStateTarget = null; remoteStateVx = 0; remoteStateVy = 0; sendSeq = 0; remoteReady = true;
 }
 function resetOnlineGame() { roundWins = {p1:0,p2:0}; matchOver = false; document.getElementById('result-panel').style.display = 'none'; resetRound(); }
 function handleOnlineGameOver(iWon) {
-  if (iWon) roundWins.p1++; else roundWins.p2++;
-  if (roundWins.p1 >= ROUNDS_TO_WIN || roundWins.p2 >= ROUNDS_TO_WIN) {
-    matchOver = true;
-    const oppName = remoteUser ? remoteUser.name : '对手';
-    const won = roundWins.p1 >= ROUNDS_TO_WIN;
-    recordMatch('online', oppName, won, roundWins.p1, roundWins.p2);
-    showOnlineResult(won, roundWins.p1, roundWins.p2);
-    if (window._updatePending) setTimeout(() => { window.open(window._updatePending, '_blank'); }, 3000);
-  } else {
-    roundPause = 1.5;
-  }
+if (iWon) roundWins.p1++; else roundWins.p2++;
+if (roundWins.p1 >= ROUNDS_TO_WIN || roundWins.p2 >= ROUNDS_TO_WIN) {
+matchOver = true;
+const oppName = remoteUser ? remoteUser.name : '对手';
+const won = roundWins.p1 >= ROUNDS_TO_WIN;
+recordMatch('online', oppName, won, roundWins.p1, roundWins.p2);
+showOnlineResult(won, roundWins.p1, roundWins.p2);
+if (window._updatePending) setTimeout(() => { window.open(window._updatePending, '_blank'); }, 3000);
+} else {
+roundPause = 1.5;
+}
 }
 function applyHitLocally(data) {
-  if (player.invuln > 0) return;
-  player.hp -= data.damage; if (player.hp < 0) player.hp = 0;
-  spawnExplosion(data.bulletX||player.x, data.bulletY||player.y, COLORS[player.colorIdx].hex, 5);
-  spawnDmg(data.bulletX||player.x, (data.bulletY||player.y)-12, data.damage, COLORS[opponent.colorIdx].hex);
-  screenShake = Math.max(screenShake, Math.min(8, data.damage*0.4));
-  if (Date.now()-player.lastHitTime < 1500) player.combo++; else player.combo = 1;
-  player.lastHitTime = Date.now();
-  snd(200 + player.combo*30, 0.12, 'square', 0.06);
-  if (data.damage >= 80) snd(80, 0.25, 'sawtooth', 0.1);
-  if (player.hp <= 0 && !killCam.active) {
-    player.dead = true; startKillCam(opponent, player.x, player.y);
-    spawnShatter(player.x, player.y, COLORS[player.colorIdx].hex, player.r);
-    snd(120, 0.5, 'sawtooth', 0.12);
-  }
+if (player.invuln > 0) return;
+player.hp -= data.damage; if (player.hp < 0) player.hp = 0;
+spawnExplosion(data.bulletX||player.x, data.bulletY||player.y, COLORS[player.colorIdx].hex, 5);
+spawnDmg(data.bulletX||player.x, (data.bulletY||player.y)-12, data.damage, COLORS[opponent.colorIdx].hex);
+screenShake = Math.max(screenShake, Math.min(8, data.damage*0.4));
+if (Date.now()-player.lastHitTime < 1500) player.combo++; else player.combo = 1;
+player.lastHitTime = Date.now();
+snd(200 + player.combo*30, 0.12, 'square', 0.06);
+if (data.damage >= 80) snd(80, 0.25, 'sawtooth', 0.1);
+if (player.hp <= 0 && !killCam.active) {
+player.dead = true; startKillCam(opponent, player.x, player.y);
+spawnShatter(player.x, player.y, COLORS[player.colorIdx].hex, player.r);
+snd(120, 0.5, 'sawtooth', 0.12);
+}
 }
 function fireBulletRemote(data) { oppBullets.push({x1:data.x1,y1:data.y1,x2:data.x2,y2:data.y2,color:COLORS[opponent.colorIdx].hex,timer:0.07+(data.charge||0)*0.13,charge:data.charge||0}); }
 function fireUltRemote(data) { opponent.ultiBeam = {x1:data.x1,y1:data.y1,x2:data.x2,y2:data.y2,timer:data.beamDuration,maxTimer:data.beamDuration,chargeLevel:data.chargeLevel,color:COLORS[opponent.colorIdx].hex}; }
 let sendTimer = 0; const SEND_INTERVAL = 1/25;
 function sendState() { if (!conn || !conn.open || !remoteReady) return; sendSeq++; conn.send(JSON.stringify({type:'state',seq:sendSeq,x:player.x,y:player.y,vx:player.vx,vy:player.vy,aimAngle:player.aimAngle,bowCharging:player.bowCharging,bowCharge:player.bowCharge,arrowCd:player.arrowCd,ultiCharging:player.ultiCharging,ultiChargeProgress:player.ultiChargeProgress,ultiCooldown:player.ultiCooldown,xp:player.xp,hp:player.hp,dead:player.dead,dashCd:player.dashCd,dashing:player.dashing,dashTimer:player.dashTimer,invuln:player.invuln})); }
-
-// ===================== HISTORY UI =====================
 function showHistory() { if (!currentUser) { showRegister(); return; } hideAll(); document.getElementById('history').classList.add('active'); document.getElementById('history').style.display = ''; switchHistoryTab('record'); }
 function switchHistoryTab(tab) {
-  document.querySelectorAll('#history .tab-btn').forEach(b => b.classList.toggle('on',false));
-  document.querySelectorAll('#history .tab-content').forEach(c => c.classList.toggle('on',false));
-  if (tab === 'record') { document.querySelector('#history .tab-btn:nth-child(1)').classList.add('on'); document.getElementById('tab-record').classList.add('on'); renderRecords(); }
-  else { document.querySelector('#history .tab-btn:nth-child(2)').classList.add('on'); document.getElementById('tab-room').classList.add('on'); renderRooms(); }
+document.querySelectorAll('#history .tab-btn').forEach(b => b.classList.toggle('on',false));
+document.querySelectorAll('#history .tab-content').forEach(c => c.classList.toggle('on',false));
+if (tab === 'record') { document.querySelector('#history .tab-btn:nth-child(1)').classList.add('on'); document.getElementById('tab-record').classList.add('on'); renderRecords(); }
+else { document.querySelector('#history .tab-btn:nth-child(2)').classList.add('on'); document.getElementById('tab-room').classList.add('on'); renderRooms(); }
 }
 function formatTime(ts) { const d = new Date(ts); const pad = n => String(n).padStart(2,'0'); return pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes()); }
 function renderRecords() {
-  const h = loadHistory(), stats = document.getElementById('stats-bar'), list = document.getElementById('record-list');
-  const wins = h.matches.filter(m => m.result === 'win').length, total = h.matches.length;
-  stats.innerHTML = '<div class="stat-item"><div class="stat-num">'+total+'</div><div class="stat-label">总场次</div></div><div class="stat-item"><div class="stat-num">'+wins+'</div><div class="stat-label">胜</div></div><div class="stat-item"><div class="stat-num">'+(total-wins)+'</div><div class="stat-label">负</div></div><div class="stat-item"><div class="stat-num">'+(total?Math.round(wins/total*100):0)+'%</div><div class="stat-label">胜率</div></div>';
-  if (!h.matches.length) { list.innerHTML = '<div class="list-empty">暂无战绩</div>'; return; }
-  list.innerHTML = h.matches.map(m => '<div class="list-item"><span style="color:#555">['+(m.mode==='ai'?'人机':'联机')+']</span><span style="color:#888">vs '+m.opponent+'</span><span>'+m.myScore+':'+m.oppScore+'</span><span class="'+(m.result==='win'?'result-win':'result-lose')+'">'+(m.result==='win'?'胜':'负')+'</span><span style="color:#444;font-size:10px">'+formatTime(m.time)+'</span></div>').join('');
+const h = loadHistory(), stats = document.getElementById('stats-bar'), list = document.getElementById('record-list');
+const wins = h.matches.filter(m => m.result === 'win').length, total = h.matches.length;
+stats.innerHTML = '<div class="stat-item"><div class="stat-num">'+total+'</div><div class="stat-label">总场次</div></div><div class="stat-item"><div class="stat-num">'+wins+'</div><div class="stat-label">胜</div></div><div class="stat-item"><div class="stat-num">'+(total-wins)+'</div><div class="stat-label">负</div></div><div class="stat-item"><div class="stat-num">'+(total?Math.round(wins/total*100):0)+'%</div><div class="stat-label">胜率</div></div>';
+if (!h.matches.length) { list.innerHTML = '<div class="list-empty">暂无战绩</div>'; return; }
+list.innerHTML = h.matches.map(m => '<div class="list-item"><span style="color:#555">['+(m.mode==='ai'?'人机':'联机')+']</span><span style="color:#888">vs '+m.opponent+'</span><span>'+m.myScore+':'+m.oppScore+'</span><span class="'+(m.result==='win'?'result-win':'result-lose')+'">'+(m.result==='win'?'胜':'负')+'</span><span style="color:#444;font-size:10px">'+formatTime(m.time)+'</span></div>').join('');
 }
 function renderRooms() {
-  const h = loadHistory(), list = document.getElementById('room-list');
-  if (!h.rooms.length) { list.innerHTML = '<div class="list-empty">暂无房间记录</div>'; return; }
-  list.innerHTML = h.rooms.map(r => '<div class="list-item"><span style="color:#555">['+(r.role==='host'?'创建':'加入')+']</span><span class="room-code-sm" onclick="navigator.clipboard.writeText(\''+r.code+'\')">'+r.code+'</span><span style="color:#444;font-size:10px">'+formatTime(r.time)+'</span></div>').join('');
+const h = loadHistory(), list = document.getElementById('room-list');
+if (!h.rooms.length) { list.innerHTML = '<div class="list-empty">暂无房间记录</div>'; return; }
+list.innerHTML = h.rooms.map(r => '<div class="list-item"><span style="color:#555">['+(r.role==='host'?'创建':'加入')+']</span><span class="room-code-sm" onclick="navigator.clipboard.writeText(\''+r.code+'\')">'+r.code+'</span><span style="color:#444;font-size:10px">'+formatTime(r.time)+'</span></div>').join('');
 }
-
-// ===================== ADMIN =====================
 const ADMIN_PW = 'bie110308';
 function showAdmin() { hideAll(); document.getElementById('admin-panel').style.display = ''; document.getElementById('admin-panel').classList.add('active'); document.getElementById('admin-pw').value = ''; document.getElementById('admin-err').textContent = ''; setTimeout(() => document.getElementById('admin-pw').focus(), 100); }
 function adminVerify() { const input = document.getElementById('admin-pw').value; if (input === ADMIN_PW) { document.getElementById('admin-err').textContent = '密码正确'; } else { document.getElementById('admin-err').textContent = '密码错误'; document.getElementById('admin-pw').value = ''; } }
 document.getElementById('admin-pw').addEventListener('keydown', function(e) { if (e.key === 'Enter') adminVerify(); });
-
-// ===================== MORE / EDIT MODE =====================
 function showMore() { hideAll(); document.getElementById('more').classList.add('active'); document.getElementById('more').style.display = ''; }
 function showHistoryFromMore() { hideAll(); showHistory(); }
-
 let editMode = false, editDragId = null, editTarget = null, editOffX = 0, editOffY = 0;
-
 function enterEditMode() {
-  hideAll();
-  document.getElementById('ctrl-layer').classList.add('active');
-  document.getElementById('ctrl-layer').classList.add('edit-mode');
-  document.getElementById('edit-bar').style.display = 'flex';
-  editMode = true;
-  btnDash.style.display = ''; btnFire.style.display = ''; btnUlt.style.display = '';
-  btnDash.classList.remove('selected'); btnFire.classList.remove('selected'); btnUlt.classList.remove('selected');
-  document.getElementById('eb-size').textContent = '--';
+hideAll();
+document.getElementById('ctrl-layer').classList.add('active');
+document.getElementById('ctrl-layer').classList.add('edit-mode');
+document.getElementById('edit-bar').style.display = 'flex';
+editMode = true;
+btnDash.style.display = ''; btnFire.style.display = ''; btnUlt.style.display = '';
+btnDash.classList.remove('selected'); btnFire.classList.remove('selected'); btnUlt.classList.remove('selected');
+document.getElementById('eb-size').textContent = '--';
 }
-
 function exitEditMode(save) {
-  document.getElementById('ctrl-layer').classList.remove('edit-mode','active');
-  document.getElementById('edit-bar').style.display = 'none';
-  editMode = false; editDragId = null; editTarget = null;
-  btnDash.classList.remove('selected'); btnFire.classList.remove('selected'); btnUlt.classList.remove('selected');
-  if (save) saveLayout();
-  backToMenu();
+document.getElementById('ctrl-layer').classList.remove('edit-mode','active');
+document.getElementById('edit-bar').style.display = 'none';
+editMode = false; editDragId = null; editTarget = null;
+btnDash.classList.remove('selected'); btnFire.classList.remove('selected'); btnUlt.classList.remove('selected');
+if (save) saveLayout();
+backToMenu();
 }
-
 function resizeSelected(delta) {
-  const el = editTarget;
-  if (!el) return;
-  const w = parseFloat(el.style.width) || el.offsetWidth;
-  const h = parseFloat(el.style.height) || el.offsetHeight;
-  const nw = Math.max(24, Math.min(120, w + delta));
-  const nh = Math.max(24, Math.min(120, h + delta));
-  el.style.width = nw + 'px';
-  el.style.height = nh + 'px';
-  document.getElementById('eb-size').textContent = Math.round(nw);
+const el = editTarget;
+if (!el) return;
+const w = parseFloat(el.style.width) || el.offsetWidth;
+const h = parseFloat(el.style.height) || el.offsetHeight;
+const nw = Math.max(24, Math.min(120, w + delta));
+const nh = Math.max(24, Math.min(120, h + delta));
+el.style.width = nw + 'px';
+el.style.height = nh + 'px';
+document.getElementById('eb-size').textContent = Math.round(nw);
 }
-
 function saveLayout() {
-  const l = {};
-  ['dash','fire','ult'].forEach(id => {
-    const b = document.getElementById('btn-'+id);
-    l[id] = { bottom: b.style.bottom, right: b.style.right, width: b.style.width, height: b.style.height };
-  });
-  localStorage.setItem('gw_layout_m', JSON.stringify(l));
+const l = {};
+['dash','fire','ult'].forEach(id => {
+const b = document.getElementById('btn-'+id);
+l[id] = { bottom: b.style.bottom, right: b.style.right, width: b.style.width, height: b.style.height };
+});
+localStorage.setItem('gw_layout_m', JSON.stringify(l));
 }
-
 function resetLayout() {
-  localStorage.removeItem('gw_layout_m');
-  ['dash','fire','ult'].forEach(id => {
-    const b = document.getElementById('btn-'+id);
-    b.style.bottom = b.dataset.dB || '';
-    b.style.right = b.dataset.dR || '';
-    b.style.width = ''; b.style.height = '';
-  });
-  document.getElementById('eb-size').textContent = '--';
+localStorage.removeItem('gw_layout_m');
+['dash','fire','ult'].forEach(id => {
+const b = document.getElementById('btn-'+id);
+b.style.bottom = b.dataset.dB || '';
+b.style.right = b.dataset.dR || '';
+b.style.width = ''; b.style.height = '';
+});
+document.getElementById('eb-size').textContent = '--';
 }
-
 function loadLayout() {
-  try {
-    const l = JSON.parse(localStorage.getItem('gw_layout_m'));
-    if (!l) return;
-    ['dash','fire','ult'].forEach(id => {
-      const b = document.getElementById('btn-'+id);
-      if (l[id] && l[id].bottom) b.style.bottom = l[id].bottom;
-      if (l[id] && l[id].right) b.style.right = l[id].right;
-      if (l[id] && l[id].width) b.style.width = l[id].width;
-      if (l[id] && l[id].height) b.style.height = l[id].height;
-    });
-  } catch(e) {}
+try {
+const l = JSON.parse(localStorage.getItem('gw_layout_m'));
+if (!l) return;
+['dash','fire','ult'].forEach(id => {
+const b = document.getElementById('btn-'+id);
+if (l[id] && l[id].bottom) b.style.bottom = l[id].bottom;
+if (l[id] && l[id].right) b.style.right = l[id].right;
+if (l[id] && l[id].width) b.style.width = l[id].width;
+if (l[id] && l[id].height) b.style.height = l[id].height;
+});
+} catch(e) {}
 }
-
-// ===================== UPDATE LOGIC =====================
 function updatePlayerInput(p, dt) {
-  if (p.dead || matchOver || killCam.active || roundPause > 0) return;
-  if (p.ultiCooldown > 0) { p.ultiCooldown -= dt; if (p.ultiCooldown <= 0) p.ultiCooldown = 0; }
-  const target = (p === player) ? opponent : player;
-  const canUlt = p.ultiCooldown <= 0 && p.xp >= p.maxXp;
-  const fireHeld = (p === player) ? touchState.fireDown : false;
-  const ultActive = (p === player) ? (fireHeld && ultPrimed && canUlt) : false;
-  const bowActive = (p === player) ? (fireHeld && !ultPrimed) : false;
-
-  // Ult charging via FIRE button when ultPrimed
-  if (ultActive) {
-    if (!p.ultiCharging) { p.ultiCharging = true; p.ultiChargeProgress = 0; p.ultiMaxTimer = 0; p.ultiLockTimer = 0; p.ultiLocked = false; }
-    p.ultiChargeProgress = Math.min(1, p.ultiChargeProgress + dt / 1.2);
-    if (p.ultiChargeProgress >= 1.0) {
-      p.ultiMaxTimer += dt;
-      const distToTarget = Math.hypot(target.x - p.x, target.y - p.y);
-      const angleToTarget = Math.atan2(target.y - p.y, target.x - p.x);
-      let ad = Math.abs(p.aimAngle - angleToTarget); while (ad > Math.PI) ad = Math.PI * 2 - ad;
-      if (ad < 0.22 && distToTarget < 600 && !target.dead) { p.ultiLockTimer += dt; if (p.ultiLockTimer >= 0.4) p.ultiLocked = true; }
-      else { p.ultiLockTimer = Math.max(0, p.ultiLockTimer - dt * 2); if (p.ultiLockTimer < 0.2) p.ultiLocked = false; }
-      if (p.ultiMaxTimer >= 0.6 || p.ultiLocked) {
-        const hitDmg = fireUlt(p, target, 1.0); p.xp = 0; p.ultiCharging = false;
-        ultPrimed = false; btnUlt.classList.remove('primed'); btnFire.classList.remove('ult-mode');
-        if (gameMode === 'online' && p === player && conn && conn.open) {
-          const end = p.ultiBeam ? {x1:p.ultiBeam.x1,y1:p.ultiBeam.y1,x2:p.ultiBeam.x2,y2:p.ultiBeam.y2} : {x1:0,y1:0,x2:0,y2:0};
-          conn.send(JSON.stringify({type:'fireUlt',chargeLevel:1.0,beamDuration:p.ultiBeam?p.ultiBeam.maxTimer:0.3,x1:end.x1,y1:end.y1,x2:end.x2,y2:end.y2}));
-          if (hitDmg > 0) conn.send(JSON.stringify({type:'hit',damage:hitDmg,bulletX:target.x,bulletY:target.y,isUlt:true}));
-        }
-      }
-    }
-  } else if (!ultActive && p.ultiCharging) {
-    if (p.ultiChargeProgress >= 0.25) {
-      const hitDmg = fireUlt(p, target, p.ultiChargeProgress); p.xp = 0;
-      ultPrimed = false; btnUlt.classList.remove('primed'); btnFire.classList.remove('ult-mode');
-      if (gameMode === 'online' && p === player && conn && conn.open) {
-        const end = p.ultiBeam ? {x1:p.ultiBeam.x1,y1:p.ultiBeam.y1,x2:p.ultiBeam.x2,y2:p.ultiBeam.y2} : {x1:0,y1:0,x2:0,y2:0};
-        conn.send(JSON.stringify({type:'fireUlt',chargeLevel:p.ultiChargeProgress,beamDuration:p.ultiBeam?p.ultiBeam.maxTimer:0.3,x1:end.x1,y1:end.y1,x2:end.x2,y2:end.y2}));
-        if (hitDmg > 0) conn.send(JSON.stringify({type:'hit',damage:hitDmg,bulletX:target.x,bulletY:target.y,isUlt:true}));
-        if (target.dead) conn.send(JSON.stringify({type:'gameOver',winner:isHost?'host':'guest'}));
-      }
-    }
-    p.ultiCharging = false; p.ultiChargeProgress = 0; p.ultiMaxTimer = 0; p.ultiLockTimer = 0; p.ultiLocked = false;
-  }
-
-  if (p.arrowCd > 0) { p.arrowCd -= dt; if (p.arrowCd <= 0) p.arrowCd = 0; }
-
-  // Bow charging via FIRE button (normal mode)
-  if (bowActive && p.arrowCd <= 0 && !p.ultiCharging) {
-    if (!p.bowCharging) { p.bowCharging = true; p.bowCharge = 0; }
-    p.bowCharge = Math.min(1, p.bowCharge + dt / 0.5);
-  } else if (p.bowCharging && !bowActive) {
-    if (p.bowCharge >= 0.4) {
-      fireBullet(p, bullets); p.arrowCd = 0.18;
-      if (gameMode === 'online' && p === player && conn && conn.open) {
-        const charge = p.bowCharge, angle = p.aimAngle, end = getBeamEnd(p.x, p.y, angle);
-        conn.send(JSON.stringify({type:'fireBullet',charge,angle,x1:p.x+Math.cos(angle)*(p.r+4),y1:p.y+Math.sin(angle)*(p.r+4),x2:end.x,y2:end.y}));
-      }
-    }
-    p.bowCharge = 0; p.bowCharging = false;
-  }
-
-  if ((p === player) && !p.bowCharging && !bowActive && p.bowCharge < 0.4 && p.bowCharge > 0) {
-    p.bowCharge = Math.max(0, p.bowCharge - dt * 5);
-  }
+if (p.dead || matchOver || killCam.active || roundPause > 0) return;
+if (p.ultiCooldown > 0) { p.ultiCooldown -= dt; if (p.ultiCooldown <= 0) p.ultiCooldown = 0; }
+const target = (p === player) ? opponent : player;
+const canUlt = p.ultiCooldown <= 0 && p.xp >= p.maxXp;
+const fireHeld = (p === player) ? touchState.fireDown : false;
+const ultActive = (p === player) ? (fireHeld && ultPrimed && canUlt) : false;
+const bowActive = (p === player) ? (fireHeld && !ultPrimed) : false;
+if (ultActive) {
+if (!p.ultiCharging) { p.ultiCharging = true; p.ultiChargeProgress = 0; p.ultiMaxTimer = 0; p.ultiLockTimer = 0; p.ultiLocked = false; }
+p.ultiChargeProgress = Math.min(1, p.ultiChargeProgress + dt / 1.2);
+if (p.ultiChargeProgress >= 1.0) {
+p.ultiMaxTimer += dt;
+const distToTarget = Math.hypot(target.x - p.x, target.y - p.y);
+const angleToTarget = Math.atan2(target.y - p.y, target.x - p.x);
+let ad = Math.abs(p.aimAngle - angleToTarget); while (ad > Math.PI) ad = Math.PI * 2 - ad;
+if (ad < 0.22 && distToTarget < 600 && !target.dead) { p.ultiLockTimer += dt; if (p.ultiLockTimer >= 0.4) p.ultiLocked = true; }
+else { p.ultiLockTimer = Math.max(0, p.ultiLockTimer - dt * 2); if (p.ultiLockTimer < 0.2) p.ultiLocked = false; }
+if (p.ultiMaxTimer >= 0.6 || p.ultiLocked) {
+const hitDmg = fireUlt(p, target, 1.0); p.xp = 0; p.ultiCharging = false;
+ultPrimed = false; btnUlt.classList.remove('primed'); btnFire.classList.remove('ult-mode');
+if (gameMode === 'online' && p === player && conn && conn.open) {
+const end = p.ultiBeam ? {x1:p.ultiBeam.x1,y1:p.ultiBeam.y1,x2:p.ultiBeam.x2,y2:p.ultiBeam.y2} : {x1:0,y1:0,x2:0,y2:0};
+conn.send(JSON.stringify({type:'fireUlt',chargeLevel:1.0,beamDuration:p.ultiBeam?p.ultiBeam.maxTimer:0.3,x1:end.x1,y1:end.y1,x2:end.x2,y2:end.y2}));
+if (hitDmg > 0) conn.send(JSON.stringify({type:'hit',damage:hitDmg,bulletX:target.x,bulletY:target.y,isUlt:true}));
+}
+}
+}
+} else if (!ultActive && p.ultiCharging) {
+if (p.ultiChargeProgress >= 0.25) {
+const hitDmg = fireUlt(p, target, p.ultiChargeProgress); p.xp = 0;
+ultPrimed = false; btnUlt.classList.remove('primed'); btnFire.classList.remove('ult-mode');
+if (gameMode === 'online' && p === player && conn && conn.open) {
+const end = p.ultiBeam ? {x1:p.ultiBeam.x1,y1:p.ultiBeam.y1,x2:p.ultiBeam.x2,y2:p.ultiBeam.y2} : {x1:0,y1:0,x2:0,y2:0};
+conn.send(JSON.stringify({type:'fireUlt',chargeLevel:p.ultiChargeProgress,beamDuration:p.ultiBeam?p.ultiBeam.maxTimer:0.3,x1:end.x1,y1:end.y1,x2:end.x2,y2:end.y2}));
+if (hitDmg > 0) conn.send(JSON.stringify({type:'hit',damage:hitDmg,bulletX:target.x,bulletY:target.y,isUlt:true}));
+if (target.dead) conn.send(JSON.stringify({type:'gameOver',winner:isHost?'host':'guest'}));
+}
+}
+p.ultiCharging = false; p.ultiChargeProgress = 0; p.ultiMaxTimer = 0; p.ultiLockTimer = 0; p.ultiLocked = false;
+}
+if (p.arrowCd > 0) { p.arrowCd -= dt; if (p.arrowCd <= 0) p.arrowCd = 0; }
+if (bowActive && p.arrowCd <= 0 && !p.ultiCharging) {
+if (!p.bowCharging) { p.bowCharging = true; p.bowCharge = 0; }
+p.bowCharge = Math.min(1, p.bowCharge + dt / 0.5);
+} else if (p.bowCharging && !bowActive) {
+if (p.bowCharge >= 0.4) {
+fireBullet(p, bullets); p.arrowCd = 0.18;
+if (gameMode === 'online' && p === player && conn && conn.open) {
+const charge = p.bowCharge, angle = p.aimAngle, end = getBeamEnd(p.x, p.y, angle);
+conn.send(JSON.stringify({type:'fireBullet',charge,angle,x1:p.x+Math.cos(angle)*(p.r+4),y1:p.y+Math.sin(angle)*(p.r+4),x2:end.x,y2:end.y}));
+}
+}
+p.bowCharge = 0; p.bowCharging = false;
+}
+if ((p === player) && !p.bowCharging && !bowActive && p.bowCharge < 0.4 && p.bowCharge > 0) {
+p.bowCharge = Math.max(0, p.bowCharge - dt * 5);
+}
 }
 function updatePlayerMovement(p, dt, ax, ay) {
-  if (p.dashCd > 0) p.dashCd -= dt;
-  if (p.invuln > 0) p.invuln -= dt;
-  if (p.dashTimer > 0) {
-    p.dashTimer -= dt;
-    p.vx = p._dashVx * (p.dashTimer / 0.15); p.vy = p._dashVy * (p.dashTimer / 0.15);
-    if (p.dashTimer <= 0) { p.dashing = false; p._dashVx = 0; p._dashVy = 0; }
-    p.x += p.vx * dt; p.y += p.vy * dt;
-  } else {
-    const ultSlow = p.ultiCharging ? 0.35 : 1, bowSlow = p.bowCharging ? 0.6 : 1, sm = ultSlow * bowSlow;
-    p.vx += (ax * BASE_SPEED * sm - p.vx) * 5 * dt;
-    p.vy += (ay * BASE_SPEED * sm - p.vy) * 5 * dt;
-    p.x += p.vx * dt; p.y += p.vy * dt;
-  }
-  p.x = Math.max(p.r, Math.min(GW - p.r, p.x));
-  p.y = Math.max(p.r, Math.min(GH - p.r, p.y));
+if (p.dashCd > 0) p.dashCd -= dt;
+if (p.invuln > 0) p.invuln -= dt;
+if (p.dashTimer > 0) {
+p.dashTimer -= dt;
+p.vx = p._dashVx * (p.dashTimer / 0.15); p.vy = p._dashVy * (p.dashTimer / 0.15);
+if (p.dashTimer <= 0) { p.dashing = false; p._dashVx = 0; p._dashVy = 0; }
+p.x += p.vx * dt; p.y += p.vy * dt;
+} else {
+const ultSlow = p.ultiCharging ? 0.35 : 1, bowSlow = p.bowCharging ? 0.6 : 1, sm = ultSlow * bowSlow;
+p.vx += (ax * BASE_SPEED * sm - p.vx) * 5 * dt;
+p.vy += (ay * BASE_SPEED * sm - p.vy) * 5 * dt;
+p.x += p.vx * dt; p.y += p.vy * dt;
+}
+p.x = Math.max(p.r, Math.min(GW - p.r, p.x));
+p.y = Math.max(p.r, Math.min(GH - p.r, p.y));
 }
 function updateAI(dt) {
-  if (!ai || ai.dead || matchOver || killCam.active || roundPause > 0) return;
-  if (ai.ultiCooldown > 0) { ai.ultiCooldown -= dt; if (ai.ultiCooldown <= 0) ai.ultiCooldown = 0; }
-  const d = Math.hypot(ai.x - player.x, ai.y - player.y);
-  const a = Math.atan2(player.y - ai.y, player.x - ai.x);
-  ai.learnTimer += dt;
-  if (ai.learnTimer > 0.08 && d < 600 && !player.dead) {
-    ai.learnTimer = 0;
-    const dx = player.x - ai.prevPlayerX, dy = player.y - ai.prevPlayerY;
-    const moved = Math.hypot(dx, dy);
-    if (ai.prevPlayerX !== 0 && moved > 8) {
-      const pA = Math.atan2(player.y + dy*2.5 + ai.playerDodgeBiasX*0.6 - ai.y, player.x + dx*2.5 + ai.playerDodgeBiasY*0.6 - ai.x);
-      let off = pA - a; while (off > Math.PI) off -= Math.PI*2; while (off < -Math.PI) off += Math.PI*2;
-      ai.predictedOffset += (off - ai.predictedOffset) * 0.25;
-    } else if (ai.prevPlayerX !== 0) { ai.predictedOffset += (0 - ai.predictedOffset) * 0.3; }
-    ai.prevPlayerX = player.x; ai.prevPlayerY = player.y;
-  }
-  let tA = a + (ai.predictedOffset||0) * ai.difficulty * 1.2 * ai.predictionConfidence;
-  while (tA > Math.PI) tA -= Math.PI*2; while (tA < -Math.PI) tA += Math.PI*2;
-  ai.aimNoise += (Math.random()-0.5)*0.3*dt; ai.aimNoise = Math.max(-0.15,Math.min(0.15,ai.aimNoise*0.95));
-  const wobble = ai.aimNoise * Math.max(0, 1.0/ai.difficulty-0.3);
-  ai.aimAngle += (tA + wobble - ai.aimAngle) * Math.min(1, 8*ai.difficulty*dt);
-  if (ai.arrowCd > 0) { ai.arrowCd -= dt; if (ai.arrowCd <= 0) ai.arrowCd = 0; }
-  if (!player.dead && ai.arrowCd <= 0 && !ai.ultiCharging && d < 500) {
-    let ad = Math.abs(ai.aimAngle - a); while (ad > Math.PI) ad = Math.PI*2 - ad;
-    const fat = 0.12 + 0.46/ai.difficulty;
-    if (!ai.bowCharging) { if (ad < fat && Math.random() < dt*3*ai.difficulty) { ai.bowCharging = true; ai.bowCharge = 0; } }
-    else { ai.bowCharge = Math.min(1, ai.bowCharge + dt/0.5); const sf = (ai.bowCharge>=0.85)||(ai.bowCharge>=0.5&&Math.random()<dt*2)||(ad>fat*2&&ai.bowCharge>=0.4); if (sf && ai.bowCharge>=0.4) { const aimSn = ai.aimAngle; fireBullet(ai, oppBullets); ai.bowCharge = 0; ai.bowCharging = false; ai.arrowCd = 0.25; ai.shotTimestamp = 0.3; ai.shotPlayerX = player.x; ai.shotPlayerY = player.y; if (!player.dead) { const actA = Math.atan2(player.y-ai.y,player.x-ai.x); let err = actA - aimSn; while (err>Math.PI)err-=Math.PI*2;while(err<-Math.PI)err+=Math.PI*2; if (Math.abs(err)>0.15){ai.missCount++;ai.predictionConfidence=Math.max(0.15,ai.predictionConfidence-0.04);}else{ai.hitCount++;ai.predictionConfidence=Math.min(1,ai.predictionConfidence+0.03);} } } }
-  }
-  if (!player.dead && ai.ultiCooldown <= 0 && ai.xp >= ai.maxXp) {
-    let ad = Math.abs(ai.aimAngle - a); while (ad > Math.PI) ad = Math.PI*2 - ad;
-    const udt = 320 + ai.difficulty*80, uat = 0.08 + 0.34/ai.difficulty;
-    if (!ai.ultiCharging) { if (d < udt && ad < uat && Math.random() < dt*1.5*ai.difficulty) { ai.ultiCharging = true; ai.ultiChargeProgress = 0; ai.ultiMaxTimer = 0; ai.ultiLockTimer = 0; ai.ultiLocked = false; if (ai.bowCharging) { ai.bowCharging = false; ai.bowCharge = 0; } } }
-    else { ai.ultiChargeProgress = Math.min(1, ai.ultiChargeProgress + dt/1.2); if (ai.ultiChargeProgress >= 1.0) { ai.ultiMaxTimer += dt; if (ad < uat*0.6 && !player.dead) { ai.ultiLockTimer += dt; if (ai.ultiLockTimer >= 0.4) ai.ultiLocked = true; } else { ai.ultiLockTimer = Math.max(0, ai.ultiLockTimer - dt*2); if (ai.ultiLockTimer < 0.2) ai.ultiLocked = false; } if (ai.ultiMaxTimer >= 0.6 || ai.ultiLocked) { fireUlt(ai, player, 1.0); ai.xp = 0; ai.ultiCharging = false; ai.ultiMaxTimer = 0; ai.ultiLockTimer = 0; ai.ultiLocked = false; } } if (ad > uat*2.5) { if (ai.ultiChargeProgress >= 0.25) { fireUlt(ai, player, ai.ultiChargeProgress); ai.xp = 0; } ai.ultiCharging = false; ai.ultiChargeProgress = 0; ai.ultiMaxTimer = 0; ai.ultiLockTimer = 0; ai.ultiLocked = false; } }
-  }
-  const um = ai.ultiCharging?0.35:1, bm = ai.bowCharging?0.6:1, sm = um*bm;
-  let tvx = 0, tvy = 0; const di = 0.4 + ai.difficulty*0.6;
-  for (const b of bullets) { const bd = Math.hypot(ai.x-b.x,ai.y-b.y); if (bd < 200 && bd > 0) { const f = 500/(bd*bd)*100*di; tvx += (ai.x-b.x)/bd*f; tvy += (ai.y-b.y)/bd*f; } }
-  if (player.ultiCharging && !player.dead) {
-    const pa = Math.atan2(ai.y-player.y, ai.x-player.x); let pad = Math.abs(player.aimAngle - pa); while (pad>Math.PI)pad=Math.PI*2-pad;
-    if (pad < 0.5 && d < 700) {
-      const cd = pad < 0.25 && d < 400;
-      if (cd && player.ultiChargeProgress > 0.5) { if (ai.bowCharging){ai.bowCharging=false;ai.bowCharge=0;} if (ai.ultiCharging){ai.ultiCharging=false;ai.ultiChargeProgress=0;ai.ultiMaxTimer=0;ai.ultiLockTimer=0;ai.ultiLocked=false;} }
-      ai.dodgeVx=0;ai.dodgeVy=0; const urg = cd?1:(player.ultiChargeProgress>=0.6?0.8:0.4), ds=0.5+ai.difficulty*0.5;
-      const boost = 540 + urg*460*ds, da = player.aimAngle+(Math.random()>0.5?1:-1)*(Math.PI/2+(Math.random()-0.5)*0.3);
-      tvx += Math.cos(da)*boost; tvy += Math.sin(da)*boost;
-      if (cd && player.ultiChargeProgress>0.3) ai.orbitAngle += dt*3;
-      if (!cd && ai.xp>=ai.maxXp && ai.ultiCooldown<=0 && !ai.ultiCharging) {
-        let ownDiff = Math.abs(ai.aimAngle - a); while (ownDiff>Math.PI)ownDiff=Math.PI*2-ownDiff;
-        if (ownDiff < 0.12+0.36/ai.difficulty && Math.random() < dt*4*ai.difficulty) {
-          ai.ultiCharging = true; ai.ultiChargeProgress = 0; ai.ultiMaxTimer = 0; ai.ultiLockTimer = 0; ai.ultiLocked = false;
-        }
-      }
-    }
-  }
-  if (!player.dead) { const od=220+Math.random()*80, hr=ai.hp/ai.maxHp, os=hr<0.3?2.5:hr<0.5?1.8:0.8+ai.difficulty*0.4, ret=hr<0.3?130:hr<0.5?60:0; ai.orbitAngle+=dt*os; const dx=player.x+Math.cos(ai.orbitAngle)*(od+ret)-ai.x, dy=player.y+Math.sin(ai.orbitAngle)*(od+ret)-ai.y, ttd=Math.hypot(dx,dy)||1; tvx+=dx/ttd*400; tvy+=dy/ttd*400; }
-  ai.dodgeTimer-=dt; if (ai.dodgeTimer<=0){ai.dodgeTimer=(0.35-ai.difficulty*0.1)+Math.random()*(0.5-ai.difficulty*0.1);ai.dodgeVx=(Math.random()-0.5)*240;ai.dodgeVy=(Math.random()-0.5)*240;}
-  if (ai.shotTimestamp>0){ai.shotTimestamp-=dt;if(ai.shotTimestamp<=0&&!player.dead){const ddx=player.x-ai.shotPlayerX,ddy=player.y-ai.shotPlayerY,dd=Math.hypot(ddx,ddy);if(dd>10){ai.playerDodgeBiasX+=(ddx-ai.playerDodgeBiasX)*0.12;ai.playerDodgeBiasY+=(ddy-ai.playerDodgeBiasY)*0.12;}}}
-  ai.hitCount=Math.max(0,ai.hitCount-dt*2);ai.missCount=Math.max(0,ai.missCount-dt*2);const ttt=ai.hitCount+ai.missCount;if(ttt>3){const raa=ai.hitCount/ttt;ai.predictionConfidence+=(raa-0.5)*0.15;ai.predictionConfidence=Math.max(0.15,Math.min(1,ai.predictionConfidence));}
-  const mx=BASE_SPEED*sm;ai.vx+=((ai.dodgeVx+tvx)-ai.vx)*5*dt;ai.vy+=((ai.dodgeVy+tvy)-ai.vy)*5*dt;const spd=Math.hypot(ai.vx,ai.vy);if(spd>mx){ai.vx=ai.vx/spd*mx;ai.vy=ai.vy/spd*mx;}
-  ai.x+=ai.vx*dt;ai.y+=ai.vy*dt;ai.x=Math.max(ai.r,Math.min(GW-ai.r,ai.x));ai.y=Math.max(ai.r,Math.min(GH-ai.r,ai.y));
+if (!ai || ai.dead || matchOver || killCam.active || roundPause > 0) return;
+if (ai.ultiCooldown > 0) { ai.ultiCooldown -= dt; if (ai.ultiCooldown <= 0) ai.ultiCooldown = 0; }
+const d = Math.hypot(ai.x - player.x, ai.y - player.y);
+const a = Math.atan2(player.y - ai.y, player.x - ai.x);
+ai.learnTimer += dt;
+if (ai.learnTimer > 0.08 && d < 600 && !player.dead) {
+ai.learnTimer = 0;
+const dx = player.x - ai.prevPlayerX, dy = player.y - ai.prevPlayerY;
+const moved = Math.hypot(dx, dy);
+if (ai.prevPlayerX !== 0 && moved > 8) {
+const pA = Math.atan2(player.y + dy*2.5 + ai.playerDodgeBiasX*0.6 - ai.y, player.x + dx*2.5 + ai.playerDodgeBiasY*0.6 - ai.x);
+let off = pA - a; while (off > Math.PI) off -= Math.PI*2; while (off < -Math.PI) off += Math.PI*2;
+ai.predictedOffset += (off - ai.predictedOffset) * 0.25;
+} else if (ai.prevPlayerX !== 0) { ai.predictedOffset += (0 - ai.predictedOffset) * 0.3; }
+ai.prevPlayerX = player.x; ai.prevPlayerY = player.y;
 }
-
-// ===================== MAIN UPDATE =====================
+let tA = a + (ai.predictedOffset||0) * ai.difficulty * 1.2 * ai.predictionConfidence;
+while (tA > Math.PI) tA -= Math.PI*2; while (tA < -Math.PI) tA += Math.PI*2;
+ai.aimNoise += (Math.random()-0.5)*0.3*dt; ai.aimNoise = Math.max(-0.15,Math.min(0.15,ai.aimNoise*0.95));
+const wobble = ai.aimNoise * Math.max(0, 1.0/ai.difficulty-0.3);
+ai.aimAngle += (tA + wobble - ai.aimAngle) * Math.min(1, 8*ai.difficulty*dt);
+if (ai.arrowCd > 0) { ai.arrowCd -= dt; if (ai.arrowCd <= 0) ai.arrowCd = 0; }
+if (!player.dead && ai.arrowCd <= 0 && !ai.ultiCharging && d < 500) {
+let ad = Math.abs(ai.aimAngle - a); while (ad > Math.PI) ad = Math.PI*2 - ad;
+const fat = 0.12 + 0.46/ai.difficulty;
+if (!ai.bowCharging) { if (ad < fat && Math.random() < dt*3*ai.difficulty) { ai.bowCharging = true; ai.bowCharge = 0; } }
+else { ai.bowCharge = Math.min(1, ai.bowCharge + dt/0.5); const sf = (ai.bowCharge>=0.85)||(ai.bowCharge>=0.5&&Math.random()<dt*2)||(ad>fat*2&&ai.bowCharge>=0.4); if (sf && ai.bowCharge>=0.4) { const aimSn = ai.aimAngle; fireBullet(ai, oppBullets); ai.bowCharge = 0; ai.bowCharging = false; ai.arrowCd = 0.25; ai.shotTimestamp = 0.3; ai.shotPlayerX = player.x; ai.shotPlayerY = player.y; if (!player.dead) { const actA = Math.atan2(player.y-ai.y,player.x-ai.x); let err = actA - aimSn; while (err>Math.PI)err-=Math.PI*2;while(err<-Math.PI)err+=Math.PI*2; if (Math.abs(err)>0.15){ai.missCount++;ai.predictionConfidence=Math.max(0.15,ai.predictionConfidence-0.04);}else{ai.hitCount++;ai.predictionConfidence=Math.min(1,ai.predictionConfidence+0.03);} } } }
+}
+if (!player.dead && ai.ultiCooldown <= 0 && ai.xp >= ai.maxXp) {
+let ad = Math.abs(ai.aimAngle - a); while (ad > Math.PI) ad = Math.PI*2 - ad;
+const udt = 320 + ai.difficulty*80, uat = 0.08 + 0.34/ai.difficulty;
+if (!ai.ultiCharging) { if (d < udt && ad < uat && Math.random() < dt*1.5*ai.difficulty) { ai.ultiCharging = true; ai.ultiChargeProgress = 0; ai.ultiMaxTimer = 0; ai.ultiLockTimer = 0; ai.ultiLocked = false; if (ai.bowCharging) { ai.bowCharging = false; ai.bowCharge = 0; } } }
+else { ai.ultiChargeProgress = Math.min(1, ai.ultiChargeProgress + dt/1.2); if (ai.ultiChargeProgress >= 1.0) { ai.ultiMaxTimer += dt; if (ad < uat*0.6 && !player.dead) { ai.ultiLockTimer += dt; if (ai.ultiLockTimer >= 0.4) ai.ultiLocked = true; } else { ai.ultiLockTimer = Math.max(0, ai.ultiLockTimer - dt*2); if (ai.ultiLockTimer < 0.2) ai.ultiLocked = false; } if (ai.ultiMaxTimer >= 0.6 || ai.ultiLocked) { fireUlt(ai, player, 1.0); ai.xp = 0; ai.ultiCharging = false; ai.ultiMaxTimer = 0; ai.ultiLockTimer = 0; ai.ultiLocked = false; } } if (ad > uat*2.5) { if (ai.ultiChargeProgress >= 0.25) { fireUlt(ai, player, ai.ultiChargeProgress); ai.xp = 0; } ai.ultiCharging = false; ai.ultiChargeProgress = 0; ai.ultiMaxTimer = 0; ai.ultiLockTimer = 0; ai.ultiLocked = false; } }
+}
+const um = ai.ultiCharging?0.35:1, bm = ai.bowCharging?0.6:1, sm = um*bm;
+let tvx = 0, tvy = 0; const di = 0.4 + ai.difficulty*0.6;
+for (const b of bullets) { const bd = Math.hypot(ai.x-b.x,ai.y-b.y); if (bd < 200 && bd > 0) { const f = 500/(bd*bd)*100*di; tvx += (ai.x-b.x)/bd*f; tvy += (ai.y-b.y)/bd*f; } }
+if (player.ultiCharging && !player.dead) {
+const pa = Math.atan2(ai.y-player.y, ai.x-player.x); let pad = Math.abs(player.aimAngle - pa); while (pad>Math.PI)pad=Math.PI*2-pad;
+if (pad < 0.5 && d < 700) {
+const cd = pad < 0.25 && d < 400;
+if (cd && player.ultiChargeProgress > 0.5) { if (ai.bowCharging){ai.bowCharging=false;ai.bowCharge=0;} if (ai.ultiCharging){ai.ultiCharging=false;ai.ultiChargeProgress=0;ai.ultiMaxTimer=0;ai.ultiLockTimer=0;ai.ultiLocked=false;} }
+ai.dodgeVx=0;ai.dodgeVy=0; const urg = cd?1:(player.ultiChargeProgress>=0.6?0.8:0.4), ds=0.5+ai.difficulty*0.5;
+const boost = 540 + urg*460*ds, da = player.aimAngle+(Math.random()>0.5?1:-1)*(Math.PI/2+(Math.random()-0.5)*0.3);
+tvx += Math.cos(da)*boost; tvy += Math.sin(da)*boost;
+if (cd && player.ultiChargeProgress>0.3) ai.orbitAngle += dt*3;
+if (!cd && ai.xp>=ai.maxXp && ai.ultiCooldown<=0 && !ai.ultiCharging) {
+let ownDiff = Math.abs(ai.aimAngle - a); while (ownDiff>Math.PI)ownDiff=Math.PI*2-ownDiff;
+if (ownDiff < 0.12+0.36/ai.difficulty && Math.random() < dt*4*ai.difficulty) {
+ai.ultiCharging = true; ai.ultiChargeProgress = 0; ai.ultiMaxTimer = 0; ai.ultiLockTimer = 0; ai.ultiLocked = false;
+}
+}
+}
+}
+if (!player.dead) { const od=220+Math.random()*80, hr=ai.hp/ai.maxHp, os=hr<0.3?2.5:hr<0.5?1.8:0.8+ai.difficulty*0.4, ret=hr<0.3?130:hr<0.5?60:0; ai.orbitAngle+=dt*os; const dx=player.x+Math.cos(ai.orbitAngle)*(od+ret)-ai.x, dy=player.y+Math.sin(ai.orbitAngle)*(od+ret)-ai.y, ttd=Math.hypot(dx,dy)||1; tvx+=dx/ttd*400; tvy+=dy/ttd*400; }
+ai.dodgeTimer-=dt; if (ai.dodgeTimer<=0){ai.dodgeTimer=(0.35-ai.difficulty*0.1)+Math.random()*(0.5-ai.difficulty*0.1);ai.dodgeVx=(Math.random()-0.5)*240;ai.dodgeVy=(Math.random()-0.5)*240;}
+if (ai.shotTimestamp>0){ai.shotTimestamp-=dt;if(ai.shotTimestamp<=0&&!player.dead){const ddx=player.x-ai.shotPlayerX,ddy=player.y-ai.shotPlayerY,dd=Math.hypot(ddx,ddy);if(dd>10){ai.playerDodgeBiasX+=(ddx-ai.playerDodgeBiasX)*0.12;ai.playerDodgeBiasY+=(ddy-ai.playerDodgeBiasY)*0.12;}}}
+ai.hitCount=Math.max(0,ai.hitCount-dt*2);ai.missCount=Math.max(0,ai.missCount-dt*2);const ttt=ai.hitCount+ai.missCount;if(ttt>3){const raa=ai.hitCount/ttt;ai.predictionConfidence+=(raa-0.5)*0.15;ai.predictionConfidence=Math.max(0.15,Math.min(1,ai.predictionConfidence));}
+const mx=BASE_SPEED*sm;ai.vx+=((ai.dodgeVx+tvx)-ai.vx)*5*dt;ai.vy+=((ai.dodgeVy+tvy)-ai.vy)*5*dt;const spd=Math.hypot(ai.vx,ai.vy);if(spd>mx){ai.vx=ai.vx/spd*mx;ai.vy=ai.vy/spd*mx;}
+ai.x+=ai.vx*dt;ai.y+=ai.vy*dt;ai.x=Math.max(ai.r,Math.min(GW-ai.r,ai.x));ai.y=Math.max(ai.r,Math.min(GH-ai.r,ai.y));
+}
 function update(dt) {
-  if (!gameMode || matchOver) return;
-  if (gameMode === 'ai') {
-    updatePlayerInput(player, dt); updateAI(dt);
-    let ax = 0, ay = 0;
-    if (touchState.moveId !== null) {
-      ax = touchState.moveX; ay = touchState.moveY;
-      const len = Math.hypot(ax, ay); if (len > 1) { ax /= len; ay /= len; }
-    }
-    updatePlayerMovement(player, dt, ax, ay);
-  }
-  if (gameMode === 'online') {
-    if (remoteStateTarget && remoteReady) {
-      const lerpFactor = 15;
-      opponent.x += (remoteStateTarget.x - opponent.x) * Math.min(1, lerpFactor * dt);
-      opponent.y += (remoteStateTarget.y - opponent.y) * Math.min(1, lerpFactor * dt);
-    } else if (remoteReady) {
-      opponent.x += remoteStateVx * dt; opponent.y += remoteStateVy * dt;
-      opponent.x = Math.max(opponent.r, Math.min(GW-opponent.r, opponent.x));
-      opponent.y = Math.max(opponent.r, Math.min(GH-opponent.r, opponent.y));
-    }
-    updatePlayerInput(player, dt);
-    let ax = 0, ay = 0;
-    if (touchState.moveId !== null) { ax = touchState.moveX; ay = touchState.moveY; const len = Math.hypot(ax,ay); if (len > 1) { ax/=len; ay/=len; } }
-    updatePlayerMovement(player, dt, ax, ay);
-    sendTimer += dt;
-    if (sendTimer >= SEND_INTERVAL) { sendTimer = 0; sendState(); }
-  }
-  gridOffsetX = 0; gridOffsetY = 0;
-  if (player && !player.dead && !matchOver && !killCam.active && roundPause <= 0) {
-    const spd = Math.hypot(player.vx, player.vy), moving = spd > 8 || player.dashing;
-    if (moving) { player.stillTimer = Math.max(0, player.stillTimer - dt*2); }
-    else { player.stillTimer += dt; if (player.stillTimer > 3.0) { player.hp -= player.maxHp*0.06*dt; if (player.hp <= 0) { player.hp = 0; player.dead = true; if (gameMode==='ai') { startKillCam(ai, player.x, player.y); spawnShatter(player.x, player.y, COLORS[player.colorIdx].hex, player.r); snd(120,0.5,'sawtooth',0.12); } else if (gameMode==='online') { startKillCam(opponent, player.x, player.y); spawnShatter(player.x, player.y, COLORS[player.colorIdx].hex, player.r); snd(120,0.5,'sawtooth',0.12); if (conn && conn.open) { conn.send(JSON.stringify({type:'gameOver',winner:isHost?'guest':'host'})); } } } } }
-  }
-  for (const arr of [bullets, oppBullets]) { for (let i = arr.length-1; i >= 0; i--) { arr[i].timer -= dt; if (arr[i].timer <= 0) arr.splice(i, 1); } }
-  for (const p of [player, opponent, ai]) { if (p && p.ultiBeam) { p.ultiBeam.timer -= dt; if (p.ultiBeam.timer <= 0) p.ultiBeam = null; } }
-  if (killCam.active) {
-    killCam.timer -= dt; const intensity = killCam.timer/killCam.maxTimer;
-    killCam.shakeX = (Math.random()-0.5)*intensity*40; killCam.shakeY = (Math.random()-0.5)*intensity*40;
-    killCam.flashAlpha = Math.max(0, intensity*0.6-0.2);
-    if (killCam.timer <= 0) {
-      killCam.active = false;
-      // AI and online both best of 3 rounds
-      if (gameMode === 'ai' || gameMode === 'online') {
-        if (killCam.winner === 'player') roundWins.p1++; else roundWins.p2++;
-        if (roundWins.p1 >= ROUNDS_TO_WIN || roundWins.p2 >= ROUNDS_TO_WIN) {
-          matchOver = true;
-          const won = roundWins.p1 >= ROUNDS_TO_WIN;
-          const oppName = gameMode==='ai'?'AI':(remoteUser?remoteUser.name:'对手');
-          recordMatch(gameMode, oppName, won, roundWins.p1, roundWins.p2);
-          if (gameMode === 'ai') {
-            showResultPanel(won, roundWins.p1, roundWins.p2);
-          } else {
-            showOnlineResult(won, roundWins.p1, roundWins.p2);
-          }
-          if (window._updatePending) setTimeout(() => { window.open(window._updatePending, '_blank'); }, 3000);
-        } else { roundPause = 1.5; }
-      } else { gameOver = true; }
-    }
-  }
-  if (roundPause > 0) { roundPause -= dt; if (roundPause <= 0) resetRound(); }
-  if (screenShake > 0) screenShake = Math.max(0, screenShake - dt*30);
-  for (let i = particles.length-1; i >= 0; i--) {
-    const p = particles[i]; p.x += p.vx*dt; p.y += p.vy*dt; p.life -= dt;
-    if (p.type==='shatter'){p.vx*=0.92;p.vy*=0.92;p.rot+=p.rotSpd*dt;}
-    else{p.vx*=0.94;p.vy*=0.94;}
-    if (p.life <= 0) particles.splice(i, 1);
-  }
-  for (let i = dmgNumbers.length-1; i >= 0; i--) { dmgNumbers[i].life -= dt; if (dmgNumbers[i].life <= 0) dmgNumbers.splice(i, 1); }
-  updateHUD();
-  // ULT button visual state
-  if (player && !matchOver) {
-    if (ultPrimed) {
-      btnUlt.classList.add('primed'); btnUlt.classList.remove('ready','dim');
-      btnFire.classList.add('ult-mode');
-    } else if (player.xp >= player.maxXp && player.ultiCooldown <= 0 && !player.ultiCharging) {
-      btnUlt.classList.add('ready'); btnUlt.classList.remove('primed','dim');
-    } else {
-      btnUlt.classList.add('dim'); btnUlt.classList.remove('ready','primed');
-    }
-  } else {
-    btnUlt.classList.add('dim'); btnUlt.classList.remove('ready','primed');
-  }
+if (!gameMode || matchOver) return;
+if (gameMode === 'ai') {
+updatePlayerInput(player, dt); updateAI(dt);
+let ax = 0, ay = 0;
+if (touchState.moveId !== null) {
+ax = touchState.moveX; ay = touchState.moveY;
+const len = Math.hypot(ax, ay); if (len > 1) { ax /= len; ay /= len; }
+}
+updatePlayerMovement(player, dt, ax, ay);
+}
+if (gameMode === 'online') {
+if (remoteStateTarget && remoteReady) {
+const lerpFactor = 15;
+opponent.x += (remoteStateTarget.x - opponent.x) * Math.min(1, lerpFactor * dt);
+opponent.y += (remoteStateTarget.y - opponent.y) * Math.min(1, lerpFactor * dt);
+} else if (remoteReady) {
+opponent.x += remoteStateVx * dt; opponent.y += remoteStateVy * dt;
+opponent.x = Math.max(opponent.r, Math.min(GW-opponent.r, opponent.x));
+opponent.y = Math.max(opponent.r, Math.min(GH-opponent.r, opponent.y));
+}
+updatePlayerInput(player, dt);
+let ax = 0, ay = 0;
+if (touchState.moveId !== null) { ax = touchState.moveX; ay = touchState.moveY; const len = Math.hypot(ax,ay); if (len > 1) { ax/=len; ay/=len; } }
+updatePlayerMovement(player, dt, ax, ay);
+sendTimer += dt;
+if (sendTimer >= SEND_INTERVAL) { sendTimer = 0; sendState(); }
+}
+gridOffsetX = 0; gridOffsetY = 0;
+if (player && !player.dead && !matchOver && !killCam.active && roundPause <= 0) {
+const spd = Math.hypot(player.vx, player.vy), moving = spd > 8 || player.dashing;
+if (moving) { player.stillTimer = Math.max(0, player.stillTimer - dt*2); }
+else { player.stillTimer += dt; if (player.stillTimer > 3.0) { player.hp -= player.maxHp*0.06*dt; if (player.hp <= 0) { player.hp = 0; player.dead = true; if (gameMode==='ai') { startKillCam(ai, player.x, player.y); spawnShatter(player.x, player.y, COLORS[player.colorIdx].hex, player.r); snd(120,0.5,'sawtooth',0.12); } else if (gameMode==='online') { startKillCam(opponent, player.x, player.y); spawnShatter(player.x, player.y, COLORS[player.colorIdx].hex, player.r); snd(120,0.5,'sawtooth',0.12); if (conn && conn.open) { conn.send(JSON.stringify({type:'gameOver',winner:isHost?'guest':'host'})); } } } } }
+}
+for (const arr of [bullets, oppBullets]) { for (let i = arr.length-1; i >= 0; i--) { arr[i].timer -= dt; if (arr[i].timer <= 0) arr.splice(i, 1); } }
+for (const p of [player, opponent, ai]) { if (p && p.ultiBeam) { p.ultiBeam.timer -= dt; if (p.ultiBeam.timer <= 0) p.ultiBeam = null; } }
+if (killCam.active) {
+killCam.timer -= dt; const intensity = killCam.timer/killCam.maxTimer;
+killCam.shakeX = (Math.random()-0.5)*intensity*40; killCam.shakeY = (Math.random()-0.5)*intensity*40;
+killCam.flashAlpha = Math.max(0, intensity*0.6-0.2);
+if (killCam.timer <= 0) {
+killCam.active = false;
+if (gameMode === 'ai' || gameMode === 'online') {
+if (killCam.winner === 'player') roundWins.p1++; else roundWins.p2++;
+if (roundWins.p1 >= ROUNDS_TO_WIN || roundWins.p2 >= ROUNDS_TO_WIN) {
+matchOver = true;
+const won = roundWins.p1 >= ROUNDS_TO_WIN;
+const oppName = gameMode==='ai'?'AI':(remoteUser?remoteUser.name:'对手');
+recordMatch(gameMode, oppName, won, roundWins.p1, roundWins.p2);
+if (gameMode === 'ai') {
+showResultPanel(won, roundWins.p1, roundWins.p2);
+} else {
+showOnlineResult(won, roundWins.p1, roundWins.p2);
+}
+if (window._updatePending) setTimeout(() => { window.open(window._updatePending, '_blank'); }, 3000);
+} else { roundPause = 1.5; }
+} else { gameOver = true; }
+}
+}
+if (roundPause > 0) { roundPause -= dt; if (roundPause <= 0) resetRound(); }
+if (screenShake > 0) screenShake = Math.max(0, screenShake - dt*30);
+for (let i = particles.length-1; i >= 0; i--) {
+const p = particles[i]; p.x += p.vx*dt; p.y += p.vy*dt; p.life -= dt;
+if (p.type==='shatter'){p.vx*=0.92;p.vy*=0.92;p.rot+=p.rotSpd*dt;}
+else{p.vx*=0.94;p.vy*=0.94;}
+if (p.life <= 0) particles.splice(i, 1);
+}
+for (let i = dmgNumbers.length-1; i >= 0; i--) { dmgNumbers[i].life -= dt; if (dmgNumbers[i].life <= 0) dmgNumbers.splice(i, 1); }
+updateHUD();
+if (player && !matchOver) {
+if (ultPrimed) {
+btnUlt.classList.add('primed'); btnUlt.classList.remove('ready','dim');
+btnFire.classList.add('ult-mode');
+} else if (player.xp >= player.maxXp && player.ultiCooldown <= 0 && !player.ultiCharging) {
+btnUlt.classList.add('ready'); btnUlt.classList.remove('primed','dim');
+} else {
+btnUlt.classList.add('dim'); btnUlt.classList.remove('ready','primed');
+}
+} else {
+btnUlt.classList.add('dim'); btnUlt.classList.remove('ready','primed');
+}
 }
 function updateHUD() {
-  if (!gameMode) return;
-  const p = player, o = opponent;
-
-  document.getElementById('hpbar').style.width = (p.hp/p.maxHp*100)+'%';
-  document.getElementById('hpbar').style.background = p.hp<30?'#c97d8a':'#999';
-  document.getElementById('aihpbar').style.width = (o.hp/o.maxHp*100)+'%';
-  document.getElementById('aihpbar').style.background = o.hp<30?'#c97d8a':'#888';
-
-  document.getElementById('xpbar').style.width = (p.xp/p.maxXp*100)+'%';
-  document.getElementById('xpbar').style.background = p.xp>=p.maxXp?'#d4a574':'#666';
-  document.getElementById('xplabel').textContent = '经验 '+p.xp+'/'+p.maxXp+(p.xp>=p.maxXp?' f(x)=max':'');
-  document.getElementById('aixpbar').style.width = (o.xp/o.maxXp*100)+'%';
-  document.getElementById('aixpbar').style.background = o.xp>=o.maxXp?'#d4a574':'#555';
-  document.getElementById('aixplabel').textContent = '经验 '+o.xp+'/'+o.maxXp;
-
-  if(p.arrowCd>0){document.getElementById('bowbar').style.width=(p.arrowCd/0.18*100)+'%';document.getElementById('bowbar').style.background='#555';document.getElementById('bowlabel').textContent='y=ax 冷却';}
-  else if(p.bowCharging){document.getElementById('bowbar').style.width=(p.bowCharge*100)+'%';document.getElementById('bowbar').style.background=p.bowCharge>=1?'#c9c090':'#888';document.getElementById('bowlabel').textContent=p.bowCharge>=1?'y=kx 满弦':'y=kx... '+Math.floor(p.bowCharge*100)+'%';}
-  else{document.getElementById('bowbar').style.width='0%';document.getElementById('bowbar').style.background='#666';document.getElementById('bowlabel').textContent='y=kx 蓄力';}
-
-  if(o.arrowCd>0){document.getElementById('aibowbar').style.width=(o.arrowCd/0.25*100)+'%';document.getElementById('aibowbar').style.background='#444';document.getElementById('aibowlabel').textContent=(gameMode==='ai'?'AI ':'')+'y=ax 冷却';}
-  else if(o.bowCharging){document.getElementById('aibowbar').style.width=(o.bowCharge*100)+'%';document.getElementById('aibowbar').style.background=o.bowCharge>=1?'#c9c090':'#777';document.getElementById('aibowlabel').textContent=o.bowCharge>=1?'y=kx 满弦':'y=kx... '+Math.floor(o.bowCharge*100)+'%';}
-  else{document.getElementById('aibowbar').style.width='0%';document.getElementById('aibowbar').style.background='#555';document.getElementById('aibowlabel').textContent=(gameMode==='ai'?'AI ':'')+'y=kx';}
-
-  if(p.ultiCooldown>0){document.getElementById('ultbar').style.width=(p.ultiCooldown/7*100)+'%';document.getElementById('ultbar').style.background='#555';document.getElementById('ultlabel').textContent='sin(x) 冷却 '+p.ultiCooldown.toFixed(1)+'s';}
-  else if(p.xp<p.maxXp){document.getElementById('ultbar').style.width=(p.xp/p.maxXp*100)+'%';document.getElementById('ultbar').style.background='#7a6a5a';document.getElementById('ultlabel').textContent='sin(x) 需经验 '+p.xp+'/'+p.maxXp;}
-  else if(p.ultiCharging){document.getElementById('ultbar').style.width=(p.ultiChargeProgress*100)+'%';document.getElementById('ultbar').style.background=p.ultiChargeProgress>=1?'#d4a574':'#9a8a6a';if(p.ultiLocked){document.getElementById('ultlabel').textContent='锁定向!';}else if(p.ultiChargeProgress>=1){document.getElementById('ultlabel').textContent='蓄力完成 '+p.ultiMaxTimer.toFixed(1)+'s / 0.6s';}else{document.getElementById('ultlabel').textContent='sin(x)... '+Math.floor(p.ultiChargeProgress*100)+'%';}}
-  else{document.getElementById('ultbar').style.width='100%';document.getElementById('ultbar').style.background='#d4a574';document.getElementById('ultlabel').textContent='sin(x) 就绪';}
-
-  if(o.ultiCooldown>0){document.getElementById('aiultbar').style.width=(o.ultiCooldown/7*100)+'%';document.getElementById('aiultbar').style.background='#444';document.getElementById('aiultlabel').textContent=(gameMode==='ai'?'AI ':'')+'sin(x) 冷却 '+o.ultiCooldown.toFixed(1)+'s';}
-  else if(o.xp<o.maxXp){document.getElementById('aiultbar').style.width=(o.xp/o.maxXp*100)+'%';document.getElementById('aiultbar').style.background='#6a5a4a';document.getElementById('aiultlabel').textContent=(gameMode==='ai'?'AI ':'')+'sin(x) 需经验 '+o.xp+'/'+o.maxXp;}
-  else if(o.ultiCharging){document.getElementById('aiultbar').style.width=(o.ultiChargeProgress*100)+'%';document.getElementById('aiultbar').style.background=o.ultiChargeProgress>=1?'#d4a574':'#8a7a5a';if(o.ultiLocked){document.getElementById('aiultlabel').textContent=(gameMode==='ai'?'AI ':'')+'锁定向!';}else if(o.ultiChargeProgress>=1){document.getElementById('aiultlabel').textContent='蓄力完成';}else{document.getElementById('aiultlabel').textContent=(gameMode==='ai'?'AI ':'')+'sin(x)...';}}
-  else{document.getElementById('aiultbar').style.width='100%';document.getElementById('aiultbar').style.background='#d4a574';document.getElementById('aiultlabel').textContent=(gameMode==='ai'?'AI ':'')+'sin(x) 就绪';}
-
-  const ri = document.getElementById('round-indicator');
-  if(roundWins.p1===0&&roundWins.p2===0)ri.textContent='B 0 - 0';
-  else ri.innerHTML='<span style="color:#ddd">'+roundWins.p1+'</span> - <span style="color:#aaa">'+roundWins.p2+'</span>';
-  if(roundPause>0)ri.textContent='Round '+(roundWins.p1+roundWins.p2+1);
+if (!gameMode) return;
+const p = player, o = opponent;
+document.getElementById('hpbar').style.width = (p.hp/p.maxHp*100)+'%';
+document.getElementById('hpbar').style.background = p.hp<30?'#c97d8a':'#999';
+document.getElementById('aihpbar').style.width = (o.hp/o.maxHp*100)+'%';
+document.getElementById('aihpbar').style.background = o.hp<30?'#c97d8a':'#888';
+document.getElementById('xpbar').style.width = (p.xp/p.maxXp*100)+'%';
+document.getElementById('xpbar').style.background = p.xp>=p.maxXp?'#d4a574':'#666';
+document.getElementById('xplabel').textContent = '经验 '+p.xp+'/'+p.maxXp+(p.xp>=p.maxXp?' f(x)=max':'');
+document.getElementById('aixpbar').style.width = (o.xp/o.maxXp*100)+'%';
+document.getElementById('aixpbar').style.background = o.xp>=o.maxXp?'#d4a574':'#555';
+document.getElementById('aixplabel').textContent = '经验 '+o.xp+'/'+o.maxXp;
+if(p.arrowCd>0){document.getElementById('bowbar').style.width=(p.arrowCd/0.18*100)+'%';document.getElementById('bowbar').style.background='#555';document.getElementById('bowlabel').textContent='y=ax 冷却';}
+else if(p.bowCharging){document.getElementById('bowbar').style.width=(p.bowCharge*100)+'%';document.getElementById('bowbar').style.background=p.bowCharge>=1?'#c9c090':'#888';document.getElementById('bowlabel').textContent=p.bowCharge>=1?'y=kx 满弦':'y=kx... '+Math.floor(p.bowCharge*100)+'%';}
+else{document.getElementById('bowbar').style.width='0%';document.getElementById('bowbar').style.background='#666';document.getElementById('bowlabel').textContent='y=kx 蓄力';}
+if(o.arrowCd>0){document.getElementById('aibowbar').style.width=(o.arrowCd/0.25*100)+'%';document.getElementById('aibowbar').style.background='#444';document.getElementById('aibowlabel').textContent=(gameMode==='ai'?'AI ':'')+'y=ax 冷却';}
+else if(o.bowCharging){document.getElementById('aibowbar').style.width=(o.bowCharge*100)+'%';document.getElementById('aibowbar').style.background=o.bowCharge>=1?'#c9c090':'#777';document.getElementById('aibowlabel').textContent=o.bowCharge>=1?'y=kx 满弦':'y=kx... '+Math.floor(o.bowCharge*100)+'%';}
+else{document.getElementById('aibowbar').style.width='0%';document.getElementById('aibowbar').style.background='#555';document.getElementById('aibowlabel').textContent=(gameMode==='ai'?'AI ':'')+'y=kx';}
+if(p.ultiCooldown>0){document.getElementById('ultbar').style.width=(p.ultiCooldown/7*100)+'%';document.getElementById('ultbar').style.background='#555';document.getElementById('ultlabel').textContent='sin(x) 冷却 '+p.ultiCooldown.toFixed(1)+'s';}
+else if(p.xp<p.maxXp){document.getElementById('ultbar').style.width=(p.xp/p.maxXp*100)+'%';document.getElementById('ultbar').style.background='#7a6a5a';document.getElementById('ultlabel').textContent='sin(x) 需经验 '+p.xp+'/'+p.maxXp;}
+else if(p.ultiCharging){document.getElementById('ultbar').style.width=(p.ultiChargeProgress*100)+'%';document.getElementById('ultbar').style.background=p.ultiChargeProgress>=1?'#d4a574':'#9a8a6a';if(p.ultiLocked){document.getElementById('ultlabel').textContent='锁定向!';}else if(p.ultiChargeProgress>=1){document.getElementById('ultlabel').textContent='蓄力完成 '+p.ultiMaxTimer.toFixed(1)+'s / 0.6s';}else{document.getElementById('ultlabel').textContent='sin(x)... '+Math.floor(p.ultiChargeProgress*100)+'%';}}
+else{document.getElementById('ultbar').style.width='100%';document.getElementById('ultbar').style.background='#d4a574';document.getElementById('ultlabel').textContent='sin(x) 就绪';}
+if(o.ultiCooldown>0){document.getElementById('aiultbar').style.width=(o.ultiCooldown/7*100)+'%';document.getElementById('aiultbar').style.background='#444';document.getElementById('aiultlabel').textContent=(gameMode==='ai'?'AI ':'')+'sin(x) 冷却 '+o.ultiCooldown.toFixed(1)+'s';}
+else if(o.xp<o.maxXp){document.getElementById('aiultbar').style.width=(o.xp/o.maxXp*100)+'%';document.getElementById('aiultbar').style.background='#6a5a4a';document.getElementById('aiultlabel').textContent=(gameMode==='ai'?'AI ':'')+'sin(x) 需经验 '+o.xp+'/'+o.maxXp;}
+else if(o.ultiCharging){document.getElementById('aiultbar').style.width=(o.ultiChargeProgress*100)+'%';document.getElementById('aiultbar').style.background=o.ultiChargeProgress>=1?'#d4a574':'#8a7a5a';if(o.ultiLocked){document.getElementById('aiultlabel').textContent=(gameMode==='ai'?'AI ':'')+'锁定向!';}else if(o.ultiChargeProgress>=1){document.getElementById('aiultlabel').textContent='蓄力完成';}else{document.getElementById('aiultlabel').textContent=(gameMode==='ai'?'AI ':'')+'sin(x)...';}}
+else{document.getElementById('aiultbar').style.width='100%';document.getElementById('aiultbar').style.background='#d4a574';document.getElementById('aiultlabel').textContent=(gameMode==='ai'?'AI ':'')+'sin(x) 就绪';}
+const ri = document.getElementById('round-indicator');
+if(roundWins.p1===0&&roundWins.p2===0)ri.textContent='B 0 - 0';
+else ri.innerHTML='<span style="color:#ddd">'+roundWins.p1+'</span> - <span style="color:#aaa">'+roundWins.p2+'</span>';
+if(roundPause>0)ri.textContent='Round '+(roundWins.p1+roundWins.p2+1);
 }
-
-// ===================== RENDER =====================
 function drawGrid() {
-  ctx.strokeStyle='rgba(30,35,50,0.4)';ctx.lineWidth=0.5;
-  for(let x=gridOffsetX;x<GW;x+=gridSize){ctx.beginPath();ctx.moveTo(Math.round(x)+0.5,0);ctx.lineTo(Math.round(x)+0.5,GH);ctx.stroke();}
-  for(let y=gridOffsetY;y<GH;y+=gridSize){ctx.beginPath();ctx.moveTo(0,Math.round(y)+0.5);ctx.lineTo(GW,Math.round(y)+0.5);ctx.stroke();}
-  ctx.strokeStyle='rgba(50,60,80,0.5)';ctx.lineWidth=0.8;
-  const cx=Math.round(GW/2/gridSize)*gridSize+gridOffsetX,cy=Math.round(GH/2/gridSize)*gridSize+gridOffsetY;
-  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,GH);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(GW,cy);ctx.stroke();
+ctx.strokeStyle='rgba(30,35,50,0.4)';ctx.lineWidth=0.5;
+for(let x=gridOffsetX;x<GW;x+=gridSize){ctx.beginPath();ctx.moveTo(Math.round(x)+0.5,0);ctx.lineTo(Math.round(x)+0.5,GH);ctx.stroke();}
+for(let y=gridOffsetY;y<GH;y+=gridSize){ctx.beginPath();ctx.moveTo(0,Math.round(y)+0.5);ctx.lineTo(GW,Math.round(y)+0.5);ctx.stroke();}
+ctx.strokeStyle='rgba(50,60,80,0.5)';ctx.lineWidth=0.8;
+const cx=Math.round(GW/2/gridSize)*gridSize+gridOffsetX,cy=Math.round(GH/2/gridSize)*gridSize+gridOffsetY;
+ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,GH);ctx.stroke();
+ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(GW,cy);ctx.stroke();
 }
 function drawSquare(x,y,r,angle,color,cp,ic,bc,bch) {
-  ctx.save();ctx.translate(x,y);ctx.rotate(angle+Math.PI/4);
-  const hex=color,rc=parseInt(hex.slice(1,3),16),gc=parseInt(hex.slice(3,5),16),bc_=parseInt(hex.slice(5,7),16);
-  ctx.fillStyle='rgba('+rc+','+gc+','+bc_+',0.08)';const hs=r*0.85;ctx.fillRect(-hs,-hs,hs*2,hs*2);
-  ctx.strokeStyle='rgba('+rc+','+gc+','+bc_+',0.9)';ctx.lineWidth=1.5;ctx.strokeRect(-hs,-hs,hs*2,hs*2);
-  ctx.fillStyle='rgba('+rc+','+gc+','+bc_+',0.6)';ctx.beginPath();ctx.arc(0,0,2.5,0,Math.PI*2);ctx.fill();
-  const ds=hs*0.5;ctx.strokeStyle='rgba('+rc+','+gc+','+bc_+',0.25)';ctx.lineWidth=0.7;
-  ctx.beginPath();ctx.moveTo(-ds,-ds);ctx.lineTo(ds,ds);ctx.stroke();ctx.beginPath();ctx.moveTo(ds,-ds);ctx.lineTo(-ds,ds);ctx.stroke();
-  if(ic&&cp>0){ctx.strokeStyle='rgba('+rc+','+gc+','+bc_+','+(0.3+cp*0.5)+')';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.beginPath();ctx.arc(0,0,r+6,-Math.PI/2,-Math.PI/2+Math.PI*2*cp);ctx.stroke();ctx.setLineDash([]);}
-  if(bch&&bc>0&&!ic){ctx.strokeStyle='rgba('+rc+','+gc+','+bc_+','+(0.2+bc*0.5)+')';ctx.lineWidth=1.2;ctx.setLineDash([3,4]);ctx.beginPath();ctx.arc(0,0,r+4,-Math.PI/2,-Math.PI/2+Math.PI*2*bc);ctx.stroke();ctx.setLineDash([]);}
-  ctx.restore();
+ctx.save();ctx.translate(x,y);ctx.rotate(angle+Math.PI/4);
+const hex=color,rc=parseInt(hex.slice(1,3),16),gc=parseInt(hex.slice(3,5),16),bc_=parseInt(hex.slice(5,7),16);
+ctx.fillStyle='rgba('+rc+','+gc+','+bc_+',0.08)';const hs=r*0.85;ctx.fillRect(-hs,-hs,hs*2,hs*2);
+ctx.strokeStyle='rgba('+rc+','+gc+','+bc_+',0.9)';ctx.lineWidth=1.5;ctx.strokeRect(-hs,-hs,hs*2,hs*2);
+ctx.fillStyle='rgba('+rc+','+gc+','+bc_+',0.6)';ctx.beginPath();ctx.arc(0,0,2.5,0,Math.PI*2);ctx.fill();
+const ds=hs*0.5;ctx.strokeStyle='rgba('+rc+','+gc+','+bc_+',0.25)';ctx.lineWidth=0.7;
+ctx.beginPath();ctx.moveTo(-ds,-ds);ctx.lineTo(ds,ds);ctx.stroke();ctx.beginPath();ctx.moveTo(ds,-ds);ctx.lineTo(-ds,ds);ctx.stroke();
+if(ic&&cp>0){ctx.strokeStyle='rgba('+rc+','+gc+','+bc_+','+(0.3+cp*0.5)+')';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.beginPath();ctx.arc(0,0,r+6,-Math.PI/2,-Math.PI/2+Math.PI*2*cp);ctx.stroke();ctx.setLineDash([]);}
+if(bch&&bc>0&&!ic){ctx.strokeStyle='rgba('+rc+','+gc+','+bc_+','+(0.2+bc*0.5)+')';ctx.lineWidth=1.2;ctx.setLineDash([3,4]);ctx.beginPath();ctx.arc(0,0,r+4,-Math.PI/2,-Math.PI/2+Math.PI*2*bc);ctx.stroke();ctx.setLineDash([]);}
+ctx.restore();
 }
 function drawUltBeam(beam) {
-  if(!beam||beam.timer<=0)return;const a=beam.timer/beam.maxTimer,hex=beam.color,r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16),cl=beam.chargeLevel||0.5;
-  const dx=beam.x2-beam.x1,dy=beam.y2-beam.y1,dist=Math.hypot(dx,dy);if(dist<1)return;const px=-dy/dist,py=dx/dist,freq=2+cl*5,amp=8+cl*16;
-  [[6,a*0.12],[4,a*0.25],[1.5,a*0.7]].forEach(ls=>{ctx.strokeStyle='rgba('+r+','+g+','+b+','+ls[1]+')';ctx.lineWidth=ls[0];ctx.setLineDash([]);ctx.beginPath();const st=Math.floor(dist/4);for(let i=0;i<=st;i++){const t=i/st,en=Math.sin(t*Math.PI),off=Math.sin(t*Math.PI*2*freq)*amp*en;if(i===0)ctx.moveTo(beam.x1+dx*t+px*off,beam.y1+dy*t+py*off);else ctx.lineTo(beam.x1+dx*t+px*off,beam.y1+dy*t+py*off);}ctx.stroke();});
-  ctx.strokeStyle='rgba('+Math.min(255,r+40)+','+Math.min(255,g+40)+','+Math.min(255,b+40)+','+(a*0.9)+')';ctx.lineWidth=1;ctx.beginPath();const sst=Math.floor(dist/4);for(let i=0;i<=sst;i++){const t=i/sst,en=Math.sin(t*Math.PI),off=Math.sin(t*Math.PI*2*freq)*amp*en;if(i===0)ctx.moveTo(beam.x1+dx*t+px*off,beam.y1+dy*t+py*off);else ctx.lineTo(beam.x1+dx*t+px*off,beam.y1+dy*t+py*off);}ctx.stroke();
+if(!beam||beam.timer<=0)return;const a=beam.timer/beam.maxTimer,hex=beam.color,r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16),cl=beam.chargeLevel||0.5;
+const dx=beam.x2-beam.x1,dy=beam.y2-beam.y1,dist=Math.hypot(dx,dy);if(dist<1)return;const px=-dy/dist,py=dx/dist,freq=2+cl*5,amp=8+cl*16;
+[[6,a*0.12],[4,a*0.25],[1.5,a*0.7]].forEach(ls=>{ctx.strokeStyle='rgba('+r+','+g+','+b+','+ls[1]+')';ctx.lineWidth=ls[0];ctx.setLineDash([]);ctx.beginPath();const st=Math.floor(dist/4);for(let i=0;i<=st;i++){const t=i/st,en=Math.sin(t*Math.PI),off=Math.sin(t*Math.PI*2*freq)*amp*en;if(i===0)ctx.moveTo(beam.x1+dx*t+px*off,beam.y1+dy*t+py*off);else ctx.lineTo(beam.x1+dx*t+px*off,beam.y1+dy*t+py*off);}ctx.stroke();});
+ctx.strokeStyle='rgba('+Math.min(255,r+40)+','+Math.min(255,g+40)+','+Math.min(255,b+40)+','+(a*0.9)+')';ctx.lineWidth=1;ctx.beginPath();const sst=Math.floor(dist/4);for(let i=0;i<=sst;i++){const t=i/sst,en=Math.sin(t*Math.PI),off=Math.sin(t*Math.PI*2*freq)*amp*en;if(i===0)ctx.moveTo(beam.x1+dx*t+px*off,beam.y1+dy*t+py*off);else ctx.lineTo(beam.x1+dx*t+px*off,beam.y1+dy*t+py*off);}ctx.stroke();
 }
 function drawBullet(b) {
-  const progress=1-Math.max(0,b.timer/(b.charge>0?0.08+b.charge*0.15:0.08)),alpha=Math.max(0,b.timer/(b.charge>0?0.08+b.charge*0.15:0.08));
-  const hex=b.color,rc=parseInt(hex.slice(1,3),16),gc=parseInt(hex.slice(3,5),16),bc_=parseInt(hex.slice(5,7),16),charge=b.charge||0;
-  const cx2=b.x1+(b.x2-b.x1)*Math.min(1,progress*1.3),cy2=b.y1+(b.y2-b.y1)*Math.min(1,progress*1.3);
-  const flashAlpha=alpha*(1-progress)*0.5;
-  if(flashAlpha>0.01){const grad=ctx.createRadialGradient(b.x1,b.y1,0,b.x1,b.y1,12+charge*6);grad.addColorStop(0,'rgba('+rc+','+gc+','+bc_+','+flashAlpha+')');grad.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=grad;ctx.beginPath();ctx.arc(b.x1,b.y1,12+charge*6,0,Math.PI*2);ctx.fill();}
-  ctx.strokeStyle='rgba('+rc+','+gc+','+bc_+','+(alpha*0.08)+')';ctx.lineWidth=10+charge*5;ctx.beginPath();ctx.moveTo(b.x1,b.y1);ctx.lineTo(cx2,cy2);ctx.stroke();
-  ctx.strokeStyle='rgba('+rc+','+gc+','+bc_+','+(alpha*0.2)+')';ctx.lineWidth=4+charge*2.5;ctx.beginPath();ctx.moveTo(b.x1,b.y1);ctx.lineTo(cx2,cy2);ctx.stroke();
-  ctx.strokeStyle='rgba('+rc+','+gc+','+bc_+','+(alpha*0.7)+')';ctx.lineWidth=1.5+charge;ctx.beginPath();ctx.moveTo(b.x1,b.y1);ctx.lineTo(cx2,cy2);ctx.stroke();
-  ctx.strokeStyle='rgba('+Math.min(255,rc+40)+','+Math.min(255,gc+40)+','+Math.min(255,bc_+40)+','+(alpha*0.95)+')';ctx.lineWidth=0.8;ctx.beginPath();ctx.moveTo(b.x1,b.y1);ctx.lineTo(cx2,cy2);ctx.stroke();
+const progress=1-Math.max(0,b.timer/(b.charge>0?0.08+b.charge*0.15:0.08)),alpha=Math.max(0,b.timer/(b.charge>0?0.08+b.charge*0.15:0.08));
+const hex=b.color,rc=parseInt(hex.slice(1,3),16),gc=parseInt(hex.slice(3,5),16),bc_=parseInt(hex.slice(5,7),16),charge=b.charge||0;
+const cx2=b.x1+(b.x2-b.x1)*Math.min(1,progress*1.3),cy2=b.y1+(b.y2-b.y1)*Math.min(1,progress*1.3);
+const flashAlpha=alpha*(1-progress)*0.5;
+if(flashAlpha>0.01){const grad=ctx.createRadialGradient(b.x1,b.y1,0,b.x1,b.y1,12+charge*6);grad.addColorStop(0,'rgba('+rc+','+gc+','+bc_+','+flashAlpha+')');grad.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=grad;ctx.beginPath();ctx.arc(b.x1,b.y1,12+charge*6,0,Math.PI*2);ctx.fill();}
+ctx.strokeStyle='rgba('+rc+','+gc+','+bc_+','+(alpha*0.08)+')';ctx.lineWidth=10+charge*5;ctx.beginPath();ctx.moveTo(b.x1,b.y1);ctx.lineTo(cx2,cy2);ctx.stroke();
+ctx.strokeStyle='rgba('+rc+','+gc+','+bc_+','+(alpha*0.2)+')';ctx.lineWidth=4+charge*2.5;ctx.beginPath();ctx.moveTo(b.x1,b.y1);ctx.lineTo(cx2,cy2);ctx.stroke();
+ctx.strokeStyle='rgba('+rc+','+gc+','+bc_+','+(alpha*0.7)+')';ctx.lineWidth=1.5+charge;ctx.beginPath();ctx.moveTo(b.x1,b.y1);ctx.lineTo(cx2,cy2);ctx.stroke();
+ctx.strokeStyle='rgba('+Math.min(255,rc+40)+','+Math.min(255,gc+40)+','+Math.min(255,bc_+40)+','+(alpha*0.95)+')';ctx.lineWidth=0.8;ctx.beginPath();ctx.moveTo(b.x1,b.y1);ctx.lineTo(cx2,cy2);ctx.stroke();
 }
 function draw() {
-  ctx.fillStyle='#0a0a0f';ctx.fillRect(0,0,GW,GH);
-  if(gameMode){
-    ctx.save();
-    if(killCam.active){const intensity=killCam.timer/killCam.maxTimer,zoom=1+intensity*0.15;ctx.translate(GW/2,GH/2);ctx.scale(zoom,zoom);ctx.translate(-GW/2+killCam.shakeX,-GH/2+killCam.shakeY);}
-    else if(screenShake>0.3){const sx=(Math.random()-0.5)*screenShake,sy=(Math.random()-0.5)*screenShake;ctx.translate(sx,sy);}
-    drawGrid();
-    for(const p of particles){
-      const alpha=p.life/p.maxLife;
-      if(p.type==='shatter'){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);const s=p.size*alpha;ctx.fillStyle='rgba('+p.r+','+p.g+','+p.b+','+(alpha*0.9)+')';ctx.strokeStyle='rgba('+Math.min(255,p.r+60)+','+Math.min(255,p.g+60)+','+Math.min(255,p.b+60)+','+alpha+')';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(-0.35)*s,Math.sin(-0.35)*s);ctx.lineTo(Math.cos(0.35)*s,Math.sin(0.35)*s);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();}
-      else{ctx.fillStyle=p.color.replace(')',';'+alpha+')').replace('rgb','rgba');ctx.beginPath();ctx.arc(p.x,p.y,p.size*alpha,0,Math.PI*2);ctx.fill();}
-    }
-    for(const dn of dmgNumbers){const a=dn.life/dn.maxLife;ctx.fillStyle=dn.color.replace(')',';'+a+')').replace('rgb','rgba');ctx.font='bold 13px "Courier New",monospace';ctx.textAlign='center';ctx.fillText(dn.text,dn.x,dn.y-(1-a)*18);}
-    for(const b of bullets)drawBullet(b);for(const b of oppBullets)drawBullet(b);
-    if(player.ultiBeam)drawUltBeam(player.ultiBeam);if(opponent&&opponent.ultiBeam)drawUltBeam(opponent.ultiBeam);if(ai&&ai.ultiBeam)drawUltBeam(ai.ultiBeam);
-    const pColor=COLORS[player.colorIdx].hex;if(!player.dead)drawSquare(player.x,player.y,player.r,player.aimAngle,pColor,null,player.ultiChargeProgress,player.ultiCharging,player.bowCharge,player.bowCharging);
-    const oColor=COLORS[opponent.colorIdx].hex;if(!opponent.dead)drawSquare(opponent.x,opponent.y,opponent.r,opponent.aimAngle,oColor,null,opponent.ultiChargeProgress,opponent.ultiCharging,opponent.bowCharge,opponent.bowCharging);
-    ctx.fillStyle=pColor;ctx.font='10px "Courier New",monospace';ctx.textAlign='center';
-    if(!player.dead){ctx.fillText(currentUser.name,player.x,player.y-28);if(player.stillTimer>2.0){const wa=Math.min(1,(player.stillTimer-2.0)/1.0),pa=wa*(0.4+Math.sin(Date.now()*0.008)*0.3);ctx.strokeStyle='rgba(201,125,138,'+pa+')';ctx.lineWidth=2;ctx.setLineDash([4,2]);ctx.beginPath();ctx.arc(player.x,player.y,player.r+10,-Math.PI/2,-Math.PI/2+Math.PI*2*Math.min(1,(player.stillTimer-2.0)/1.0));ctx.stroke();ctx.setLineDash([]);if(player.stillTimer>3.0){ctx.fillStyle='rgba(201,125,138,'+(wa*0.6)+')';ctx.font='9px "Courier New",monospace';ctx.textAlign='center';ctx.fillText('静止惩罚中',player.x,player.y-38);}else{ctx.fillStyle='rgba(201,125,138,'+(wa*0.5)+')';ctx.font='9px "Courier New",monospace';ctx.textAlign='center';ctx.fillText('请移动!',player.x,player.y-38);}}}
-    ctx.fillStyle=oColor;const oName=gameMode==='ai'?'AI':(remoteUser?remoteUser.name:'对手');if(!opponent.dead)ctx.fillText(oName,opponent.x,opponent.y-28);
-
-    // Aim line — always visible, dashed, using player color
-    if(!player.dead && !matchOver){
-      const end=getBeamEnd(player.x,player.y,player.aimAngle);
-      const aimAlpha=player.ultiCharging?0.3:player.bowCharging?0.2:0.06;
-      const aimWidth=player.ultiCharging?1.5:player.bowCharging?1:0.5;
-      ctx.strokeStyle='rgba('+parseInt(pColor.slice(1,3),16)+','+parseInt(pColor.slice(3,5),16)+','+parseInt(pColor.slice(5,7),16)+','+aimAlpha+')';
-      ctx.lineWidth=aimWidth;ctx.setLineDash([6,10]);ctx.beginPath();
-      ctx.moveTo(player.x+Math.cos(player.aimAngle)*(player.r+6),player.y+Math.sin(player.aimAngle)*(player.r+6));
-      ctx.lineTo(end.x,end.y);ctx.stroke();ctx.setLineDash([]);
-
-      // Crosshair
-      const aimX=aimTouchActive?touchState.aimX:player.x+Math.cos(player.aimAngle)*100;
-      const aimY=aimTouchActive?touchState.aimY:player.y+Math.sin(player.aimAngle)*100;
-      const cs=12;
-      const ultiAvailable=player.xp>=player.maxXp&&player.ultiCooldown<=0&&!player.ultiCharging;
-      let alpha=player.ultiLocked?0.9:ultiAvailable?0.55+Math.sin(Date.now()*0.006)*0.3:player.ultiCharging?0.5:0.3;
-      if(player.ultiLocked)alpha=0.8+Math.sin(Date.now()*0.015)*0.2;
-      ctx.strokeStyle='rgba('+parseInt(pColor.slice(1,3),16)+','+parseInt(pColor.slice(3,5),16)+','+parseInt(pColor.slice(5,7),16)+','+alpha+')';
-      ctx.lineWidth=1;
-      ctx.beginPath();ctx.arc(aimX,aimY,2,0,Math.PI*2);ctx.fillStyle='rgba('+parseInt(pColor.slice(1,3),16)+','+parseInt(pColor.slice(3,5),16)+','+parseInt(pColor.slice(5,7),16)+','+(alpha+0.2)+')';ctx.fill();
-      ctx.beginPath();
-      for(let i=-2;i<=2;i++){if(i===0)continue;const t=i*6;ctx.moveTo(aimX+t,aimY-2);ctx.lineTo(aimX+t,aimY+2);ctx.moveTo(aimX-2,aimY+t);ctx.lineTo(aimX+2,aimY+t);}
-      ctx.stroke();
-
-      if(player.ultiCharging){const pr=16+player.ultiChargeProgress*14;ctx.strokeStyle='rgba('+parseInt(pColor.slice(1,3),16)+','+parseInt(pColor.slice(3,5),16)+','+parseInt(pColor.slice(5,7),16)+','+(0.2+player.ultiChargeProgress*0.5)+')';ctx.lineWidth=1.5;ctx.setLineDash([3,2]);ctx.beginPath();ctx.arc(aimX,aimY,pr,-Math.PI/2,-Math.PI/2+Math.PI*2*player.ultiChargeProgress);ctx.stroke();ctx.setLineDash([]);if(player.ultiLocked){ctx.strokeStyle='rgba(212,165,116,0.8)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(aimX,aimY,pr+2,-Math.PI/2,-Math.PI/2+Math.PI*2*player.ultiLockTimer/0.4);ctx.stroke();}}
-      else if(player.bowCharging){const pr=14+player.bowCharge*10;ctx.strokeStyle='rgba('+parseInt(pColor.slice(1,3),16)+','+parseInt(pColor.slice(3,5),16)+','+parseInt(pColor.slice(5,7),16)+','+(0.15+player.bowCharge*0.4)+')';ctx.lineWidth=1;ctx.setLineDash([2,4]);ctx.beginPath();ctx.arc(aimX,aimY,pr,-Math.PI/2,-Math.PI/2+Math.PI*2*player.bowCharge);ctx.stroke();ctx.setLineDash([]);}
-      if(player.ultiLocked){ctx.fillStyle='rgba(212,165,116,0.8)';ctx.font='11px "Courier New",monospace';ctx.textAlign='center';ctx.fillText('LOCKED',aimX,aimY-22);}
-
-      // AI aim line during ult
-      if(gameMode==='ai'&&ai&&!ai.dead&&!matchOver&&ai.ultiCharging){
-        const aEnd=getBeamEnd(ai.x,ai.y,ai.aimAngle);
-        ctx.strokeStyle='rgba('+parseInt(COLORS[ai.colorIdx||1].hex.slice(1,3),16)+','+parseInt(COLORS[ai.colorIdx||1].hex.slice(3,5),16)+','+parseInt(COLORS[ai.colorIdx||1].hex.slice(5,7),16)+',0.5)';
-        ctx.lineWidth=2;ctx.setLineDash([4,5]);ctx.beginPath();
-        ctx.moveTo(ai.x+Math.cos(ai.aimAngle)*(ai.r+8),ai.y+Math.sin(ai.aimAngle)*(ai.r+8));
-        ctx.lineTo(aEnd.x,aEnd.y);ctx.stroke();ctx.setLineDash([]);
-      }
-    }
-    ctx.restore();
-    if(killCam.active){const intensity=killCam.timer/killCam.maxTimer;ctx.fillStyle='rgba(10,10,15,'+(killCam.flashAlpha*intensity*0.6)+')';ctx.fillRect(0,0,GW,GH);const er=(1-intensity)*250+30;ctx.strokeStyle='rgba(200,200,200,'+(intensity*0.6)+')';ctx.lineWidth=1+intensity*4;ctx.beginPath();ctx.arc(killCam.posX,killCam.posY,er,0,Math.PI*2);ctx.stroke();
-    if(intensity<0.6){const isPlayerWin=killCam.winner==='player';const wc=isPlayerWin?COLORS[player.colorIdx].hex:COLORS[opponent.colorIdx].hex;const wr=parseInt(wc.slice(1,3),16),wg=parseInt(wc.slice(3,5),16),wb=parseInt(wc.slice(5,7),16);const textAlpha=Math.min(1,(0.6-intensity)/0.4);ctx.fillStyle='rgba('+wr+','+wg+','+wb+','+textAlpha+')';ctx.font='24px "Courier New",monospace';ctx.textAlign='center';ctx.fillText(isPlayerWin?'Q.E.D.':'N.S.F.',GW/2,GH/2+8);}}
-
-    ctx.fillStyle='rgba(255,255,255,0.2)';ctx.font='9px "Courier New",monospace';ctx.textAlign='left';
-    ctx.fillText('FIRE:y=kx | U切换大招 | DASH | ✕:返回',10,GH-10);ctx.textAlign='start';
-    if(gameMode==='ai'&&ai&&ai.difficulty!==1){
-      ctx.fillStyle='#666';ctx.font='9px "Courier New",monospace';ctx.textAlign='right';
-      ctx.fillText('AI难度: '+(ai.difficulty===0.5?'简单':'困难'),GW-10,GH-10);ctx.textAlign='start';
-    }
-  }
+ctx.fillStyle='#0a0a0f';ctx.fillRect(0,0,GW,GH);
+if(gameMode){
+ctx.save();
+if(killCam.active){const intensity=killCam.timer/killCam.maxTimer,zoom=1+intensity*0.15;ctx.translate(GW/2,GH/2);ctx.scale(zoom,zoom);ctx.translate(-GW/2+killCam.shakeX,-GH/2+killCam.shakeY);}
+else if(screenShake>0.3){const sx=(Math.random()-0.5)*screenShake,sy=(Math.random()-0.5)*screenShake;ctx.translate(sx,sy);}
+drawGrid();
+for(const p of particles){
+const alpha=p.life/p.maxLife;
+if(p.type==='shatter'){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);const s=p.size*alpha;ctx.fillStyle='rgba('+p.r+','+p.g+','+p.b+','+(alpha*0.9)+')';ctx.strokeStyle='rgba('+Math.min(255,p.r+60)+','+Math.min(255,p.g+60)+','+Math.min(255,p.b+60)+','+alpha+')';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(-0.35)*s,Math.sin(-0.35)*s);ctx.lineTo(Math.cos(0.35)*s,Math.sin(0.35)*s);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();}
+else{ctx.fillStyle=p.color.replace(')',';'+alpha+')').replace('rgb','rgba');ctx.beginPath();ctx.arc(p.x,p.y,p.size*alpha,0,Math.PI*2);ctx.fill();}
 }
-
-// ===================== LOOP =====================
+for(const dn of dmgNumbers){const a=dn.life/dn.maxLife;ctx.fillStyle=dn.color.replace(')',';'+a+')').replace('rgb','rgba');ctx.font='bold 13px "Courier New",monospace';ctx.textAlign='center';ctx.fillText(dn.text,dn.x,dn.y-(1-a)*18);}
+for(const b of bullets)drawBullet(b);for(const b of oppBullets)drawBullet(b);
+if(player.ultiBeam)drawUltBeam(player.ultiBeam);if(opponent&&opponent.ultiBeam)drawUltBeam(opponent.ultiBeam);if(ai&&ai.ultiBeam)drawUltBeam(ai.ultiBeam);
+const pColor=COLORS[player.colorIdx].hex;if(!player.dead)drawSquare(player.x,player.y,player.r,player.aimAngle,pColor,null,player.ultiChargeProgress,player.ultiCharging,player.bowCharge,player.bowCharging);
+const oColor=COLORS[opponent.colorIdx].hex;if(!opponent.dead)drawSquare(opponent.x,opponent.y,opponent.r,opponent.aimAngle,oColor,null,opponent.ultiChargeProgress,opponent.ultiCharging,opponent.bowCharge,opponent.bowCharging);
+ctx.fillStyle=pColor;ctx.font='10px "Courier New",monospace';ctx.textAlign='center';
+if(!player.dead){ctx.fillText(currentUser.name,player.x,player.y-28);if(player.stillTimer>2.0){const wa=Math.min(1,(player.stillTimer-2.0)/1.0),pa=wa*(0.4+Math.sin(Date.now()*0.008)*0.3);ctx.strokeStyle='rgba(201,125,138,'+pa+')';ctx.lineWidth=2;ctx.setLineDash([4,2]);ctx.beginPath();ctx.arc(player.x,player.y,player.r+10,-Math.PI/2,-Math.PI/2+Math.PI*2*Math.min(1,(player.stillTimer-2.0)/1.0));ctx.stroke();ctx.setLineDash([]);if(player.stillTimer>3.0){ctx.fillStyle='rgba(201,125,138,'+(wa*0.6)+')';ctx.font='9px "Courier New",monospace';ctx.textAlign='center';ctx.fillText('静止惩罚中',player.x,player.y-38);}else{ctx.fillStyle='rgba(201,125,138,'+(wa*0.5)+')';ctx.font='9px "Courier New",monospace';ctx.textAlign='center';ctx.fillText('请移动!',player.x,player.y-38);}}}
+ctx.fillStyle=oColor;const oName=gameMode==='ai'?'AI':(remoteUser?remoteUser.name:'对手');if(!opponent.dead)ctx.fillText(oName,opponent.x,opponent.y-28);
+if(!player.dead && !matchOver){
+const end=getBeamEnd(player.x,player.y,player.aimAngle);
+const aimAlpha=player.ultiCharging?0.3:player.bowCharging?0.2:0.06;
+const aimWidth=player.ultiCharging?1.5:player.bowCharging?1:0.5;
+ctx.strokeStyle='rgba('+parseInt(pColor.slice(1,3),16)+','+parseInt(pColor.slice(3,5),16)+','+parseInt(pColor.slice(5,7),16)+','+aimAlpha+')';
+ctx.lineWidth=aimWidth;ctx.setLineDash([6,10]);ctx.beginPath();
+ctx.moveTo(player.x+Math.cos(player.aimAngle)*(player.r+6),player.y+Math.sin(player.aimAngle)*(player.r+6));
+ctx.lineTo(end.x,end.y);ctx.stroke();ctx.setLineDash([]);
+const aimX=aimTouchActive?touchState.aimX:player.x+Math.cos(player.aimAngle)*100;
+const aimY=aimTouchActive?touchState.aimY:player.y+Math.sin(player.aimAngle)*100;
+const cs=12;
+const ultiAvailable=player.xp>=player.maxXp&&player.ultiCooldown<=0&&!player.ultiCharging;
+let alpha=player.ultiLocked?0.9:ultiAvailable?0.55+Math.sin(Date.now()*0.006)*0.3:player.ultiCharging?0.5:0.3;
+if(player.ultiLocked)alpha=0.8+Math.sin(Date.now()*0.015)*0.2;
+ctx.strokeStyle='rgba('+parseInt(pColor.slice(1,3),16)+','+parseInt(pColor.slice(3,5),16)+','+parseInt(pColor.slice(5,7),16)+','+alpha+')';
+ctx.lineWidth=1;
+ctx.beginPath();ctx.arc(aimX,aimY,2,0,Math.PI*2);ctx.fillStyle='rgba('+parseInt(pColor.slice(1,3),16)+','+parseInt(pColor.slice(3,5),16)+','+parseInt(pColor.slice(5,7),16)+','+(alpha+0.2)+')';ctx.fill();
+ctx.beginPath();
+for(let i=-2;i<=2;i++){if(i===0)continue;const t=i*6;ctx.moveTo(aimX+t,aimY-2);ctx.lineTo(aimX+t,aimY+2);ctx.moveTo(aimX-2,aimY+t);ctx.lineTo(aimX+2,aimY+t);}
+ctx.stroke();
+if(player.ultiCharging){const pr=16+player.ultiChargeProgress*14;ctx.strokeStyle='rgba('+parseInt(pColor.slice(1,3),16)+','+parseInt(pColor.slice(3,5),16)+','+parseInt(pColor.slice(5,7),16)+','+(0.2+player.ultiChargeProgress*0.5)+')';ctx.lineWidth=1.5;ctx.setLineDash([3,2]);ctx.beginPath();ctx.arc(aimX,aimY,pr,-Math.PI/2,-Math.PI/2+Math.PI*2*player.ultiChargeProgress);ctx.stroke();ctx.setLineDash([]);if(player.ultiLocked){ctx.strokeStyle='rgba(212,165,116,0.8)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(aimX,aimY,pr+2,-Math.PI/2,-Math.PI/2+Math.PI*2*player.ultiLockTimer/0.4);ctx.stroke();}}
+else if(player.bowCharging){const pr=14+player.bowCharge*10;ctx.strokeStyle='rgba('+parseInt(pColor.slice(1,3),16)+','+parseInt(pColor.slice(3,5),16)+','+parseInt(pColor.slice(5,7),16)+','+(0.15+player.bowCharge*0.4)+')';ctx.lineWidth=1;ctx.setLineDash([2,4]);ctx.beginPath();ctx.arc(aimX,aimY,pr,-Math.PI/2,-Math.PI/2+Math.PI*2*player.bowCharge);ctx.stroke();ctx.setLineDash([]);}
+if(player.ultiLocked){ctx.fillStyle='rgba(212,165,116,0.8)';ctx.font='11px "Courier New",monospace';ctx.textAlign='center';ctx.fillText('LOCKED',aimX,aimY-22);}
+if(gameMode==='ai'&&ai&&!ai.dead&&!matchOver&&ai.ultiCharging){
+const aEnd=getBeamEnd(ai.x,ai.y,ai.aimAngle);
+ctx.strokeStyle='rgba('+parseInt(COLORS[ai.colorIdx||1].hex.slice(1,3),16)+','+parseInt(COLORS[ai.colorIdx||1].hex.slice(3,5),16)+','+parseInt(COLORS[ai.colorIdx||1].hex.slice(5,7),16)+',0.5)';
+ctx.lineWidth=2;ctx.setLineDash([4,5]);ctx.beginPath();
+ctx.moveTo(ai.x+Math.cos(ai.aimAngle)*(ai.r+8),ai.y+Math.sin(ai.aimAngle)*(ai.r+8));
+ctx.lineTo(aEnd.x,aEnd.y);ctx.stroke();ctx.setLineDash([]);
+}
+}
+ctx.restore();
+if(killCam.active){const intensity=killCam.timer/killCam.maxTimer;ctx.fillStyle='rgba(10,10,15,'+(killCam.flashAlpha*intensity*0.6)+')';ctx.fillRect(0,0,GW,GH);const er=(1-intensity)*250+30;ctx.strokeStyle='rgba(200,200,200,'+(intensity*0.6)+')';ctx.lineWidth=1+intensity*4;ctx.beginPath();ctx.arc(killCam.posX,killCam.posY,er,0,Math.PI*2);ctx.stroke();
+if(intensity<0.6){const isPlayerWin=killCam.winner==='player';const wc=isPlayerWin?COLORS[player.colorIdx].hex:COLORS[opponent.colorIdx].hex;const wr=parseInt(wc.slice(1,3),16),wg=parseInt(wc.slice(3,5),16),wb=parseInt(wc.slice(5,7),16);const textAlpha=Math.min(1,(0.6-intensity)/0.4);ctx.fillStyle='rgba('+wr+','+wg+','+wb+','+textAlpha+')';ctx.font='24px "Courier New",monospace';ctx.textAlign='center';ctx.fillText(isPlayerWin?'Q.E.D.':'N.S.F.',GW/2,GH/2+8);}}
+ctx.fillStyle='rgba(255,255,255,0.2)';ctx.font='9px "Courier New",monospace';ctx.textAlign='left';
+ctx.fillText('FIRE:y=kx | U切换大招 | DASH | ✕:返回',10,GH-10);ctx.textAlign='start';
+if(gameMode==='ai'&&ai&&ai.difficulty!==1){
+ctx.fillStyle='#666';ctx.font='9px "Courier New",monospace';ctx.textAlign='right';
+ctx.fillText('AI难度: '+(ai.difficulty===0.5?'简单':'困难'),GW-10,GH-10);ctx.textAlign='start';
+}
+}
+}
 let lastTime=0,accumulator=0;const fixedDt=1/60;
 function loop(time){let rawDt=(time-lastTime)/1000;lastTime=time;if(rawDt>0.1)rawDt=0.1;accumulator+=rawDt;while(accumulator>=fixedDt){if(gameMode&&!gameOver)update(fixedDt);accumulator-=fixedDt;}draw();requestAnimationFrame(loop);}
-
-// ===================== INIT =====================
 loadUser();renderColorOptions();if(currentUser)selectedColorIdx=currentUser.colorIdx;loadLayout();
 document.getElementById('bar-col-1').innerHTML='<div class="bar"><div class="bar-fill" id="hpbar" style="background:#999;width:100%"></div></div><div class="bar-label" id="hplabel">生命</div><div class="bar"><div class="bar-fill" id="xpbar" style="background:#666;width:0%"></div></div><div class="bar-label" id="xplabel">经验 0/50</div><div class="bar"><div class="bar-fill" id="bowbar" style="background:#666;width:0%"></div></div><div class="bar-label" id="bowlabel">y=kx [左键] 蓄力</div><div class="bar"><div class="bar-fill" id="ultbar" style="background:#d4a574;width:0%"></div></div><div class="bar-label" id="ultlabel">sin(x) [右键] 蓄力</div>';
 document.getElementById('bar-col-2').innerHTML='<div class="bar"><div class="bar-fill" id="aihpbar" style="background:#888;width:100%"></div></div><div class="bar-label" id="aihplabel">对手生命</div><div class="bar"><div class="bar-fill" id="aixpbar" style="background:#555;width:0%"></div></div><div class="bar-label" id="aixplabel">经验 0/50</div><div class="bar"><div class="bar-fill" id="aibowbar" style="background:#555;width:0%"></div></div><div class="bar-label" id="aibowlabel">对手 y=kx</div><div class="bar"><div class="bar-fill" id="aiultbar" style="background:#d4a574;width:0%"></div></div><div class="bar-label" id="aiultlabel">对手 sin(x)</div>';
-
 window.addEventListener('beforeunload',()=>{if(peer){try{peer.destroy();}catch(e){}}});
 requestAnimationFrame(loop);
 </script>
